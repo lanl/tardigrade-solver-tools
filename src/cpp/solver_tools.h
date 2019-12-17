@@ -15,6 +15,7 @@
 #define USE_EIGEN
 #include<vector_tools.h>
 #include<error_tools.h>
+#include<sstream>
 
 namespace solverTools{
 
@@ -34,6 +35,16 @@ namespace solverTools{
                             const unsigned int maxNLIterations=20, const floatType tolr=1e-9, const floatType tola=1e-9);
 
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
+
+    errorOut checkJacobian( errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                                 floatVector &residual, floatMatrix &jacobian),
+                            const floatVector &x0,
+                            floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps=1e-6);
+
+    errorOut finiteDifference(errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                                 floatVector &residual),
+                            const floatVector &x0,
+                            floatMatrix &J, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps=1e-6);
 }
 
 #endif
