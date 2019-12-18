@@ -13,8 +13,6 @@
 
 namespace solverTools{
 
-//    errorOut newtonRaphson( errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, 
-//                                                 floatVector &residual, floatMatrix &jacobian) residual,
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0,
@@ -131,8 +129,6 @@ namespace solverTools{
         return NULL;
     }
 
-//    errorOut finiteDifference(errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-//                                                 floatVector &residual),
     errorOut finiteDifference( stdFncNLF fxn, const floatVector &x0,
                             floatMatrix &grad, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps){
         /*!
@@ -212,7 +208,6 @@ namespace solverTools{
          */
 
         //Wrap the residual function to hide the jacobian
-//        std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > residual_;
         stdFncNLF residual_;
         residual_ = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_, 
                             floatVector &r){

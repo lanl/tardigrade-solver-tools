@@ -1,4 +1,4 @@
-//Tests for constitutive_tools
+//Tests for solver_tools
 
 #include<solver_tools.h>
 #include<sstream>
@@ -249,12 +249,6 @@ int testNewtonRaphson(std::ofstream &results){
         results << "testNewtonRaphson (test 1) & False\n";
         return 1;
     }
-
-//    if (!vectorTools::fuzzyEquals(x, {-1, 5.6})){
-//        results << "testNewtonRaphson (test 1) & False\n";
-//        return 1;
-//    }
-
 
     results << "testNewtonRaphson & True\n";
     return 0;

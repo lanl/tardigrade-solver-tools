@@ -22,10 +22,10 @@ namespace solverTools{
     typedef errorTools::Node errorNode; //!Redefinition for the error node
     typedef errorNode* errorOut; //!Redefinition for a pointer to the error node
     typedef double floatType; //!Define the float values type.
-    typedef double intType; //!Define the integer values type.
+    typedef int intType; //!Define the integer values type.
     typedef std::vector< floatType > floatVector; //! Define a vector of floats
     typedef std::vector< intType > intVector; //!Define a vector of integers
-    typedef std::vector< std::vector< floatType > > floatMatrix; //!Define a matrix of floats
+    typedef std::vector< floatVector > floatMatrix; //!Define a matrix of floats
     typedef std::vector< intVector > intMatrix; //!Define a matrix of integers
 
     typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
