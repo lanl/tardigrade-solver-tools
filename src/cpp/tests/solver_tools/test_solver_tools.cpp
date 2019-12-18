@@ -363,7 +363,7 @@ int testCheckLSCriteria(std::ofstream &results){
         return 1;
     }
 
-    Rp[3] = R[3] - 0.1;
+    R[0] = 100;
 
     solverTools::checkLSCriteria(R, Rp, result);
 

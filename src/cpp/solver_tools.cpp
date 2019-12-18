@@ -17,7 +17,8 @@ namespace solverTools{
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0,
                             floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola){
+                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                            const floatType alpha){
         /*!
          * The main Newton-Raphson non-linear solver routine. An implementation 
          * of a typical Newton-Raphson solver which can take an arbitrary 
@@ -38,6 +39,7 @@ namespace solverTools{
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
          * :param floatType tolr: The relative tolerance
          * :param floatType tola: The absolute tolerance 
+         * :param floatType alpha: The line search criteria.
          */
 
         //Compute the initial residual and jacobian
@@ -67,7 +69,7 @@ namespace solverTools{
 
         //Initialize variables required for the iteration loop
         int nNLIterations = 0;
-        bool converged;
+        bool converged, lsCheck;
         checkTolerance(R, tol, converged);
         unsigned int rank;        
 
@@ -90,7 +92,7 @@ namespace solverTools{
                 return new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration"); 
             }
 
-            
+            checkLSCriteria(R, Rp, lsCheck, alpha);
 
             //Check if the solution is converged
             checkTolerance(R, tol, converged);
@@ -137,7 +139,7 @@ namespace solverTools{
     errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha){
         /*!
          * Perform the check on the line-search criteria setting result to false if the new residual does not meet it.
-         * R[i] < alpha*Rp[i] for all i
+         * l2norm(R) < (1 - alpha)* l2norm(Rp)
          * 
          * :param const floatVector &R: The trial residual.
          * :param const floatVector &Rp: the previous acceptable residual
@@ -153,12 +155,8 @@ namespace solverTools{
             return new errorNode("errorOut", "R has a size of zero");
         }
 
-        for (unsigned int i=0; i<R.size(); i++){
-            result = R[i] <= (1 - alpha)*Rp[i];
-            if (!result){
-                return NULL;
-            }
-        }
+        result = vectorTools::dot(R, R) < (1 - alpha)*vectorTools::dot(Rp, Rp);
+
         return NULL;
     }
 
