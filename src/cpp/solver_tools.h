@@ -41,6 +41,8 @@ namespace solverTools{
 
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
 
+    errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha=1e-4);
+
     errorOut finiteDifference( stdFncNLF fxn,
                             const floatVector &x0,
                             floatMatrix &J, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps=1e-6);

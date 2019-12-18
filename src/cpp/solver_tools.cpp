@@ -43,7 +43,7 @@ namespace solverTools{
         //Compute the initial residual and jacobian
         floatVector dx = floatVector(x0.size(), 0);
         floatVector ddx;
-        floatVector R;
+        floatVector R, Rp;
         floatMatrix J;
 
         errorOut error = residual(x0 + dx, floatArgs, intArgs, R, J);
@@ -61,6 +61,9 @@ namespace solverTools{
         //Set the tolerance for each value individually
         floatVector tol = floatVector(R.size(), 0);
         for (unsigned int i=0; i<R.size(); i++){tol[i] = tolr*fabs(R[i]) + tola;}
+
+        //Copy R to Rp
+        Rp = R;
 
         //Initialize variables required for the iteration loop
         int nNLIterations = 0;
@@ -86,6 +89,8 @@ namespace solverTools{
             if (error){
                 return new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration"); 
             }
+
+            
 
             //Check if the solution is converged
             checkTolerance(R, tol, converged);
@@ -126,6 +131,34 @@ namespace solverTools{
             }
         }
         result = true;
+        return NULL;
+    }
+
+    errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha){
+        /*!
+         * Perform the check on the line-search criteria setting result to false if the new residual does not meet it.
+         * R[i] < alpha*Rp[i] for all i
+         * 
+         * :param const floatVector &R: The trial residual.
+         * :param const floatVector &Rp: the previous acceptable residual
+         * :param bool &result: The output value.
+         * :param const floatType &alpha: The scaling factor on Rp
+         */
+
+        if (R.size() != Rp.size()){
+            return new errorNode("errorOut", "R and Rp have different sizes");
+        }
+
+        if (R.size() == 0){
+            return new errorNode("errorOut", "R has a size of zero");
+        }
+
+        for (unsigned int i=0; i<R.size(); i++){
+            result = R[i] <= (1 - alpha)*Rp[i];
+            if (!result){
+                return NULL;
+            }
+        }
         return NULL;
     }
 

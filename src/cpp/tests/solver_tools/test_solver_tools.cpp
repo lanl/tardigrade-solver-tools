@@ -345,6 +345,37 @@ int testCheckJacobian(std::ofstream &results){
     return 0;
 }
 
+int testCheckLSCriteria(std::ofstream &results){
+    /*!
+     * Test the line search criteria
+     * 
+     * :param std::ofstream &results: The output file
+     */
+
+    floatVector R  = {1, 2, 3, 4, 5, 6};
+    floatVector Rp = {2, 3, 4, 5, 6, 7};
+    bool result;
+
+    solverTools::checkLSCriteria(R, Rp, result);
+
+    if (!result){
+        results << "testCheckLSCriteria (test 1) & False\n";
+        return 1;
+    }
+
+    Rp[3] = R[3] - 0.1;
+
+    solverTools::checkLSCriteria(R, Rp, result);
+
+    if (result){
+        results << "testCheckLSCriteria (test 2) & False\n";
+        return 1;
+    }
+
+    results << "testCheckLSCriteria  & True\n";
+    return 0;
+}
+
 int main(){
     /*!
     The main loop which runs the tests defined in the 
@@ -362,6 +393,7 @@ int main(){
     testNewtonRaphson(results);
     testFiniteDifference(results);
     testCheckJacobian(results);
+    testCheckLSCriteria(results);
 
     //Close the results file
     results.close();
