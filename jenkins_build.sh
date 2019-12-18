@@ -14,9 +14,12 @@ source set_vars.sh
 # Clone and update dependencies
 source update_dependencies.sh
 
-# Perform repo tests
+# Build the repo tests
 cd ${workdir}/src/cpp/tests/${repo}/
 if [ -f ${repo}.o ]; then
     make clean
 fi
 make
+
+# Run the repo tests
+./test_${repo}
