@@ -13,8 +13,10 @@
 
 namespace solverTools{
 
-    errorOut newtonRaphson( errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, 
-                                                 floatVector &residual, floatMatrix &jacobian),
+//    errorOut newtonRaphson( errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, 
+//                                                 floatVector &residual, floatMatrix &jacobian) residual,
+    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &) > residual,
                             const floatVector &x0,
                             floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola){
@@ -129,14 +131,69 @@ namespace solverTools{
         return NULL;
     }
 
-    errorOut finiteDifference(errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                                                 floatVector &residual),
-                            const floatVector &x0,
-                            floatMatrix &J, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps){
+//    errorOut finiteDifference(errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+//                                                 floatVector &residual),
+    errorOut finiteDifference( stdFncNLF fxn, const floatVector &x0,
+                            floatMatrix &grad, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps){
         /*!
-         * Perform a forward finite difference gradient solve of the provided residual equation.
-         * Note that for residual functions that are more (or less) complex than this you may need to 
+         * Perform a forward finite difference gradient solve of the provided function.
+         * Note that for functions that are more (or less) complex than this you may need to 
          * wrap the function.
+         * 
+         * The function function should have inputs of the form
+         * :param const floatVector &x: A vector of the variable to be solved.
+         * :param const floatMatrix &floatArgs: Additional floating point arguments to function
+         * :param const intMatrix &intArgs: Additional integer arguments to the function
+         * :param floatVector &value: The output value vector
+         * 
+         * The main routine accepts the following parameters:
+         * :param const floatVector &x0: The initial iterate of x.
+         * :param floatVector &grad: The finite difference gradient. 
+         * :param const floatMatrix &floatArgs: The additional floating-point arguments.
+         * :param const intMatrix &intArgs: The additional integer arguments.
+         * :param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
+         */
+
+        //Initialize the first value and the gradient
+        floatVector y0, yi;
+
+        //Compute the first value
+        errorOut error = fxn(x0, floatArgs, intArgs, y0);
+        if (error){
+            errorOut result = new errorNode("finiteDifference", "Error in initial function calculation");
+            result->addNext(error);
+            return result;
+        }
+
+        grad = floatMatrix(y0.size(), floatVector(x0.size(), 0));
+
+        for (unsigned int i=0; i<x0.size(); i++){
+            //Set the step size
+            floatVector delta = floatVector(x0.size(), 0);
+            delta[i] = eps*fabs(x0[i]) + eps;
+
+            //Compute the function after perturbation
+            error = fxn(x0 + delta, floatArgs, intArgs, yi);
+            if (error){
+                errorOut result = new errorNode("finiteDifference", "Error in function calculation");
+                result->addNext(error);
+                return result;
+            }
+
+            //Set the terms of the gradient
+            for (unsigned int j=0; j<yi.size(); j++){
+                grad[j][i] = (yi[j] - y0[j])/delta[i];
+            }
+        }
+        return NULL;
+    }
+
+    errorOut checkJacobian( stdFncNLFJ residual,
+                            const floatVector &x0,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps,
+                            const floatType tolr, const floatType tola){
+        /*!
+         * Check if the jacobian is correct. Used as a debugging tool.
          * 
          * The residual function should have inputs of the form
          * :param const floatVector &x: A vector of the variable to be solved.
@@ -146,42 +203,45 @@ namespace solverTools{
          * 
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
-         * :param floatVector &J: The finite difference jacobian. 
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
          * :param const intMatrix &intArgs: The additional integer arguments.
+         * :param bool isGood: Whether the error in the jacobian is within tolerance.
+         * :param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
+         * :param const floatType tolr: The relative tolerance
+         * :param const floatType tola: The absolute tolerance
          */
 
-        //Initialize the first residual and the gradient
-        floatVector R0, Ri;
+        //Wrap the residual function to hide the jacobian
+//        std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > residual_;
+        stdFncNLF residual_;
+        residual_ = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_, 
+                            floatVector &r){
+            floatMatrix Jtmp;
+            return residual(x_, floatArgs_, intArgs_, r, Jtmp);
+        };
 
-        //Compute the first residual
-        errorOut error = residual(x0, floatArgs, intArgs, R0);
+        //Compute the finite difference jacobian
+        floatMatrix finiteDifferenceJ;
+        errorOut error = finiteDifference( residual_, x0, finiteDifferenceJ, floatArgs, intArgs);
+
         if (error){
-            errorOut result = new errorNode("finiteDifference", "Error in initial residual calculation");
+            errorOut result = new errorNode("checkJacobian", "Error in finite difference");
             result->addNext(error);
-            return result;
+            return error;
         }
 
-        J = floatMatrix(R0.size(), floatVector(x0.size(), 0));
+        //Compute the analytic jacobian
+        floatVector rtmp;
+        floatMatrix analyticJ;
+        residual(x0, floatArgs, intArgs, rtmp, analyticJ);
 
-        for (unsigned int i=0; i<x0.size(); i++){
-            //Set the step size
-            floatVector delta = floatVector(x0.size(), 0);
-            delta[i] = eps*fabs(x0[i]) + eps;
+        isGood = vectorTools::fuzzyEquals(finiteDifferenceJ, analyticJ, tolr, tola);
 
-            //Compute the residual after perturbation
-            error = residual(x0 + delta, floatArgs, intArgs, Ri);
-            if (error){
-                errorOut result = new errorNode("finiteDifference", "Error in residual calculation");
-                result->addNext(error);
-                return result;
-            }
-
-            //Set the terms of the gradient
-            for (unsigned int j=0; j<Ri.size(); j++){
-                J[j][i] = (Ri[j] - R0[j])/delta[i];
-            }
+        if (!isGood){
+            std::cout << "Jacobian is not within tolerance.\nError:\n";
+            vectorTools::print(analyticJ - finiteDifferenceJ);
         }
-        return NULL;
+
+        return NULL;   
     }
 }

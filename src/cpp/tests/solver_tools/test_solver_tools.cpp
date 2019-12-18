@@ -199,7 +199,10 @@ int testNewtonRaphson(std::ofstream &results){
     floatVector x0 = {1.5, 6};
     floatVector x;
 
-    errorOut error = solverTools::newtonRaphson(nlFxn1, x0, x, {}, {});
+    solverTools::stdFncNLFJ func;
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
+    
+    errorOut error = solverTools::newtonRaphson(func, x0, x, {}, {});
 
     if (error){
         error->print();
@@ -224,7 +227,9 @@ int testNewtonRaphson(std::ofstream &results){
 
     //The second test
     x0 = {1, 1, 1};
-    error = solverTools::newtonRaphson(nlFxn2, x0, x, {}, {});
+
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
+    error = solverTools::newtonRaphson(func, x0, x, {}, {});
 
     if (error){
         error->print();
@@ -266,7 +271,9 @@ int testFiniteDifference(std::ofstream &results){
     floatVector x0 = {1.5, 6};
     floatMatrix J;
 
-    solverTools::finiteDifference(nlFxn1, x0, J, {}, {});
+    solverTools::stdFncNLF func;
+    func = static_cast<solverTools::NonLinearFunction>(nlFxn1);
+    solverTools::finiteDifference(func, x0, J, {}, {});
 
     floatVector Rtmp;
     floatMatrix result;
@@ -279,7 +286,8 @@ int testFiniteDifference(std::ofstream &results){
 
     //The second test
     x0 = {1, 1, 1};
-    solverTools::finiteDifference(nlFxn2, x0, J, {}, {});
+    func = static_cast<solverTools::NonLinearFunction>(nlFxn2);
+    solverTools::finiteDifference(func, x0, J, {}, {});
     nlFxn2(x0, {}, {}, Rtmp, result);
 
     if (!vectorTools::fuzzyEquals(J, result)){
@@ -288,6 +296,58 @@ int testFiniteDifference(std::ofstream &results){
     }
 
     results << "testFiniteDifference & True\n";
+    return 0;
+}
+
+int testCheckJacobian(std::ofstream &results){
+    /*!
+     * Test the jacobian checking utility.
+     * 
+     * :param std::ofstream &results: The output file
+     */
+
+    //The first test
+
+    solverTools::stdFncNLFJ func;
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
+    bool isGood = false;
+    floatVector x0 = {0, 0};
+    errorOut error = solverTools::checkJacobian(func, x0, {}, {}, isGood);
+
+    if (error){
+        error->print();
+        results << "testCheckJacobian & False\n";
+        return 1;
+    }
+
+    if (!isGood){
+        results << "testCheckJacobian (test 1) & False\n";
+        return 1;
+    }
+
+    //The second test
+    solverTools::stdFncNLFJ badfunc;
+    badfunc = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+                            floatVector &r, floatMatrix &j){
+        errorOut e = func(x_, floatArgs_, intArgs_, r, j);
+        j[0][1] = 0.1;
+        return e;
+    }; 
+
+    error = solverTools::checkJacobian(badfunc, x0, {}, {}, isGood);
+
+    if (error){
+        error->print();
+        results << "testCheckJacobian & False\n";
+        return 1;
+    }
+
+    if (isGood){
+        results << "testCheckJacobian (test 2) & False\n";
+        return 1;
+    }
+
+    results << "testCheckJacobian & True\n";
     return 0;
 }
 
@@ -307,6 +367,7 @@ int main(){
     testCheckTolerance(results);
     testNewtonRaphson(results);
     testFiniteDifference(results);
+    testCheckJacobian(results);
 
     //Close the results file
     results.close();

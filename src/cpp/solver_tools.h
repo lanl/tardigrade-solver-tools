@@ -28,23 +28,28 @@ namespace solverTools{
     typedef std::vector< std::vector< floatType > > floatMatrix; //!Define a matrix of floats
     typedef std::vector< intVector > intMatrix; //!Define a matrix of integers
 
-    errorOut newtonRaphson( errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                                                 floatVector &residual, floatMatrix &jacobian),
+    typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
+    typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
+    typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&);
+    typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&) > stdFncNLFJ;
+
+    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &) > residual,
                             const floatVector &x0, 
                             floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, 
                             const unsigned int maxNLIterations=20, const floatType tolr=1e-9, const floatType tola=1e-9);
 
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
 
-    errorOut checkJacobian( errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                                                 floatVector &residual, floatMatrix &jacobian),
-                            const floatVector &x0,
-                            floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps=1e-6);
-
-    errorOut finiteDifference(errorOut (*residual)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                                                 floatVector &residual),
+    errorOut finiteDifference( stdFncNLF fxn,
                             const floatVector &x0,
                             floatMatrix &J, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps=1e-6);
+
+    errorOut checkJacobian( stdFncNLFJ residual,
+                            const floatVector &x0,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps=1e-6,
+                            const floatType tolr=1e-6, const floatType tola=1e-6);
+
 }
 
 #endif
