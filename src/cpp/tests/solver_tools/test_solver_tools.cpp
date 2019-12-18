@@ -122,6 +122,40 @@ errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMat
     return nlFxn2(x, floatArgs, intArgs, residual, Jtmp); 
 }
 
+errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                floatVector &residual, floatMatrix &jacobian){
+    /*!
+     * A non-linear function for use in testing the solver which will 
+     * require the use of the line-search algorithm.
+     * 
+     * :param const floatVector &x: The variable vector
+     * :param const floatMatrix &floatArgs: Floating point arguments to the function
+     * :param const intMatrix &intArgs: Integer arguments to the function
+     * :param floatVector &residual: The residual vector output.
+     * :param floatMatrix &jacobian: The jacobian output.
+     */
+
+    residual = {std::exp(-x[0]) - 1};
+    jacobian = {{-std::exp(-x[0])}};
+    return NULL;
+}
+
+errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                floatVector &residual){
+    /*!
+     * A non-linear function for use in testing the solver which will 
+     * require the use of the line-search algorithm.
+     * 
+     * :param const floatVector &x: The variable vector
+     * :param const floatMatrix &floatArgs: Floating point arguments to the function
+     * :param const intMatrix &intArgs: Integer arguments to the function
+     * :param floatVector &residual: The residual vector output.
+     */
+    floatMatrix Jtmp;
+    return nlFxn3(x, floatArgs, intArgs, residual, Jtmp);
+}
+
+
 int testCheckTolerance(std::ofstream &results){
     /*!
      * Test the tolerance checking function.
@@ -246,7 +280,24 @@ int testNewtonRaphson(std::ofstream &results){
     }
 
     if (!vectorTools::fuzzyEquals(Rtmp, {0, 0, 0})){
-        results << "testNewtonRaphson (test 1) & False\n";
+        results << "testNewtonRaphson (test 2) & False\n";
+        return 1;
+    }
+
+    //The third test
+    x0 = {3};
+    
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
+    error = solverTools::newtonRaphson(func, x0, x, {}, {});
+
+    if (error){
+        error->print();
+        results << "testNewtonRaphson & False\n";
+        return 1;
+    }
+
+    if (!vectorTools::fuzzyEquals(x, {0})){
+        results << "testNewtonRaphson (test 3) & false\n";
         return 1;
     }
 

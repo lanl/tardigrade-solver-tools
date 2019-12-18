@@ -37,8 +37,8 @@ namespace solverTools{
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0, 
                             floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, 
-                            const unsigned int maxNLIterations=20, const floatType tolr=1e-9, const floatType tola=1e-9,
-                            const floatType alpha=1e-4);
+                            const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                            const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5);
 
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
 
