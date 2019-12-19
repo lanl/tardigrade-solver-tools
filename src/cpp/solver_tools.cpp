@@ -190,8 +190,9 @@ namespace solverTools{
          */
 
         //Initialize the homotopy solver
-        floatType ds = 1/homotopySteps;
+        floatType ds = 1./homotopySteps;
         floatType s  = 0;
+        floatVector xh = x0;
 
         //Define the homotopy residual equation
         floatVector Rinit;
@@ -210,18 +211,18 @@ namespace solverTools{
         stdFncNLFJ homotopyResidual;
         homotopyResidual = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
                             floatVector &r, floatMatrix &J){
-
+ 
             floatVector R;
             error = residual(x_, floatArgs_, intArgs_, R, J);
-
+ 
             if (error){
                 errorOut result = new errorNode("homotopySolver::homotopyResidual", "error in residual calculation");
                 result->addNext(error);
                 return result;
             }
-
+ 
             r = R - (1 - s)*Rinit;
-
+ 
             return static_cast<errorOut>(NULL);
         };
 
@@ -231,7 +232,7 @@ namespace solverTools{
             //Update s
             s += ds;
 
-            error = newtonRaphson( homotopyResidual, x0, x, floatArgs, intArgs, maxNLIterations, tolr, tola, 
+            error = newtonRaphson( homotopyResidual, xh, x, floatArgs, intArgs, maxNLIterations, tolr, tola, 
                                    alpha, maxLSIterations);
 
             if (error){
@@ -239,6 +240,8 @@ namespace solverTools{
                 result->addNext(error);
                 return result;
             }
+
+            xh = x;
 
         }
         

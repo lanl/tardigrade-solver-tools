@@ -427,6 +427,93 @@ int testCheckLSCriteria(std::ofstream &results){
     return 0;
 }
 
+int testHomotopySolver(std::ofstream &results){
+    /*!
+     * Test the Homotopy solver.
+     * 
+     * :param std::ofstream &results: The output file
+     */
+
+    //The first test
+    floatVector x0 = {1.5, 6};
+    floatVector x;
+
+    solverTools::stdFncNLFJ func;
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
+    
+    errorOut error = solverTools::homotopySolver(func, x0, x, {}, {});
+
+    if (error){
+        error->print();
+        results << "testHomotopySolver & False\n";
+        return 1;
+    }
+
+    std::cout << "x1: "; vectorTools::print(x);
+
+    floatVector Rtmp;
+    floatMatrix Jtmp;
+    error = nlFxn1(x, {}, {}, Rtmp, Jtmp);
+
+    if (error){
+        error->print();
+        results << "testHomotopySolver & False\n";
+        return 1;
+    }
+
+    if (!vectorTools::fuzzyEquals(Rtmp, {0, 0})){
+        std::cout << "Rtmp: "; vectorTools::print(Rtmp);
+        results << "testHomotopySolver (test 1) & False\n";
+        return 1;
+    }
+
+    //The second test
+    x0 = {1, 1, 1};
+
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
+    error = solverTools::homotopySolver(func, x0, x, {}, {});
+
+    if (error){
+        error->print();
+        results << "testHomotopySolver & False\n";
+        return 1;
+    }
+
+    error = nlFxn2(x, {}, {}, Rtmp, Jtmp);
+
+    if (error){
+        error->print();
+        results << "testNewtonRaphson & False\n";
+        return 1;
+    }
+
+    if (!vectorTools::fuzzyEquals(Rtmp, {0, 0, 0})){
+        results << "testHomotopySolver (test 2) & False\n";
+        return 1;
+    }
+
+    //The third test
+    x0 = {3};
+    
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
+    error = solverTools::homotopySolver(func, x0, x, {}, {});
+
+    if (error){
+        error->print();
+        results << "testHomotopySolver & False\n";
+        return 1;
+    }
+
+    if (!vectorTools::fuzzyEquals(x, {0})){
+        results << "testHomotopySolver (test 3) & false\n";
+        return 1;
+    }
+
+    results << "testHomotopySolver & True\n";
+    return 0;
+    
+}
+
 int main(){
     /*!
     The main loop which runs the tests defined in the 
@@ -445,6 +532,7 @@ int main(){
     testFiniteDifference(results);
     testCheckJacobian(results);
     testCheckLSCriteria(results);
+    testHomotopySolver(results);
 
     //Close the results file
     results.close();
