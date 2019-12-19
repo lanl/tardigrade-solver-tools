@@ -17,7 +17,8 @@ namespace solverTools{
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0,
                             floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola){
+                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                            const floatType alpha, const unsigned int maxLSIterations){
         /*!
          * The main Newton-Raphson non-linear solver routine. An implementation 
          * of a typical Newton-Raphson solver which can take an arbitrary 
@@ -36,14 +37,16 @@ namespace solverTools{
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
-         * :param floatType tolr: The relative tolerance
-         * :param floatType tola: The absolute tolerance 
+         * :param const floatType tolr: The relative tolerance
+         * :param const floatType tola: The absolute tolerance 
+         * :param const floatType alpha: The line search criteria.
+         * :param const unsigned int maxLSIterations: The maximum number of line-search iterations.
          */
 
         //Compute the initial residual and jacobian
         floatVector dx = floatVector(x0.size(), 0);
         floatVector ddx;
-        floatVector R;
+        floatVector R, Rp;
         floatMatrix J;
 
         errorOut error = residual(x0 + dx, floatArgs, intArgs, R, J);
@@ -62,9 +65,14 @@ namespace solverTools{
         floatVector tol = floatVector(R.size(), 0);
         for (unsigned int i=0; i<R.size(); i++){tol[i] = tolr*fabs(R[i]) + tola;}
 
+        //Copy R to Rp
+        Rp = R;
+
         //Initialize variables required for the iteration loop
         int nNLIterations = 0;
-        bool converged;
+        int nLSIterations = 0;
+        float lambda = 1;
+        bool converged, lsCheck;
         checkTolerance(R, tol, converged);
         unsigned int rank;        
 
@@ -84,7 +92,49 @@ namespace solverTools{
             error = residual(x0 + dx, floatArgs, intArgs, R, J);
 
             if (error){
-                return new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration"); 
+                errorOut result = new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration"); 
+                result->addNext(error);
+                return result;
+            }
+
+            //Check the line search criteria
+            checkLSCriteria(R, Rp, lsCheck, alpha);
+            nLSIterations = 0;
+            lambda = 1;
+
+            //Enter line-search if required
+            while ((!lsCheck) && (nLSIterations < maxLSIterations)){
+
+                //Extract ddx from dx
+                dx -= lambda * ddx;
+                
+                //Decrement lambda. We could make this fancier but just halving it is probably okay
+                lambda *= 0.5;
+
+                //Update dx
+                dx += lambda * ddx;
+
+                //Compute the new residual
+                error = residual(x0 + dx, floatArgs, intArgs, R, J);
+
+                if (error){
+                    errorOut result = new errorNode("newtonRaphson", "Error in line-search");
+                    result->addNext(error);
+                    return result;
+                }
+
+                //Perform the line-search check
+                checkLSCriteria(R, Rp, lsCheck, alpha);
+
+                //Increment the number of line-search iterations
+                nLSIterations++;
+            }
+
+            if (!lsCheck){
+                return new errorNode("newtonRaphson", "The line-search failed to converge.");
+            }
+            else{
+                Rp = R;
             }
 
             //Check if the solution is converged
@@ -126,6 +176,30 @@ namespace solverTools{
             }
         }
         result = true;
+        return NULL;
+    }
+
+    errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha){
+        /*!
+         * Perform the check on the line-search criteria setting result to false if the new residual does not meet it.
+         * l2norm(R) < (1 - alpha)* l2norm(Rp)
+         * 
+         * :param const floatVector &R: The trial residual.
+         * :param const floatVector &Rp: the previous acceptable residual
+         * :param bool &result: The output value.
+         * :param const floatType &alpha: The scaling factor on Rp
+         */
+
+        if (R.size() != Rp.size()){
+            return new errorNode("errorOut", "R and Rp have different sizes");
+        }
+
+        if (R.size() == 0){
+            return new errorNode("errorOut", "R has a size of zero");
+        }
+
+        result = vectorTools::dot(R, R) < (1 - alpha)*vectorTools::dot(Rp, Rp);
+
         return NULL;
     }
 
