@@ -156,6 +156,99 @@ namespace solverTools{
         }
     }
 
+    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &) > residual,
+                            const floatVector &x0,
+                            floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                            const floatType alpha, const unsigned int maxLSIterations, const unsigned int homotopySteps){
+        /*!
+         * Solve a non-linear equation using a homotopy Newton solver. This method 
+         * can be successful in solving very stiff equations which other techniques 
+         * struggle to capture. It effectively breaks the solve up into sub-steps 
+         * of easier to solve equations which will eventually converge to the 
+         * more difficult problem.
+         * 
+         * The residual function should have inputs of the form
+         * :param const floatVector &x: A vector of the variable to be solved.
+         * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
+         * :param const intMatrix &intArgs: Additional integer arguments to the residual
+         * :param floatVector &residual: The residual vector
+         * :param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
+         * 
+         * The main routine accepts the following parameters:
+         * :param const floatVector &x0: The initial iterate of x.
+         * :param floatVector &x: The converged value of the solver. 
+         * :param const floatMatrix &floatArgs: The additional floating-point arguments.
+         * :param const intMatrix &intArgs: The additional integer arguments.
+         * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
+         * :param const floatType tolr: The relative tolerance
+         * :param const floatType tola: The absolute tolerance 
+         * :param const floatType alpha: The line search criteria.
+         * :param const unsigned int maxLSIterations: The maximum number of line-search iterations.
+         * :param const unsigned int homotopySteps: The number of homotopy steps which will be taken.
+         */
+
+        //Initialize the homotopy solver
+        floatType ds = 1./homotopySteps;
+        floatType s  = 0;
+        floatVector xh = x0;
+
+        //Define the homotopy residual equation
+        floatVector Rinit;
+        floatMatrix J;
+
+        //Compute the initial residual
+        errorOut error = residual(x0, floatArgs, intArgs, Rinit, J);
+
+        if (error){
+            errorOut result = new errorNode("homotopySolver", "error in initial residual calculation");
+            result->addNext(error);
+            return result;
+        }
+
+        //Define the homotopy residual
+        stdFncNLFJ homotopyResidual;
+        homotopyResidual = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+                            floatVector &r, floatMatrix &J){
+ 
+            floatVector R;
+            error = residual(x_, floatArgs_, intArgs_, R, J);
+ 
+            if (error){
+                errorOut result = new errorNode("homotopySolver::homotopyResidual", "error in residual calculation");
+                result->addNext(error);
+                return result;
+            }
+ 
+            r = R - (1 - s)*Rinit;
+ 
+            return static_cast<errorOut>(NULL);
+        };
+
+        //Begin the homotopy loop
+        for (unsigned int n=0; n<homotopySteps; n++){
+
+            //Update s
+            s += ds;
+
+            error = newtonRaphson( homotopyResidual, xh, x, floatArgs, intArgs, maxNLIterations, tolr, tola, 
+                                   alpha, maxLSIterations);
+
+            if (error){
+                errorOut result = new errorNode("homotopySolver", "error in Newton Raphson solution");
+                result->addNext(error);
+                return result;
+            }
+
+            xh = x;
+
+        }
+        
+        //Solver completed successfully
+        return NULL;
+    }
+
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result){
         /*!
          * Check whether the residual vector meets the tolerance returning a boolean.
