@@ -403,9 +403,6 @@ int testCheckLSCriteria(std::ofstream &results){
      * :param std::ofstream &results: The output file
      */
 
-    results << "testCheckLSCriteria (debug) & False\n";
-    return 1;
-
     floatVector R  = {1, 2, 3, 4, 5, 6};
     floatVector Rp = {2, 3, 4, 5, 6, 7};
     bool result;
