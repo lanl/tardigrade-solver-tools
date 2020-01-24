@@ -8,18 +8,20 @@ source /apps/intel2016/bin/ifortvars.sh -arch intel64 -platform linux
 # Have to do this after sourcing ifortvars.sh becuase the shell script has unbound variables
 set -Eeuxo pipefail
 
-# Source common shell script variables
-source set_vars.sh
-
 # Clone and update dependencies
 source update_dependencies.sh
 
-# Build the repo tests
+# Build repo tests
 cd ${workdir}/src/cpp/tests/${repo}/
 if [ -f ${repo}.o ]; then
     make clean
 fi
 make
 
-# Run the repo tests
+# Perform repo tests
 ./test_${repo}
+
+# Check for failed tests
+if grep -i false results.tex; then
+    exit 1
+fi
