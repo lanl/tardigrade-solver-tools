@@ -95,10 +95,6 @@ errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMat
         return new errorNode("nlFnx1", "x must have a size of 2");
     }
 
-    floatType x0 = -1;
-    floatType y0 = 5.6;
-    floatType z0 = 9.3;
-
     residual = {(x[0] - 1)*(x[0] - 7)*x[1], (x[1] - 1)*(x[0] - 3)*x[2], x[0]*x[1]*x[2]};
     jacobian = {{(x[0] - 7)*x[1] + (x[0] - 1)*x[1], (x[0] - 1)*(x[0] - 7), 0},
                 {   (x[1] - 1)*x[2],    (x[0] - 3)*x[2], (x[1] - 1)*(x[0] - 3)},

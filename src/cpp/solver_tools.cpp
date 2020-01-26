@@ -69,8 +69,8 @@ namespace solverTools{
         Rp = R;
 
         //Initialize variables required for the iteration loop
-        int nNLIterations = 0;
-        int nLSIterations = 0;
+        unsigned int nNLIterations = 0;
+        unsigned int nLSIterations = 0;
         float lambda = 1;
         bool converged, lsCheck;
         checkTolerance(R, tol, converged);
