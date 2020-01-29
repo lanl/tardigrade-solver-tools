@@ -16,7 +16,7 @@ namespace solverTools{
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations){
         /*!
@@ -33,7 +33,8 @@ namespace solverTools{
          * 
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
-         * :param floatVector &x: The converged value of the solver. 
+         * :param floatVector &x: The converged value of the solver.
+         * :param bool &convergeFlag: A flag which indicates whether the solver converged.
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
@@ -131,6 +132,7 @@ namespace solverTools{
             }
 
             if (!lsCheck){
+                convergeFlag = false;
                 return new errorNode("newtonRaphson", "The line-search failed to converge.");
             }
             else{
@@ -146,12 +148,14 @@ namespace solverTools{
 
         //Check if the solution converged
         if (!converged){
+            convergeFlag = false;
             return new errorNode("newtonRaphson", "The Newton-Raphson solver failed to converge.");
         }
         else{
             //Update x
             x = x0 + dx;
             //Solver completed successfully
+            convergeFlag = true;
             return NULL;        
         }
     }
@@ -159,7 +163,7 @@ namespace solverTools{
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations, const unsigned int homotopySteps){
         /*!
@@ -178,7 +182,8 @@ namespace solverTools{
          * 
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
-         * :param floatVector &x: The converged value of the solver. 
+         * :param floatVector &x: The converged value of the solver.
+         * :param bool &convergeFlag: A flag which indicates whether the solver converged.
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
@@ -232,7 +237,7 @@ namespace solverTools{
             //Update s
             s += ds;
 
-            error = newtonRaphson( homotopyResidual, xh, x, floatArgs, intArgs, maxNLIterations, tolr, tola, 
+            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, floatArgs, intArgs, maxNLIterations, tolr, tola, 
                                    alpha, maxLSIterations);
 
             if (error){
