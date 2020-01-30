@@ -36,14 +36,14 @@ namespace solverTools{
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0, 
-                            floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, 
+                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs, 
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5);
 
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const unsigned int homotopySteps=10);
 

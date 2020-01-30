@@ -228,11 +228,12 @@ int testNewtonRaphson(std::ofstream &results){
     //The first test
     floatVector x0 = {1.5, 6};
     floatVector x;
+    bool converged;
 
     solverTools::stdFncNLFJ func;
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
     
-    errorOut error = solverTools::newtonRaphson(func, x0, x, {}, {});
+    errorOut error = solverTools::newtonRaphson(func, x0, x, converged, {}, {});
 
     if (error){
         error->print();
@@ -259,7 +260,7 @@ int testNewtonRaphson(std::ofstream &results){
     x0 = {1, 1, 1};
 
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
-    error = solverTools::newtonRaphson(func, x0, x, {}, {});
+    error = solverTools::newtonRaphson(func, x0, x, converged, {}, {});
 
     if (error){
         error->print();
@@ -284,7 +285,7 @@ int testNewtonRaphson(std::ofstream &results){
     x0 = {3};
     
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
-    error = solverTools::newtonRaphson(func, x0, x, {}, {});
+    error = solverTools::newtonRaphson(func, x0, x, converged, {}, {});
 
     if (error){
         error->print();
@@ -433,11 +434,12 @@ int testHomotopySolver(std::ofstream &results){
     //The first test
     floatVector x0 = {1.5, 6};
     floatVector x;
+    bool converged;
 
     solverTools::stdFncNLFJ func;
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
     
-    errorOut error = solverTools::homotopySolver(func, x0, x, {}, {});
+    errorOut error = solverTools::homotopySolver(func, x0, x, converged, {}, {});
 
     if (error){
         error->print();
@@ -467,7 +469,7 @@ int testHomotopySolver(std::ofstream &results){
     x0 = {1, 1, 1};
 
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
-    error = solverTools::homotopySolver(func, x0, x, {}, {});
+    error = solverTools::homotopySolver(func, x0, x, converged, {}, {});
 
     if (error){
         error->print();
@@ -492,7 +494,7 @@ int testHomotopySolver(std::ofstream &results){
     x0 = {3};
     
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
-    error = solverTools::homotopySolver(func, x0, x, {}, {});
+    error = solverTools::homotopySolver(func, x0, x, converged, {}, {});
 
     if (error){
         error->print();
