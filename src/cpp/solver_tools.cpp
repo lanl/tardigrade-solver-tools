@@ -14,9 +14,10 @@
 namespace solverTools{
 
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &) > residual,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts, 
+                            const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations){
         /*!
@@ -30,11 +31,15 @@ namespace solverTools{
          * :param const intMatrix &intArgs: Additional integer arguments to the residual
          * :param floatVector &residual: The residual vector
          * :param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
+         * :param floatMatrix &floatOuts: Additional floating point values to return.
+         * :param intMatrix &intOuts: Additional integer values to return.
          * 
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
          * :param floatVector &x: The converged value of the solver.
          * :param bool &convergeFlag: A flag which indicates whether the solver converged.
+         * :param floatMatrix &floatOuts: Additional floating point values to return.
+         * :param intMatrix &intOuts: Additional integer values to return.
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
@@ -50,7 +55,7 @@ namespace solverTools{
         floatVector R, Rp;
         floatMatrix J;
 
-        errorOut error = residual(x0 + dx, floatArgs, intArgs, R, J);
+        errorOut error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
         if (error){
             errorOut result = new errorNode("newtonRaphson", "Error in computation of initial residual");
@@ -90,7 +95,7 @@ namespace solverTools{
             }
 
             //Compute the new residual
-            error = residual(x0 + dx, floatArgs, intArgs, R, J);
+            error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
             if (error){
                 errorOut result = new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration"); 
@@ -116,7 +121,7 @@ namespace solverTools{
                 dx += lambda * ddx;
 
                 //Compute the new residual
-                error = residual(x0 + dx, floatArgs, intArgs, R, J);
+                error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
                 if (error){
                     errorOut result = new errorNode("newtonRaphson", "Error in line-search");
@@ -161,9 +166,10 @@ namespace solverTools{
     }
 
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &) > residual,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts, 
+                            const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations, const unsigned int homotopySteps){
         /*!
@@ -179,11 +185,15 @@ namespace solverTools{
          * :param const intMatrix &intArgs: Additional integer arguments to the residual
          * :param floatVector &residual: The residual vector
          * :param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
+         * :param floatMatrix &floatOuts: Additional floating point values to return.
+         * :param intMatrix &intOuts: Additional integer values to return.
          * 
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
          * :param floatVector &x: The converged value of the solver.
          * :param bool &convergeFlag: A flag which indicates whether the solver converged.
+         * :param floatMatrix &floatOuts: Additional floating point values to return.
+         * :param intMatrix &intOuts: Additional integer values to return.
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
@@ -204,7 +214,7 @@ namespace solverTools{
         floatMatrix J;
 
         //Compute the initial residual
-        errorOut error = residual(x0, floatArgs, intArgs, Rinit, J);
+        errorOut error = residual(x0, floatArgs, intArgs, Rinit, J, floatOuts, intOuts);
 
         if (error){
             errorOut result = new errorNode("homotopySolver", "error in initial residual calculation");
@@ -215,10 +225,10 @@ namespace solverTools{
         //Define the homotopy residual
         stdFncNLFJ homotopyResidual;
         homotopyResidual = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
-                            floatVector &r, floatMatrix &J){
+                            floatVector &r, floatMatrix &J, floatMatrix &fO, intMatrix &iO){
  
             floatVector R;
-            error = residual(x_, floatArgs_, intArgs_, R, J);
+            error = residual(x_, floatArgs_, intArgs_, R, J, fO, iO);
  
             if (error){
                 errorOut result = new errorNode("homotopySolver::homotopyResidual", "error in residual calculation");
@@ -237,7 +247,8 @@ namespace solverTools{
             //Update s
             s += ds;
 
-            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, floatArgs, intArgs, maxNLIterations, tolr, tola, 
+            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, floatOuts, intOuts, 
+                                   floatArgs, intArgs, maxNLIterations, tolr, tola, 
                                    alpha, maxLSIterations);
 
             if (error){
@@ -359,7 +370,7 @@ namespace solverTools{
     errorOut checkJacobian( stdFncNLFJ residual,
                             const floatVector &x0,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps,
-                            const floatType tolr, const floatType tola){
+                            const floatType tolr, const floatType tola, const bool suppressOutput){
         /*!
          * Check if the jacobian is correct. Used as a debugging tool.
          * 
@@ -368,6 +379,9 @@ namespace solverTools{
          * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
          * :param const intMatrix &intArgs: Additional integer arguments to the residual
          * :param floatVector &residual: The residual vector
+         * :param floatMatrix &jacobian: The jacobian matrix
+         * :param floatMatrix &floatOuts: Additional returning floating point values.
+         * :param int Matrix &intOuts: Additional return integer values.
          * 
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
@@ -377,6 +391,7 @@ namespace solverTools{
          * :param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
          * :param const floatType tolr: The relative tolerance
          * :param const floatType tola: The absolute tolerance
+         * :param const bool suppressOutput: Suppress the output to the terminal
          */
 
         //Wrap the residual function to hide the jacobian
@@ -384,7 +399,9 @@ namespace solverTools{
         residual_ = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_, 
                             floatVector &r){
             floatMatrix Jtmp;
-            return residual(x_, floatArgs_, intArgs_, r, Jtmp);
+            floatMatrix fO;
+            intMatrix iO;
+            return residual(x_, floatArgs_, intArgs_, r, Jtmp, fO, iO);
         };
 
         //Compute the finite difference jacobian
@@ -400,11 +417,13 @@ namespace solverTools{
         //Compute the analytic jacobian
         floatVector rtmp;
         floatMatrix analyticJ;
-        residual(x0, floatArgs, intArgs, rtmp, analyticJ);
+        floatMatrix floatOuts;
+        intMatrix intOuts;
+        residual(x0, floatArgs, intArgs, rtmp, analyticJ, floatOuts, intOuts);
 
         isGood = vectorTools::fuzzyEquals(finiteDifferenceJ, analyticJ, tolr, tola);
 
-        if (!isGood){
+        if ((!isGood) && (!suppressOutput)){
             std::cout << "Jacobian is not within tolerance.\nError:\n";
             vectorTools::print(analyticJ - finiteDifferenceJ);
         }
