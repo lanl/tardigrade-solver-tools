@@ -40,7 +40,8 @@ struct cerr_redirect{
 };
 
 errorOut nlFxn1(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual, floatMatrix &jacobian){
+                floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
+                intMatrix &intOuts){
     /*!
      * A non-linear function for use in testing the solver.
      * 
@@ -49,6 +50,8 @@ errorOut nlFxn1(const floatVector &x, const floatMatrix &floatArgs, const intMat
      * :param const intMatrix &intArgs: Integer arguments to the function
      * :param floatVector &residual: The residual vector output.
      * :param floatMatrix &jacobian: The jacobian output.
+     * :param floatMatrix &floatOuts: Additional floating point outputs.
+     * :param intMatrix &intOuts: Additional integer outputs.
      */
 
     if (x.size() != 2){
@@ -60,6 +63,9 @@ errorOut nlFxn1(const floatVector &x, const floatMatrix &floatArgs, const intMat
 
     residual = {x[0] - x0, x[1] - y0};
     jacobian = {{1, 0}, {0, 1}};
+
+    floatOuts = {{-1}, {-1, -2, -3}, {4, 5, 6}};
+    intOuts = {{1, 2, 8}};
 
     return NULL;
 }
@@ -76,11 +82,14 @@ errorOut nlFxn1(const floatVector &x, const floatMatrix &floatArgs, const intMat
      */
 
     floatMatrix Jtmp;
-    return nlFxn1(x, floatArgs, intArgs, residual, Jtmp);
+    floatMatrix fO;
+    intMatrix iO;
+    return nlFxn1(x, floatArgs, intArgs, residual, Jtmp, fO, iO);
 }
 
 errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual, floatMatrix &jacobian){
+                floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
+                intMatrix &intOuts){
     /*!
      * A non-linear function for use in testing the solver.
      * 
@@ -89,6 +98,8 @@ errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMat
      * :param const intMatrix &intArgs: Integer arguments to the function
      * :param floatVector &residual: The residual vector output.
      * :param floatMatrix &jacobian: The jacobian output.
+     * :param floatMatrix &floatOuts: Additional floating point outputs.
+     * :param intMatrix &intOuts: Additional integer outputs.
      */
 
     if (x.size() != 3){
@@ -100,6 +111,9 @@ errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMat
                 {   (x[1] - 1)*x[2],    (x[0] - 3)*x[2], (x[1] - 1)*(x[0] - 3)},
                 {   x[1]*x[2],    x[0]*x[2], x[0]*x[1]}};
 
+    floatOuts = {{-1}, {-1, -2, -3}, {4, 5, 6}};
+    intOuts = {{1, 2, 8}};
+
     return NULL;
 }
 
@@ -115,11 +129,14 @@ errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMat
      */
 
     floatMatrix Jtmp;
-    return nlFxn2(x, floatArgs, intArgs, residual, Jtmp); 
+    floatMatrix fO;
+    intMatrix iO;
+    return nlFxn2(x, floatArgs, intArgs, residual, Jtmp, fO, iO); 
 }
 
 errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual, floatMatrix &jacobian){
+                floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
+                intMatrix &intOuts){
     /*!
      * A non-linear function for use in testing the solver which will 
      * require the use of the line-search algorithm.
@@ -129,10 +146,14 @@ errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMat
      * :param const intMatrix &intArgs: Integer arguments to the function
      * :param floatVector &residual: The residual vector output.
      * :param floatMatrix &jacobian: The jacobian output.
+     * :param floatMatrix &floatOuts: Additional floating point outputs.
+     * :param intMatrix &intOuts: Additional integer outputs.
      */
 
     residual = {std::exp(-x[0]) - 1};
     jacobian = {{-std::exp(-x[0])}};
+    floatOuts = {{-1}, {-1, -2, -3}, {4, 5, 6}};
+    intOuts = {{1, 2, 8}};
     return NULL;
 }
 
@@ -148,7 +169,9 @@ errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMat
      * :param floatVector &residual: The residual vector output.
      */
     floatMatrix Jtmp;
-    return nlFxn3(x, floatArgs, intArgs, residual, Jtmp);
+    floatMatrix fO;
+    intMatrix iO;
+    return nlFxn3(x, floatArgs, intArgs, residual, Jtmp, fO, iO);
 }
 
 
@@ -232,8 +255,10 @@ int testNewtonRaphson(std::ofstream &results){
 
     solverTools::stdFncNLFJ func;
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
-    
-    errorOut error = solverTools::newtonRaphson(func, x0, x, converged, {}, {});
+
+    floatMatrix floatOut;
+    intMatrix intOut;    
+    errorOut error = solverTools::newtonRaphson(func, x0, x, converged, floatOut, intOut, {}, {});
 
     if (error){
         error->print();
@@ -243,7 +268,9 @@ int testNewtonRaphson(std::ofstream &results){
 
     floatVector Rtmp;
     floatMatrix Jtmp;
-    error = nlFxn1(x, {}, {}, Rtmp, Jtmp);
+    floatMatrix fO;
+    intMatrix iO;
+    error = nlFxn1(x, {}, {}, Rtmp, Jtmp, fO, iO);
 
     if (error){
         error->print();
@@ -258,9 +285,13 @@ int testNewtonRaphson(std::ofstream &results){
 
     //The second test
     x0 = {1, 1, 1};
+    floatOut.clear();
+    intOut.clear();
+    fO.clear();
+    iO.clear();
 
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
-    error = solverTools::newtonRaphson(func, x0, x, converged, {}, {});
+    error = solverTools::newtonRaphson(func, x0, x, converged, floatOut, intOut, {}, {});
 
     if (error){
         error->print();
@@ -268,7 +299,7 @@ int testNewtonRaphson(std::ofstream &results){
         return 1;
     }
 
-    error = nlFxn2(x, {}, {}, Rtmp, Jtmp);
+    error = nlFxn2(x, {}, {}, Rtmp, Jtmp, fO, iO);
 
     if (error){
         error->print();
@@ -283,9 +314,13 @@ int testNewtonRaphson(std::ofstream &results){
 
     //The third test
     x0 = {3};
+    floatOut.clear();
+    intOut.clear();
+    fO.clear();
+    iO.clear();
     
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
-    error = solverTools::newtonRaphson(func, x0, x, converged, {}, {});
+    error = solverTools::newtonRaphson(func, x0, x, converged, floatOut, intOut, {}, {});
 
     if (error){
         error->print();
@@ -319,7 +354,9 @@ int testFiniteDifference(std::ofstream &results){
 
     floatVector Rtmp;
     floatMatrix result;
-    nlFxn1(x0, {}, {}, Rtmp, result);
+    floatMatrix floatOuts;
+    intMatrix intOuts;
+    nlFxn1(x0, {}, {}, Rtmp, result, floatOuts, intOuts);
 
     if (!vectorTools::fuzzyEquals(J, result)){
         results << "testFiniteDifference (test 1) & False\n";
@@ -328,9 +365,11 @@ int testFiniteDifference(std::ofstream &results){
 
     //The second test
     x0 = {1, 1, 1};
+    floatOuts.clear();
+    intOuts.clear();
     func = static_cast<solverTools::NonLinearFunction>(nlFxn2);
     solverTools::finiteDifference(func, x0, J, {}, {});
-    nlFxn2(x0, {}, {}, Rtmp, result);
+    nlFxn2(x0, {}, {}, Rtmp, result, floatOuts, intOuts);
 
     if (!vectorTools::fuzzyEquals(J, result)){
         results << "testFiniteDifference (test 2) & False\n";
@@ -353,8 +392,13 @@ int testCheckJacobian(std::ofstream &results){
     solverTools::stdFncNLFJ func;
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
     bool isGood = false;
+    floatType eps = 1e-6;
+    floatType tolr = 1e-6;
+    floatType tola = 1e-6;
+    bool suppressOutput = true;
+
     floatVector x0 = {0, 0};
-    errorOut error = solverTools::checkJacobian(func, x0, {}, {}, isGood);
+    errorOut error = solverTools::checkJacobian(func, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
 
     if (error){
         error->print();
@@ -370,13 +414,13 @@ int testCheckJacobian(std::ofstream &results){
     //The second test
     solverTools::stdFncNLFJ badfunc;
     badfunc = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
-                            floatVector &r, floatMatrix &j){
-        errorOut e = func(x_, floatArgs_, intArgs_, r, j);
+                            floatVector &r, floatMatrix &j, floatMatrix &fO, intMatrix &iO){
+        errorOut e = func(x_, floatArgs_, intArgs_, r, j, fO, iO);
         j[0][1] = 0.1;
         return e;
     }; 
 
-    error = solverTools::checkJacobian(badfunc, x0, {}, {}, isGood);
+    error = solverTools::checkJacobian(badfunc, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
 
     if (error){
         error->print();
@@ -435,11 +479,13 @@ int testHomotopySolver(std::ofstream &results){
     floatVector x0 = {1.5, 6};
     floatVector x;
     bool converged;
+    floatMatrix floatOuts;
+    intMatrix intOuts;
 
     solverTools::stdFncNLFJ func;
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
     
-    errorOut error = solverTools::homotopySolver(func, x0, x, converged, {}, {});
+    errorOut error = solverTools::homotopySolver(func, x0, x, converged, floatOuts, intOuts, {}, {});
 
     if (error){
         error->print();
@@ -447,11 +493,11 @@ int testHomotopySolver(std::ofstream &results){
         return 1;
     }
 
-    std::cout << "x1: "; vectorTools::print(x);
-
     floatVector Rtmp;
     floatMatrix Jtmp;
-    error = nlFxn1(x, {}, {}, Rtmp, Jtmp);
+    floatMatrix fO;
+    intMatrix iO;
+    error = nlFxn1(x, {}, {}, Rtmp, Jtmp, fO, iO);
 
     if (error){
         error->print();
@@ -467,9 +513,13 @@ int testHomotopySolver(std::ofstream &results){
 
     //The second test
     x0 = {1, 1, 1};
+    floatOuts.clear();
+    intOuts.clear();
+    fO.clear();
+    iO.clear();
 
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
-    error = solverTools::homotopySolver(func, x0, x, converged, {}, {});
+    error = solverTools::homotopySolver(func, x0, x, converged, floatOuts, intOuts, {}, {});
 
     if (error){
         error->print();
@@ -477,7 +527,7 @@ int testHomotopySolver(std::ofstream &results){
         return 1;
     }
 
-    error = nlFxn2(x, {}, {}, Rtmp, Jtmp);
+    error = nlFxn2(x, {}, {}, Rtmp, Jtmp, fO, iO);
 
     if (error){
         error->print();
@@ -492,9 +542,13 @@ int testHomotopySolver(std::ofstream &results){
 
     //The third test
     x0 = {3};
+    floatOuts.clear();
+    intOuts.clear();
+    fO.clear();
+    iO.clear();
     
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
-    error = solverTools::homotopySolver(func, x0, x, converged, {}, {});
+    error = solverTools::homotopySolver(func, x0, x, converged, floatOuts, intOuts, {}, {});
 
     if (error){
         error->print();

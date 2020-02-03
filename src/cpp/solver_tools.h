@@ -30,20 +30,24 @@ namespace solverTools{
 
     typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
-    typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&);
-    typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&) > stdFncNLFJ;
+    typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&, 
+                                                     floatMatrix &, intMatrix &);
+    typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, 
+                                    floatMatrix&, floatMatrix&, intMatrix&) > stdFncNLFJ;
 
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &) > residual,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0, 
-                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs, 
+                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts, 
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, 
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5);
 
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &) > residual,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const unsigned int homotopySteps=10);
 
@@ -58,7 +62,7 @@ namespace solverTools{
     errorOut checkJacobian( stdFncNLFJ residual,
                             const floatVector &x0,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps=1e-6,
-                            const floatType tolr=1e-6, const floatType tola=1e-6);
+                            const floatType tolr=1e-6, const floatType tola=1e-6, const bool suppressOutput = false);
 
 }
 
