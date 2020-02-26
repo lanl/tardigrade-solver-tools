@@ -81,6 +81,8 @@ namespace solverTools{
         bool converged, lsCheck;
         checkTolerance(R, tol, converged);
         unsigned int rank;        
+        floatMatrix oldFloatOuts = floatOuts; //Copy the float outs
+        intMatrix   oldIntOuts   = intOuts;   //Copy the int outs
 
         //Begin the iteration loop
         while ((!converged) && (nNLIterations<maxNLIterations)){
@@ -120,6 +122,10 @@ namespace solverTools{
                 //Update dx
                 dx += lambda * ddx;
 
+                //Reset floatOuts and intOuts to the previously converged values
+                floatOuts = oldFloatOuts;
+                intOuts   = oldIntOuts;
+
                 //Compute the new residual
                 error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
@@ -142,6 +148,8 @@ namespace solverTools{
             }
             else{
                 Rp = R;
+                oldFloatOuts = floatOuts;
+                oldIntOuts   = intOuts;
             }
 
             //Check if the solution is converged
