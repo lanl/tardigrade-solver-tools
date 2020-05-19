@@ -1,6 +1,6 @@
-cmake_minimum_required (VERSION 3.14)
-
 project (solver_tools)
+
+cmake_minimum_required (VERSION 3.14)
 
 # Find eigen
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
@@ -13,4 +13,4 @@ add_subdirectory ("docs")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-std=gnu++11 -Wall -ansi -pedantic -O3 -I. -fmax-errors=5")
+set(CMAKE_CXX_FLAGS "-Wall -ansi -pedantic -O3 -I. -fmax-errors=5")
