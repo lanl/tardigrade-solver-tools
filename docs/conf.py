@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'vector_tools'
+project = 'solver_tools'
 copyright = '2020, Nathan A. Miller and Kyle A. Brindley'
 author = 'Nathan A. Miller and Kyle A. Brindley'
 
@@ -33,8 +33,8 @@ release = '0.0.1'
 extensions = ["breathe"]
 
 # Breathe Configuration
-breathe_projects = {"vector_tools": "../build/docs/doxygen/xml"}
-breathe_default_project = "vector_tools"
+breathe_projects = {"solver_tools": "../build/docs/doxygen/xml"}
+breathe_default_project = "solver_tools"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

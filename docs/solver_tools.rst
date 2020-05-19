@@ -1,21 +1,21 @@
 ===============
-vector_tools API
+solver_tools API
 ===============
 
 .. toctree::
     :maxdepth: 2
 
 ***************
-vector_tools.cpp
+solver_tools.cpp
 ***************
 
-.. doxygenfile:: vector_tools.cpp
-.. doxygenclass:: vectorTools::Node
+.. doxygenfile:: solver_tools.cpp
+.. doxygenclass:: solverTools::Node
    :members:
    :undoc-members:
 
 *************
-vector_tools.h
+solver_tools.h
 *************
 
-.. doxygenfile:: vector_tools.h
+.. doxygenfile:: solver_tools.h
