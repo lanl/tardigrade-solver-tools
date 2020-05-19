@@ -41,15 +41,15 @@ breathe.
 
 The documentation was built with these [microsoft developer blog
 instructions](https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/)
-for c++ projects. The one caveat is the ``vector_tools`` project is used as a
+for c++ projects. The one caveat is the ``solver_tools`` project is used as a
 header only project, so no libraries are built.
 
 To build the documentation run the following from the project root directory,
-``vector_tools``:
+``solver_tools``:
 
 ```
 $ pwd
-path/to/vector_tools
+path/to/solver_tools
 $ mkdir build
 $ cd build
 $ cmake3 ..

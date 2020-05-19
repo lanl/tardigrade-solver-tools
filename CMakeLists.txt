@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.14)
 
-project (vector_tools)
+project (solver_tools)
 
 # Find eigen
 set(EIGEN3_ROOT "../../eigen_install")
