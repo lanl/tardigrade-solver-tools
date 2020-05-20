@@ -6,15 +6,17 @@
 
 # Set hard coded relative path
 set(ERROR_TOOLS_RELATIVE_PATH "${PROJECT_SOURCE_DIR}/../error_tools/src/cpp")
+set(ERROR_TOOLS_ABS_PATH
+    /Users/projects/kbrindley/e13repos/constitutive_models/error_tools/src/cpp)
 
 # Include dir
 find_path(ERROR_TOOLS_INCLUDE_DIR
           NAMES error_tools.h
-          PATHS ${ERROR_TOOLS_RELATIVE_PATH})
+          PATHS ${ERROR_TOOLS_RELATIVE_PATH} ${ERROR_TOOLS_ABS_PATH})
 
 find_library(ERROR_TOOLS_LIBRARY
              NAMES error_tools
-             PATHS ${ERROR_TOOLS_RELATIVE_PATH})
+             PATHS ${ERROR_TOOLS_RELATIVE_PATH} ${ERROR_TOOLS_ABS_PATH})
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set ERROR_TOOLS_FOUND to TRUE
