@@ -13,4 +13,3 @@ add_subdirectory ("docs")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-Wall -ansi -pedantic -O3 -I. -fmax-errors=5")
