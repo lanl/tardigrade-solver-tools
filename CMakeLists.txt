@@ -9,8 +9,8 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 # Find related, but external, projects
-find_package (VectorTools REQUIRED)
-find_package (ErrorTools REQUIRED)
+find_package (VECTOR_TOOLS REQUIRED)
+find_package (ERROR_TOOLS REQUIRED)
 
 # Add project source directories
 add_subdirectory ("src/cpp")
