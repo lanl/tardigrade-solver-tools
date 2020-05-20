@@ -4,7 +4,9 @@ target_include_directories(solver_tools PUBLIC .)
 set_target_properties(solver_tools PROPERTIES CXX_STANDARD 11)
 
 target_link_libraries (solver_tools Eigen3::Eigen
-                       ${VECTOR_TOOLS_LIBRARIES} ${ERROR_TOOLS_LIBRARIES})
+                       "${VECTOR_TOOLS_LIBRARY}" "${ERROR_TOOLS_LIBRARY}")
+target_include_directories (solver_tools
+                            "${VECTOR_TOOLS_LIBRARY}" "${ERROR_TOOLS_LIBRARY}")
 
 target_compile_options(solver_tools PUBLIC
                        -Wall -ansi -pedantic -O3 -fmax-errors=5)
