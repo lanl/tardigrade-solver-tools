@@ -29,29 +29,103 @@ directory as this repo.
 The project is transitioning from Make to Cmake. For cmake builds, Eigen must be
 "installed" following the ``eigen/INSTALL`` instructions. The Eigen dependence
 is easiest to resolve if eigen is installed in the default install directory.
+However, if you don't have admin privileges, you can also insall Eigen to your
+home directory in ``~/include`` (or possibly in ``~/.local/include``, but this
+is untested by this project).
+
+#### Non-admin Eigen install for solver_tools
+[Reference](https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed)
+
+```
+# sstelmo
+ssh -X sstelmo.lanl.gov
+# source Intel compilers
+source /apps/intel2016/bin/ifortvars.sh -arch intel64 -platform linux
+# Create personal include file directory
+$ pwd
+/home/$USER
+$ mkdir include
+# Move to repository directory
+$ cd /preferred/path/to/repos
+# Example
+$ pwd
+/projects/$USER/e13repos
+# Clone eigen
+$ git clone https://gitlab.com/libeigen/eigen.git
+$ cd eigen
+$ git checkout 3.3.7
+# Build eigen
+$ mkdir build
+$ cd build
+$ export CXX=$(command -v icpc)
+$ cmake3 .. -DCMAKE_INSTALL_PREFIX=/home/$USER
+$ make install
+```
 
 ---
 
 ---
 
-## Documentation
+## Building the documentation
 
-The documentation for this project is built with cmake, sphinx, doxygen, and
-breathe.
+> **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
+> API is much more useful
 
-The documentation was built with these [microsoft developer blog
-instructions](https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/)
-for c++ projects. The one caveat is the ``solver_tools`` project is used as a
-header only project, so no libraries are built.
+A build script has been created for convenience, ``new_build.sh``. It will build
+everything including the library binary, the test binary, and the documentation.
+This is the same build script used by ``jenkins_build.sh`` for CI builds and
+testing.
 
-To build the documentation run the following from the project root directory,
-``solver_tools``:
+### sstelmo
+
+1) Activate the correct python environment
+
+```
+$ source /apps/anaconda/5.0.1-python-3.6/bin/activate
+$ source activate /projects/python/release-cpp
+```
+
+2) Create the build directory and move there
 
 ```
 $ pwd
-path/to/solver_tools
-$ mkdir build
-$ cd build
+/path/to/solver_tools/
+$ mkdir build/
+$ cd build/
+```
+
+3) Run cmake3 configuration
+
+```
+$ pwd
+/path/to/solver_tools/build/
 $ cmake3 ..
-$ cmake --build docs
+```
+
+4) Build the docs
+
+```
+$ cmake3 --build docs
+```
+
+5) Documentation builds to: 
+
+```
+solver_tools/build/docs/sphinx/index.html
+```
+
+6) Display docs
+
+```
+$ pwd
+/path/to/solver_tools/build/
+firefox docs/sphinx/index.html &
+```
+
+7) While the Sphinx API is still a WIP, try the doxygen API
+
+```
+$ pwd
+/path/to/solver_tools/build/
+firefox docs/doxygen/html/index.html &
 ```
