@@ -26,27 +26,27 @@ namespace solverTools{
          * residual function.
          *
          * The residual function should have inputs of the form
-         * :param const floatVector &x: A vector of the variable to be solved.
-         * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
-         * :param const intMatrix &intArgs: Additional integer arguments to the residual
-         * :param floatVector &residual: The residual vector
-         * :param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
-         * :param floatMatrix &floatOuts: Additional floating point values to return.
-         * :param intMatrix &intOuts: Additional integer values to return.
+         * \param const floatVector &x: A vector of the variable to be solved.
+         * \param const floatMatrix &floatArgs: Additional floating point arguments to residual
+         * \param const intMatrix &intArgs: Additional integer arguments to the residual
+         * \param floatVector &residual: The residual vector
+         * \param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param floatMatrix &floatOuts: Additional floating point values to return.
+         * \param intMatrix &intOuts: Additional integer values to return.
          *
          * The main routine accepts the following parameters:
-         * :param const floatVector &x0: The initial iterate of x.
-         * :param floatVector &x: The converged value of the solver.
-         * :param bool &convergeFlag: A flag which indicates whether the solver converged.
-         * :param floatMatrix &floatOuts: Additional floating point values to return.
-         * :param intMatrix &intOuts: Additional integer values to return.
-         * :param const floatMatrix &floatArgs: The additional floating-point arguments.
-         * :param const intMatrix &intArgs: The additional integer arguments.
-         * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
-         * :param const floatType tolr: The relative tolerance
-         * :param const floatType tola: The absolute tolerance
-         * :param const floatType alpha: The line search criteria.
-         * :param const unsigned int maxLSIterations: The maximum number of line-search iterations.
+         * \param const floatVector &x0: The initial iterate of x.
+         * \param floatVector &x: The converged value of the solver.
+         * \param bool &convergeFlag: A flag which indicates whether the solver converged.
+         * \param floatMatrix &floatOuts: Additional floating point values to return.
+         * \param intMatrix &intOuts: Additional integer values to return.
+         * \param const floatMatrix &floatArgs: The additional floating-point arguments.
+         * \param const intMatrix &intArgs: The additional integer arguments.
+         * \param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
+         * \param const floatType tolr: The relative tolerance
+         * \param const floatType tola: The absolute tolerance
+         * \param const floatType alpha: The line search criteria.
+         * \param const unsigned int maxLSIterations: The maximum number of line-search iterations.
          */
 
         //Compute the initial residual and jacobian
@@ -188,28 +188,28 @@ namespace solverTools{
          * more difficult problem.
          *
          * The residual function should have inputs of the form
-         * :param const floatVector &x: A vector of the variable to be solved.
-         * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
-         * :param const intMatrix &intArgs: Additional integer arguments to the residual
-         * :param floatVector &residual: The residual vector
-         * :param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
-         * :param floatMatrix &floatOuts: Additional floating point values to return.
-         * :param intMatrix &intOuts: Additional integer values to return.
+         * \param const floatVector &x: A vector of the variable to be solved.
+         * \param const floatMatrix &floatArgs: Additional floating point arguments to residual
+         * \param const intMatrix &intArgs: Additional integer arguments to the residual
+         * \param floatVector &residual: The residual vector
+         * \param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param floatMatrix &floatOuts: Additional floating point values to return.
+         * \param intMatrix &intOuts: Additional integer values to return.
          *
          * The main routine accepts the following parameters:
-         * :param const floatVector &x0: The initial iterate of x.
-         * :param floatVector &x: The converged value of the solver.
-         * :param bool &convergeFlag: A flag which indicates whether the solver converged.
-         * :param floatMatrix &floatOuts: Additional floating point values to return.
-         * :param intMatrix &intOuts: Additional integer values to return.
-         * :param const floatMatrix &floatArgs: The additional floating-point arguments.
-         * :param const intMatrix &intArgs: The additional integer arguments.
-         * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
-         * :param const floatType tolr: The relative tolerance
-         * :param const floatType tola: The absolute tolerance
-         * :param const floatType alpha: The line search criteria.
-         * :param const unsigned int maxLSIterations: The maximum number of line-search iterations.
-         * :param const unsigned int homotopySteps: The number of homotopy steps which will be taken.
+         * \param const floatVector &x0: The initial iterate of x.
+         * \param floatVector &x: The converged value of the solver.
+         * \param bool &convergeFlag: A flag which indicates whether the solver converged.
+         * \param floatMatrix &floatOuts: Additional floating point values to return.
+         * \param intMatrix &intOuts: Additional integer values to return.
+         * \param const floatMatrix &floatArgs: The additional floating-point arguments.
+         * \param const intMatrix &intArgs: The additional integer arguments.
+         * \param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
+         * \param const floatType tolr: The relative tolerance
+         * \param const floatType tola: The absolute tolerance
+         * \param const floatType alpha: The line search criteria.
+         * \param const unsigned int maxLSIterations: The maximum number of line-search iterations.
+         * \param const unsigned int homotopySteps: The number of homotopy steps which will be taken.
          */
 
         //Initialize the homotopy solver
@@ -277,9 +277,9 @@ namespace solverTools{
         /*!
          * Check whether the residual vector meets the tolerance returning a boolean.
          *
-         * :param const floatVector &R: The residual vector.
-         * :param const floatVector &tol: The tolerance.
-         * :param bool result: The result
+         * \param const floatVector &R: The residual vector.
+         * \param const floatVector &tol: The tolerance.
+         * \param bool result: The result
          */
 
         if (R.size() != tol.size()){
@@ -301,10 +301,10 @@ namespace solverTools{
          * Perform the check on the line-search criteria setting result to false if the new residual does not meet it.
          * l2norm(R) < (1 - alpha)* l2norm(Rp)
          *
-         * :param const floatVector &R: The trial residual.
-         * :param const floatVector &Rp: the previous acceptable residual
-         * :param bool &result: The output value.
-         * :param const floatType &alpha: The scaling factor on Rp
+         * \param const floatVector &R: The trial residual.
+         * \param const floatVector &Rp: the previous acceptable residual
+         * \param bool &result: The output value.
+         * \param const floatType &alpha: The scaling factor on Rp
          */
 
         if (R.size() != Rp.size()){
@@ -328,17 +328,17 @@ namespace solverTools{
          * wrap the function.
          *
          * The function function should have inputs of the form
-         * :param const floatVector &x: A vector of the variable to be solved.
-         * :param const floatMatrix &floatArgs: Additional floating point arguments to function
-         * :param const intMatrix &intArgs: Additional integer arguments to the function
-         * :param floatVector &value: The output value vector
+         * \param const floatVector &x: A vector of the variable to be solved.
+         * \param const floatMatrix &floatArgs: Additional floating point arguments to function
+         * \param const intMatrix &intArgs: Additional integer arguments to the function
+         * \param floatVector &value: The output value vector
          *
          * The main routine accepts the following parameters:
-         * :param const floatVector &x0: The initial iterate of x.
-         * :param floatVector &grad: The finite difference gradient.
-         * :param const floatMatrix &floatArgs: The additional floating-point arguments.
-         * :param const intMatrix &intArgs: The additional integer arguments.
-         * :param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
+         * \param const floatVector &x0: The initial iterate of x.
+         * \param floatVector &grad: The finite difference gradient.
+         * \param const floatMatrix &floatArgs: The additional floating-point arguments.
+         * \param const intMatrix &intArgs: The additional integer arguments.
+         * \param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
          */
 
         //Initialize the first value and the gradient
@@ -383,23 +383,23 @@ namespace solverTools{
          * Check if the jacobian is correct. Used as a debugging tool.
          *
          * The residual function should have inputs of the form
-         * :param const floatVector &x: A vector of the variable to be solved.
-         * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
-         * :param const intMatrix &intArgs: Additional integer arguments to the residual
-         * :param floatVector &residual: The residual vector
-         * :param floatMatrix &jacobian: The jacobian matrix
-         * :param floatMatrix &floatOuts: Additional returning floating point values.
-         * :param int Matrix &intOuts: Additional return integer values.
+         * \param const floatVector &x: A vector of the variable to be solved.
+         * \param const floatMatrix &floatArgs: Additional floating point arguments to residual
+         * \param const intMatrix &intArgs: Additional integer arguments to the residual
+         * \param floatVector &residual: The residual vector
+         * \param floatMatrix &jacobian: The jacobian matrix
+         * \param floatMatrix &floatOuts: Additional returning floating point values.
+         * \param int Matrix &intOuts: Additional return integer values.
          *
          * The main routine accepts the following parameters:
-         * :param const floatVector &x0: The initial iterate of x.
-         * :param const floatMatrix &floatArgs: The additional floating-point arguments.
-         * :param const intMatrix &intArgs: The additional integer arguments.
-         * :param bool isGood: Whether the error in the jacobian is within tolerance.
-         * :param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
-         * :param const floatType tolr: The relative tolerance
-         * :param const floatType tola: The absolute tolerance
-         * :param const bool suppressOutput: Suppress the output to the terminal
+         * \param const floatVector &x0: The initial iterate of x.
+         * \param const floatMatrix &floatArgs: The additional floating-point arguments.
+         * \param const intMatrix &intArgs: The additional integer arguments.
+         * \param bool isGood: Whether the error in the jacobian is within tolerance.
+         * \param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
+         * \param const floatType tolr: The relative tolerance
+         * \param const floatType tola: The absolute tolerance
+         * \param const bool suppressOutput: Suppress the output to the terminal
          */
 
         //Wrap the residual function to hide the jacobian
