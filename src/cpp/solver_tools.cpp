@@ -1,13 +1,13 @@
-/*!
-===============================================================================
-|                             solver_tools.cpp                                |
-===============================================================================
-| The solver tools library. Incorporates a collection of non-linear solver    |
-| tools built on top of Eigen. These tools are intended to be general enough  |
-| to solve any small-ish nonlinear problem that can be solved using a Newton  |
-| Raphson approach.                                                           |
-===============================================================================
-*/
+/**
+  *****************************************************************************
+  * \file solver_tools.cpp
+  *****************************************************************************
+  * The solver tools library. Incorporates a collection of non-linear solver
+  * tools built on top of Eigen. These tools are intended to be general enough
+  * to solve any small-ish nonlinear problem that can be solved using a Newton
+  * Raphson approach.
+  *****************************************************************************
+  */
 
 #include<solver_tools.h>
 
@@ -16,15 +16,15 @@ namespace solverTools{
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts, 
+                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations){
         /*!
-         * The main Newton-Raphson non-linear solver routine. An implementation 
-         * of a typical Newton-Raphson solver which can take an arbitrary 
+         * The main Newton-Raphson non-linear solver routine. An implementation
+         * of a typical Newton-Raphson solver which can take an arbitrary
          * residual function.
-         * 
+         *
          * The residual function should have inputs of the form
          * :param const floatVector &x: A vector of the variable to be solved.
          * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
@@ -33,7 +33,7 @@ namespace solverTools{
          * :param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
          * :param floatMatrix &floatOuts: Additional floating point values to return.
          * :param intMatrix &intOuts: Additional integer values to return.
-         * 
+         *
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
          * :param floatVector &x: The converged value of the solver.
@@ -44,7 +44,7 @@ namespace solverTools{
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
          * :param const floatType tolr: The relative tolerance
-         * :param const floatType tola: The absolute tolerance 
+         * :param const floatType tola: The absolute tolerance
          * :param const floatType alpha: The line search criteria.
          * :param const unsigned int maxLSIterations: The maximum number of line-search iterations.
          */
@@ -80,7 +80,7 @@ namespace solverTools{
         float lambda = 1;
         bool converged, lsCheck;
         checkTolerance(R, tol, converged);
-        unsigned int rank;        
+        unsigned int rank;
         floatMatrix oldFloatOuts = floatOuts; //Copy the float outs
         intMatrix   oldIntOuts   = intOuts;   //Copy the int outs
 
@@ -100,7 +100,7 @@ namespace solverTools{
             error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
             if (error){
-                errorOut result = new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration"); 
+                errorOut result = new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration");
                 result->addNext(error);
                 return result;
             }
@@ -115,7 +115,7 @@ namespace solverTools{
 
                 //Extract ddx from dx
                 dx -= lambda * ddx;
-                
+
                 //Decrement lambda. We could make this fancier but just halving it is probably okay
                 lambda *= 0.5;
 
@@ -169,24 +169,24 @@ namespace solverTools{
             x = x0 + dx;
             //Solver completed successfully
             convergeFlag = true;
-            return NULL;        
+            return NULL;
         }
     }
 
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts, 
+                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations, const unsigned int homotopySteps){
         /*!
-         * Solve a non-linear equation using a homotopy Newton solver. This method 
-         * can be successful in solving very stiff equations which other techniques 
-         * struggle to capture. It effectively breaks the solve up into sub-steps 
-         * of easier to solve equations which will eventually converge to the 
+         * Solve a non-linear equation using a homotopy Newton solver. This method
+         * can be successful in solving very stiff equations which other techniques
+         * struggle to capture. It effectively breaks the solve up into sub-steps
+         * of easier to solve equations which will eventually converge to the
          * more difficult problem.
-         * 
+         *
          * The residual function should have inputs of the form
          * :param const floatVector &x: A vector of the variable to be solved.
          * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
@@ -195,7 +195,7 @@ namespace solverTools{
          * :param floatMatrix &jacobian: The jacobian matrix of the residual w.r.t. x
          * :param floatMatrix &floatOuts: Additional floating point values to return.
          * :param intMatrix &intOuts: Additional integer values to return.
-         * 
+         *
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
          * :param floatVector &x: The converged value of the solver.
@@ -206,7 +206,7 @@ namespace solverTools{
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const unsigned int maxNLIterations: The maximum number of non-linear iterations.
          * :param const floatType tolr: The relative tolerance
-         * :param const floatType tola: The absolute tolerance 
+         * :param const floatType tola: The absolute tolerance
          * :param const floatType alpha: The line search criteria.
          * :param const unsigned int maxLSIterations: The maximum number of line-search iterations.
          * :param const unsigned int homotopySteps: The number of homotopy steps which will be taken.
@@ -234,18 +234,18 @@ namespace solverTools{
         stdFncNLFJ homotopyResidual;
         homotopyResidual = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
                             floatVector &r, floatMatrix &J, floatMatrix &fO, intMatrix &iO){
- 
+
             floatVector R;
             error = residual(x_, floatArgs_, intArgs_, R, J, fO, iO);
- 
+
             if (error){
                 errorOut result = new errorNode("homotopySolver::homotopyResidual", "error in residual calculation");
                 result->addNext(error);
                 return result;
             }
- 
+
             r = R - (1 - s)*Rinit;
- 
+
             return static_cast<errorOut>(NULL);
         };
 
@@ -255,8 +255,8 @@ namespace solverTools{
             //Update s
             s += ds;
 
-            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, floatOuts, intOuts, 
-                                   floatArgs, intArgs, maxNLIterations, tolr, tola, 
+            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, floatOuts, intOuts,
+                                   floatArgs, intArgs, maxNLIterations, tolr, tola,
                                    alpha, maxLSIterations);
 
             if (error){
@@ -268,7 +268,7 @@ namespace solverTools{
             xh = x;
 
         }
-        
+
         //Solver completed successfully
         return NULL;
     }
@@ -276,7 +276,7 @@ namespace solverTools{
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result){
         /*!
          * Check whether the residual vector meets the tolerance returning a boolean.
-         * 
+         *
          * :param const floatVector &R: The residual vector.
          * :param const floatVector &tol: The tolerance.
          * :param bool result: The result
@@ -300,7 +300,7 @@ namespace solverTools{
         /*!
          * Perform the check on the line-search criteria setting result to false if the new residual does not meet it.
          * l2norm(R) < (1 - alpha)* l2norm(Rp)
-         * 
+         *
          * :param const floatVector &R: The trial residual.
          * :param const floatVector &Rp: the previous acceptable residual
          * :param bool &result: The output value.
@@ -324,18 +324,18 @@ namespace solverTools{
                             floatMatrix &grad, const floatMatrix &floatArgs, const intMatrix &intArgs, const floatType eps){
         /*!
          * Perform a forward finite difference gradient solve of the provided function.
-         * Note that for functions that are more (or less) complex than this you may need to 
+         * Note that for functions that are more (or less) complex than this you may need to
          * wrap the function.
-         * 
+         *
          * The function function should have inputs of the form
          * :param const floatVector &x: A vector of the variable to be solved.
          * :param const floatMatrix &floatArgs: Additional floating point arguments to function
          * :param const intMatrix &intArgs: Additional integer arguments to the function
          * :param floatVector &value: The output value vector
-         * 
+         *
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
-         * :param floatVector &grad: The finite difference gradient. 
+         * :param floatVector &grad: The finite difference gradient.
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
          * :param const intMatrix &intArgs: The additional integer arguments.
          * :param const floatType eps: The perturbation. delta[i] = eps*(x0[i]) + eps
@@ -381,7 +381,7 @@ namespace solverTools{
                             const floatType tolr, const floatType tola, const bool suppressOutput){
         /*!
          * Check if the jacobian is correct. Used as a debugging tool.
-         * 
+         *
          * The residual function should have inputs of the form
          * :param const floatVector &x: A vector of the variable to be solved.
          * :param const floatMatrix &floatArgs: Additional floating point arguments to residual
@@ -390,7 +390,7 @@ namespace solverTools{
          * :param floatMatrix &jacobian: The jacobian matrix
          * :param floatMatrix &floatOuts: Additional returning floating point values.
          * :param int Matrix &intOuts: Additional return integer values.
-         * 
+         *
          * The main routine accepts the following parameters:
          * :param const floatVector &x0: The initial iterate of x.
          * :param const floatMatrix &floatArgs: The additional floating-point arguments.
@@ -404,7 +404,7 @@ namespace solverTools{
 
         //Wrap the residual function to hide the jacobian
         stdFncNLF residual_;
-        residual_ = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_, 
+        residual_ = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
                             floatVector &r){
             floatMatrix Jtmp;
             floatMatrix fO;
@@ -436,6 +436,6 @@ namespace solverTools{
             vectorTools::print(analyticJ - finiteDifferenceJ);
         }
 
-        return NULL;   
+        return NULL;
     }
 }
