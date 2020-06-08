@@ -10,9 +10,6 @@ solver_tools.cpp
 ****************
 
 .. doxygenfile:: solver_tools.cpp
-.. doxygenclass:: solverTools::Node
-   :members:
-   :undoc-members:
 
 **************
 solver_tools.h
