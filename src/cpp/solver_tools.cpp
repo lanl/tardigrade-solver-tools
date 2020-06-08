@@ -299,7 +299,7 @@ namespace solverTools{
     errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha){
         /*!
          * Perform the check on the line-search criteria setting result to false if the new residual does not meet it.
-         * l2norm(R) < (1 - alpha)* l2norm(Rp)
+         * \f$l2norm(R) < (1 - alpha)* l2norm(Rp)\f$
          *
          * \param &R: The trial residual.
          * \param &Rp: the previous acceptable residual
@@ -396,7 +396,7 @@ namespace solverTools{
          * \param &floatArgs: The additional floating-point arguments.
          * \param &intArgs: The additional integer arguments.
          * \param isGood: Whether the error in the jacobian is within tolerance.
-         * \param eps: The perturbation. delta[i] = eps*(x0[i]) + eps
+         * \param eps: The perturbation. \f$delta[i] = eps*(x0[i]) + eps\f$
          * \param tolr: The relative tolerance
          * \param tola: The absolute tolerance
          * \param suppressOutput: Suppress the output to the terminal
