@@ -11,8 +11,7 @@ set(VECTOR_TOOLS_ABS_PATH
 set(ERROR_TOOLS_ABS_PATH
     /Users/projects/kbrindley/e13repos/constitutive_models/error_tools/src/cpp)
 
-target_link_libraries(solver_tools Eigen3::Eigen
-                      "${ERROR_TOOLS_ABS_PATH}/error_tools.o")
+target_link_libraries(solver_tools Eigen3::Eigen)
 # TODO: Replace include directories with fing_package paths when they work
 #                      "${VECTOR_TOOLS_LIBRARIES}" "${ERROR_TOOLS_LIBRARIES}")
 
