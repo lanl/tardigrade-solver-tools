@@ -12,13 +12,15 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(FetchContent)
 FetchContent_Declare(
     error_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/error_tools.git
-    GIT_TAG        origin/dev
+#    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/error_tools.git
+#    GIT_TAG        origin/dev
+    GIT_REPOSITORY /Users/projects/kbrindley/e13repos/constitutive_models/error_tools
 )
 FetchContent_Declare(
     vector_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/vector_tools.git
-    GIT_TAG        origin/dev
+#    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/vector_tools.git
+#    GIT_TAG        origin/dev
+    GIT_REPOSITORY /Users/projects/kbrindley/e13repos/constitutive_models/vector_tools
 )
 FetchContent_MakeAvailable(error_tools vector_tools)
 
