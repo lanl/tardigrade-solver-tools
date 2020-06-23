@@ -14,19 +14,15 @@ FetchContent_Declare(
     error_tools
 #    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/error_tools.git
 #    GIT_TAG        origin/dev
-#    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/~kbrindley/error_tools.git
-#    GIT_TAG        origin/feature/VIP-293-error_tools-make-docs-and-tests-optional-build-options
-    GIT_REPOSITORY /Users/projects/kbrindley/e13repos/constitutive_models/error_tools
-    GIT_TAG        feature/VIP-293-error_tools-make-docs-and-tests-optional-build-options
+    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/~kbrindley/error_tools.git
+    GIT_TAG        origin/feature/VIP-293-error_tools-make-docs-and-tests-optional-build-options
 )
 FetchContent_Declare(
     vector_tools
 #    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/vector_tools.git
 #    GIT_TAG        origin/dev
-#    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/~kbrindley/vector_tools.git
-#    GIT_TAG        origin/feature/VIP-294-vector_tools-make-docs-and-tests-optional-build-options
-    GIT_REPOSITORY /Users/projects/kbrindley/e13repos/constitutive_models/vector_tools
-    GIT_TAG        feature/VIP-294-vector_tools-make-docs-and-tests-optional-build-options
+    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/~kbrindley/vector_tools.git
+    GIT_TAG        origin/feature/VIP-294-vector_tools-make-docs-and-tests-optional-build-options
 )
 FetchContent_MakeAvailable(error_tools vector_tools)
 
