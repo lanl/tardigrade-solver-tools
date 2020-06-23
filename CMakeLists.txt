@@ -29,16 +29,6 @@ FetchContent_Declare(
     GIT_TAG        feature/VIP-294-vector_tools-make-docs-and-tests-optional-build-options
 )
 FetchContent_MakeAvailable(error_tools vector_tools)
-FetchContent_GetProperties(error_tools)
-if(NOT error_tools_POPULATED)
-    FetchContent_Populate(error_tools)
-    add_subdirectory(${error_tools_SOURCE_DIR})
-endif()
-FetchContent_GetProperties(vector_tools)
-if(NOT vector_tools_POPULATED)
-    FetchContent_Populate(vector_tools)
-    add_subdirectory(${vector_tools_SOURCE_DIR})
-endif()
 
 # Add project source directories
 add_subdirectory ("src/cpp")
