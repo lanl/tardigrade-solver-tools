@@ -45,8 +45,8 @@ version = release
 extensions = ["breathe"]
 
 # Breathe Configuration
-breathe_projects = {project_name: "../build/docs/doxygen/xml"}
-breathe_default_project = project_name 
+breathe_projects = {project: "../build/docs/doxygen/xml"}
+breathe_default_project = project 
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
