@@ -34,7 +34,7 @@ fi
 set -Eeuxo pipefail
 
 # Clone and update dependencies
-source update_dependencies.sh
+source set_vars.sh
 
 # Clean and build repo tests
 ./new_build.sh
