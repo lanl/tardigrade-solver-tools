@@ -1,6 +1,9 @@
-project (solver_tools)
-
 cmake_minimum_required (VERSION 3.14)
+
+project (solver_tools VERSION 0.0.1)
+
+# Configure version
+configure_file("src/cpp/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
 # Find eigen
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
