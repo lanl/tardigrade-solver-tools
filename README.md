@@ -15,23 +15,25 @@ this command will change on different platforms.
 
 ## Dependencies
 
-### Make
+### External
+* Eigen   == 3.3
+* CMake   >= 3.14
+* Doxygen
+* Sphinx
+* Breathe
+* sphinx\_rtd\_theme
 
-These tools have several dependencies that must be available in the same parent
-directory as this repo. 
-
-* eigen: https://gitlab.com/libeigen/eigen
+### Internal
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 
 ### CMake
 
-The project is transitioning from Make to Cmake. For cmake builds, Eigen must be
-"installed" following the ``eigen/INSTALL`` instructions. The Eigen dependence
-is easiest to resolve if eigen is installed in the default install directory.
-However, if you don't have admin privileges, you can also insall Eigen to your
-home directory in ``~/include`` (or possibly in ``~/.local/include``, but this
-is untested by this project).
+For cmake builds, Eigen must be "installed" following the ``eigen/INSTALL``
+instructions. The Eigen dependence is easiest to resolve if eigen is installed
+in the default install directory.  However, if you don't have admin privileges,
+you can also insall Eigen to your home directory in ``~/include`` (or possibly
+in ``~/.local/include``, but this is untested by this project).
 
 #### Non-admin Eigen install for solver_tools
 [Reference](https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed)
@@ -66,7 +68,9 @@ $ make install
 
 ---
 
-## Building the documentation
+## Build and Test
+
+This repository is now built completely with cmake.
 
 > **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
 > API is much more useful
@@ -79,11 +83,41 @@ testing.
 ### sstelmo
 
 1) Activate the correct python environment
+```
+$ module load python/2019.10-python-3.7 
+$ sv3d
+```
+
+2) Build everything
+```
+$ pwd
+/path/to/solver_tools/
+
+# Just perform the build
+./new_build.sh
+
+# Build and perform tests
+./jenkins_build.sh
+```
+
+3) View test results
+```
+cat build/src/cpp/tests/solver_tools/results.tex
+```
+
+4) Display docs
 
 ```
-$ source /apps/anaconda/5.0.1-python-3.6/bin/activate
-$ source activate /projects/python/release-cpp
+# Sphinx
+firefox build/docs/sphinx/index.html &
+
+# Doxygen
+firefox build/docs/doxygen/html/index.html &
 ```
+
+### Building the documentation
+
+To build just the documentation pick up the steps here:
 
 2) Create the build directory and move there
 
