@@ -9,6 +9,7 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 # Find related, but external, projects
+# TODO: Decide how to handle master/dev build differences. bash env variables for GIT TAG?
 include(FetchContent)
 FetchContent_Declare(
     error_tools
