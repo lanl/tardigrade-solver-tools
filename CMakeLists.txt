@@ -13,17 +13,13 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(FetchContent)
 FetchContent_Declare(
     error_tools
-#    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/error_tools.git
-#    GIT_TAG        origin/dev
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/~kbrindley/error_tools.git
-    GIT_TAG        origin/feature/VIP-293-error_tools-make-docs-and-tests-optional-build-options
+    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/error_tools.git
+    GIT_TAG        origin/dev
 )
 FetchContent_Declare(
     vector_tools
-#    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/vector_tools.git
-#    GIT_TAG        origin/dev
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/~kbrindley/vector_tools.git
-    GIT_TAG        origin/feature/VIP-294-vector_tools-make-docs-and-tests-optional-build-options
+    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/vector_tools.git
+    GIT_TAG        origin/dev
 )
 FetchContent_MakeAvailable(error_tools vector_tools)
 
