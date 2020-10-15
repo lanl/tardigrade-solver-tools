@@ -1,12 +1,15 @@
 # solver\_tools
 
-Tools for performing solves of nonlinear equations. 
+Tools for performing solves of nonlinear equations.
 
-Note: In order to use the Intel compiler one must run the following command 
-in a bash prompt:
+Note: In order to use the Intel compiler one must run the following command in a
+bash prompt:
+
+```
 source /apps/intel2016/bin/ifortvars.sh -arch intel64 -platform linux
+```
 
-This is the same command that the abaqus command issues. It may be that 
+This is the same command that the abaqus command issues. It may be that
 this command will change on different platforms.
 
 ---
@@ -15,33 +18,56 @@ this command will change on different platforms.
 
 ## Dependencies
 
-### External
-* Eigen   == 3.3
-* CMake   >= 3.14
-* Doxygen
-* Sphinx
-* Breathe
-* sphinx\_rtd\_theme
+### Executables
 
-### Internal
+* CMake >= 3.14
+* Doxygen >= 1.8.5
+
+### Python Modules (for documentation)
+
+* Sphinx >= 3.0.4
+* Breathe >= 4.18.1
+* sphinx\_rtd\_theme >= 0.4.3
+
+For convenience, the minimal Python environment requirements for the
+documentation build are included in ``environment.yaml`` and
+``requirements.txt``. A minimal anaconda environment for building the
+documentation can be created from an existing anaconda installation with the
+following commands.
+
+```
+$ conda env create --file environment.yaml
+```
+
+### Libraries
+
+* eigen >= 3.3.7
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 
-### CMake
+#### "Internal" project libraries
 
-For cmake builds, Eigen must be "installed" following the ``eigen/INSTALL``
-instructions. The Eigen dependence is easiest to resolve if eigen is installed
-in the default install directory.  However, if you don't have admin privileges,
-you can also insall Eigen to your home directory in ``~/include`` (or possibly
-in ``~/.local/include``, but this is untested by this project).
+All of the ``{error,vector}_tools`` libraries are pulled from their git repos by
+branch name and built with their respective cmake files as part of the cmake
+build for this project.
 
-#### Non-admin Eigen install for solver_tools
+#### Eigen
+
+https://gitlab.com/libeigen/eigen
+
+Eigen must be "installed" following the ``eigen/INSTALL`` instructions. The
+Eigen dependence is easiest to resolve if eigen is installed in the default
+install directory.  However, if you don't have admin privileges, you can also
+insall Eigen to your home directory in ``~/include`` (or possibly in
+``~/.local/include``, but this is untested by this project).
+
+#### Non-admin Eigen install for constitutive_tools
 [Reference](https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed)
 
 ```
 # sstelmo
 ssh -X sstelmo.lanl.gov
-# source Intel compilers
+# (OPTIONAL) source Intel compilers. c++/g++ compilers from GNU 4.8.5 also work.
 source /apps/intel2016/bin/ifortvars.sh -arch intel64 -platform linux
 # Create personal include file directory
 $ pwd
@@ -59,7 +85,7 @@ $ git checkout 3.3.7
 # Build eigen
 $ mkdir build
 $ cd build
-$ export CXX=$(command -v icpc)
+$ export CXX=$(command -v icpc) # OPTIONAL
 $ cmake3 .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
 $ make install
 ```
@@ -83,12 +109,14 @@ testing.
 ### sstelmo
 
 1) Activate the correct python environment
+
 ```
-$ module load python/2019.10-python-3.7 
-$ sv3d
+$ module load python/2019.10-python-3.7
+$ sv3r
 ```
 
 2) Build everything
+
 ```
 $ pwd
 /path/to/solver_tools/
@@ -101,6 +129,7 @@ $ pwd
 ```
 
 3) View test results
+
 ```
 cat build/src/cpp/tests/solver_tools/results.tex
 ```
@@ -142,7 +171,7 @@ $ cmake3 ..
 $ cmake3 --build docs
 ```
 
-5) Documentation builds to: 
+5) Documentation builds to:
 
 ```
 solver_tools/build/docs/sphinx/index.html
@@ -153,7 +182,7 @@ solver_tools/build/docs/sphinx/index.html
 ```
 $ pwd
 /path/to/solver_tools/build/
-firefox docs/sphinx/index.html &
+$ firefox docs/sphinx/index.html &
 ```
 
 7) While the Sphinx API is still a WIP, try the doxygen API
@@ -161,5 +190,5 @@ firefox docs/sphinx/index.html &
 ```
 $ pwd
 /path/to/solver_tools/build/
-firefox docs/doxygen/html/index.html &
+$ firefox docs/doxygen/html/index.html &
 ```
