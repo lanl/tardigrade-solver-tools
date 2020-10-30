@@ -28,6 +28,12 @@ namespace solverTools{
     typedef std::vector< floatVector > floatMatrix; //!< Define a matrix of floats
     typedef std::vector< intVector > intMatrix; //!< Define a matrix of integers
 
+#ifdef DEBUG_MODE
+    typedef std::map< std::string, floatVector > debugMap; //!< A map that allows for outputting floating point debug information
+    typedef std::map< std::string, debugMap > iterationMap; //!< A map that allows for outputting floating point information at different iterations
+    typedef std::map< std::string, iterationMap > homotopyMap; //!< A map that allows for outputting iteration information within a homotopy solver
+#endif
+
     typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
     typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&,
