@@ -652,8 +652,10 @@ namespace solverTools{
         //Do the barrier search
         for ( unsigned int i = 0; i < nBounds; i++ ){
 
-            //Extract the index of the variable                                                                     index = variableIndices[ i ];
-                                                                                                                    //Calculate the tolerance
+            //Extract the index of the variable
+            index = variableIndices[ i ];
+ 
+            //Calculate the tolerance
             //
             //This relative tolerance is not the only tolerance that could be used.
             //It does allow for the constraints to be violated but this should be very small
@@ -661,14 +663,17 @@ namespace solverTools{
             tol = tolr * fabs( x0[ index ] ) + tola;
 
             //Determine the amount of constraint violation
-            d = ( x0[ index ] + dx[ index ] ) - barrierValues[ i ];                                                 if ( barrierSigns[ i ] == 0 ){
-                d *= -1;                                                                                            }
+            d = ( x0[ index ] + dx[ index ] ) - barrierValues[ i ];
+            if ( barrierSigns[ i ] == 0 ){
+                d *= -1;
+            }
             else if ( barrierSigns[ i ] != 1 ){
                 return new errorNode( "applyBoundaryLimitation", "The barrier sign must be zero or 1" );
             }
 
             d = 0.5 * ( d + fabs( d ) );
-                                                                                                                    //Determine the required scale factor
+
+            //Determine the required scale factor
             if ( d > tol ){
 
                 if ( mode ){
@@ -677,7 +682,10 @@ namespace solverTools{
 
                 }
                 else{
-                                                                                                                            scaleFactor = std::min( scaleFactor, ( barrierValues[ i ] - x0[ index ] ) / dx[ index ] );                                                                                                                                                                                                                          }                                                                                                   }
+
+                    scaleFactor = std::min( scaleFactor, ( barrierValues[ i ] - x0[ index ] ) / dx[ index ] );
+                }
+            }
         }
 
         //Scale the dx vector if appropriate

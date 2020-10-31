@@ -28,6 +28,8 @@ namespace solverTools{
     typedef std::vector< floatVector > floatMatrix; //!< Define a matrix of floats
     typedef std::vector< intVector > intMatrix; //!< Define a matrix of integers
 
+    using solverType = vectorTools::solverType< floatType >; //!< Force consistency with vectorTools
+
     typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
     typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&,
