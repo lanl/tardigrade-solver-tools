@@ -134,44 +134,44 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
     return nlFxn2( x, floatArgs, intArgs, residual, Jtmp, fO, iO );
 }
 
-errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
-                intMatrix &intOuts){
+errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
+                 intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will 
      * require the use of the line-search algorithm.
      * 
-     * :param const floatVector &x: The variable vector
-     * :param const floatMatrix &floatArgs: Floating point arguments to the function
-     * :param const intMatrix &intArgs: Integer arguments to the function
-     * :param floatVector &residual: The residual vector output.
-     * :param floatMatrix &jacobian: The jacobian output.
-     * :param floatMatrix &floatOuts: Additional floating point outputs.
-     * :param intMatrix &intOuts: Additional integer outputs.
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
+     * /param &jacobian: The jacobian output.
+     * /param &floatOuts: Additional floating point outputs.
+     * /param &intOuts: Additional integer outputs.
      */
 
-    residual = {std::exp(-x[0]) - 1};
-    jacobian = {{-std::exp(-x[0])}};
-    floatOuts = {{-1}, {-1, -2, -3}, {4, 5, 6}};
-    intOuts = {{1, 2, 8}};
+    residual = { std::exp( -x[ 0 ] ) - 1 };
+    jacobian = { { -std::exp( -x[ 0 ] ) } };
+    floatOuts = { { -1 }, { -1, -2, -3 }, { 4, 5, 6 } };
+    intOuts = { { 1, 2, 8 } };
     return NULL;
 }
 
-errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual){
+errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual ){
     /*!
      * A non-linear function for use in testing the solver which will 
      * require the use of the line-search algorithm.
      * 
-     * :param const floatVector &x: The variable vector
-     * :param const floatMatrix &floatArgs: Floating point arguments to the function
-     * :param const intMatrix &intArgs: Integer arguments to the function
-     * :param floatVector &residual: The residual vector output.
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
      */
     floatMatrix Jtmp;
     floatMatrix fO;
     intMatrix iO;
-    return nlFxn3(x, floatArgs, intArgs, residual, Jtmp, fO, iO);
+    return nlFxn3( x, floatArgs, intArgs, residual, Jtmp, fO, iO );
 }
 
 
