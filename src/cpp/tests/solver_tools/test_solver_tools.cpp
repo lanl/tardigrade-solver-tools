@@ -174,6 +174,26 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
     return nlFxn3( x, floatArgs, intArgs, residual, Jtmp, fO, iO );
 }
 
+errorOut nlFxn4( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
+                 intMatrix &intOuts ){
+    /*!
+     * A non-linear function for use in testing the solver which will
+     * require the use of the line-search algorithm.
+     *
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
+     * /param &jacobian: The jacobian output.
+     * /param &floatOuts: Additional floating point outputs.
+     * /param &intOuts: Additional integer outputs.
+     */
+
+    residual = { std::tanh( x[ 0 ] ) };
+    jacobian = { { ( std::cosh( x[ 0 ] ) * std::cosh( x[ 0 ] ) - std::sinh( x[ 0 ] ) * std::sinh( x[ 0 ] ) ) / ( std::cosh( x[ 0 ] ) * std::cosh( x[ 0 ] ) ) } };
+    return NULL;
+}
 
 int testCheckTolerance(std::ofstream &results){
     /*!
