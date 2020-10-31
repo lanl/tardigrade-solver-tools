@@ -67,7 +67,7 @@ namespace solverTools{
         if ( error ){
             if ( ( R.size( ) == 101 ) && ( J.size( ) == 212 ) ){ // This is supposed to detect a failure in convergence of a sub non-linear solve. I don't like this approach and will be setting up an issue to change it
                 convergeFlag = false;
-                fatalerrorFlag = false;
+                fatalErrorFlag = false;
                 errorOut result = new errorNode( "newtonRaphson", "Convergence error in intial residual" );
                 result->addNext( error );
                 return result;
@@ -230,7 +230,7 @@ namespace solverTools{
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations, const unsigned int homotopySteps){
@@ -254,6 +254,7 @@ namespace solverTools{
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &fatalErrorFlag: A flag which indicates if there has been a fatal error in the solve
          * \param &floatOuts: Additional floating point values to return.
          * \param &intOuts: Additional integer values to return.
          * \param &floatArgs: The additional floating-point arguments.
@@ -309,7 +310,7 @@ namespace solverTools{
             //Update s
             s += ds;
 
-            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, floatOuts, intOuts,
+            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
                                    floatArgs, intArgs, maxNLIterations, tolr, tola,
                                    alpha, maxLSIterations);
 

@@ -28,12 +28,6 @@ namespace solverTools{
     typedef std::vector< floatVector > floatMatrix; //!< Define a matrix of floats
     typedef std::vector< intVector > intMatrix; //!< Define a matrix of integers
 
-#ifdef DEBUG_MODE
-    typedef std::map< std::string, floatVector > debugMap; //!< A map that allows for outputting floating point debug information
-    typedef std::map< std::string, debugMap > iterationMap; //!< A map that allows for outputting floating point information at different iterations
-    typedef std::map< std::string, iterationMap > homotopyMap; //!< A map that allows for outputting iteration information within a homotopy solver
-#endif
-
     typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
     typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&,
@@ -52,7 +46,7 @@ namespace solverTools{
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const unsigned int homotopySteps=10);
