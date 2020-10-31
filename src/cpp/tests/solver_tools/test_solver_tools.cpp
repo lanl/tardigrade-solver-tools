@@ -686,14 +686,14 @@ int testHomotopySolver(std::ofstream &results){
     //The first test
     floatVector x0 = {1.5, 6};
     floatVector x;
-    bool converged;
+    bool converged, fatalErrorFlag;
     floatMatrix floatOuts;
     intMatrix intOuts;
 
     solverTools::stdFncNLFJ func;
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
     
-    errorOut error = solverTools::homotopySolver(func, x0, x, converged, floatOuts, intOuts, {}, {});
+    errorOut error = solverTools::homotopySolver(func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {});
 
     if (error){
         error->print();
@@ -727,7 +727,7 @@ int testHomotopySolver(std::ofstream &results){
     iO.clear();
 
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
-    error = solverTools::homotopySolver(func, x0, x, converged, floatOuts, intOuts, {}, {});
+    error = solverTools::homotopySolver(func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {});
 
     if (error){
         error->print();
@@ -756,7 +756,7 @@ int testHomotopySolver(std::ofstream &results){
     iO.clear();
     
     func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
-    error = solverTools::homotopySolver(func, x0, x, converged, floatOuts, intOuts, {}, {});
+    error = solverTools::homotopySolver(func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {});
 
     if (error){
         error->print();
