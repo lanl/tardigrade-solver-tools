@@ -117,21 +117,21 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
     return NULL;
 }
 
-errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual){
+errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual ){
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * :param const floatVector &x: The variable vector
-     * :param const floatMatrix &floatArgs: Floating point arguments to the function
-     * :param const intMatrix &intArgs: Integer arguments to the function
-     * :param floatVector &residual: The residual vector output.
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
      */
 
     floatMatrix Jtmp;
     floatMatrix fO;
     intMatrix iO;
-    return nlFxn2(x, floatArgs, intArgs, residual, Jtmp, fO, iO); 
+    return nlFxn2( x, floatArgs, intArgs, residual, Jtmp, fO, iO );
 }
 
 errorOut nlFxn3(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
