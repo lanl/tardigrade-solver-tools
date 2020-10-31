@@ -84,6 +84,10 @@ namespace solverTools{
                             const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps=1e-6,
                             const floatType tolr=1e-6, const floatType tola=1e-6, const bool suppressOutput = false);
 
+    errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
+                                      const floatVector &barrierValues, floatVector &dx,
+                                      const floatType tolr = 1e-9, const floatType tola = 1e-9, const bool mode = false );
+
 }
 
 #endif
