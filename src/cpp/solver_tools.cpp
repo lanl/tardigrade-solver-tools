@@ -611,4 +611,83 @@ namespace solverTools{
 
         return NULL;
     }
+
+    errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
+                                      const floatVector &barrierValues, floatVector &dx, const floatType tolr,
+                                      const floatType tola, const bool mode ){
+        /*!
+         * Apply the boundary limitation to the update step.
+         * dx will either be scaled so that all of the variables respect the boundaries or each variable which
+         * violates the constraint will be set to the boundary value. This is should be viewed as
+         * a last resort if even homotopy has failed as it is increasingly likely that it will
+         * not result in convergence.
+         *
+         * /param &x0: The base vector from which dx extends.
+         * /param &variableIndices: The indices of the vector that have constraints applied to them.
+         * /param &barrierSigns: The sign of the barrier 0 is a negative barrier ( i.e. lower bound )
+         * /   1 is a positive barrier ( i.e. upper bound )
+         * /param &barrierValues: The locations of the barriers.
+         * /param &dx: The change in x vector.
+         * /param &tolr: The relative tolerance. Defaults to 1e-9
+         * /param &tola: The absolute tolerence. Defautls to 1e-9
+         * /param mode: The mode of the boundary limitation. If false, all of dx is scaled, if true
+         *     only the value that violates the constraint is set to the constraint.
+         */
+
+        unsigned int nBounds = variableIndices.size();
+
+        if ( ( barrierSigns.size() != nBounds ) || ( barrierValues.size() != nBounds ) ){
+
+            std::string output_message = "The defined barrier are not consistent in size\n";
+            output_message            += "    variableIndices: " + std::to_string( variableIndices.size() ) + "\n";
+            output_message            += "    barrierSigns:    " + std::to_string( barrierSigns.size() ) + "\n";                                                                                                            output_message            += "    barrierValues:   " + std::to_string( barrierValues.size() ) + "\n";
+            return new errorNode( "applyBoundaryLimitations", output_message.c_str() );
+        }
+
+        //Initialize variables
+        int index;
+        floatType tol, d;
+        floatType scaleFactor = 1.0;
+
+        //Do the barrier search
+        for ( unsigned int i = 0; i < nBounds; i++ ){
+
+            //Extract the index of the variable                                                                     index = variableIndices[ i ];
+                                                                                                                    //Calculate the tolerance
+            //
+            //This relative tolerance is not the only tolerance that could be used.
+            //It does allow for the constraints to be violated but this should be very small
+            //compared to the magnitude of the previously converged value.                              
+            tol = tolr * fabs( x0[ index ] ) + tola;
+
+            //Determine the amount of constraint violation
+            d = ( x0[ index ] + dx[ index ] ) - barrierValues[ i ];                                                 if ( barrierSigns[ i ] == 0 ){
+                d *= -1;                                                                                            }
+            else if ( barrierSigns[ i ] != 1 ){
+                return new errorNode( "applyBoundaryLimitation", "The barrier sign must be zero or 1" );
+            }
+
+            d = 0.5 * ( d + fabs( d ) );
+                                                                                                                    //Determine the required scale factor
+            if ( d > tol ){
+
+                if ( mode ){
+
+                    dx[ index ] = barrierValues[ i ] - x0[ index ];
+
+                }
+                else{
+                                                                                                                            scaleFactor = std::min( scaleFactor, ( barrierValues[ i ] - x0[ index ] ) / dx[ index ] );                                                                                                                                                                                                                          }                                                                                                   }
+        }
+
+        //Scale the dx vector if appropriate
+        if ( !mode ){
+            if ( !vectorTools::fuzzyEquals( scaleFactor, 1.0 ) ){
+                dx *= scaleFactor;
+            }
+        }
+
+        return NULL;
+    }
+
 }
