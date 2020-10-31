@@ -71,7 +71,8 @@ namespace solverTools{
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
-                            const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const unsigned int homotopySteps=10);
+                            const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const floatType ds0 = 1.0,
+                            const floatType dsMin = 0.1, const bool resetOuts = false );
 
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
 
