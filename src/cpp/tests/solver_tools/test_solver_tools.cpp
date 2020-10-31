@@ -195,6 +195,118 @@ errorOut nlFxn4( const floatVector &x, const floatMatrix &floatArgs, const intMa
     return NULL;
 }
 
+errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
+                 intMatrix &intOuts ){
+    /*!
+     * A non-linear function for use in testing the solver which will require
+     * the use of the bounded homotopy solver
+     *
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
+     * /param &jacobian: The jacobian output.
+     * /param &floatOuts: Additional floating point outputs.
+     * /param &intOuts: Additional integer outputs.
+     */
+
+    //floatArgs answers
+    floatVector answer1 = { .1, .2, .3, .4 };
+    floatVector answer2 = { -0.01, -0.02 };
+
+    //IntArgs answers
+    intVector answer3 = { -1, -2, -3 };
+    intVector answer4 = { 5, 4, 3, 2 };
+    intVector answer5 = { 8, 9, 9 };
+
+    //floatOuts answers
+    floatVector answer6 = { 0, 1, 2 };
+    floatVector answer7 = { 7, -6 };
+    floatVector answer8 = { .24, .25 };
+
+    //intOuts answers
+    intVector   answer9  = { 1, 2, 3 };
+    intVector   answer10 = { -5, 6, 7, 8 };
+
+    //x tests
+    if ( x.size() != 1 ){
+        return new errorNode( "nlFxn5", "The x vector should have a size of 1" );
+    }
+
+    //floatArgs tests
+    if ( floatArgs.size() != 2 ){
+        return new errorNode( "nlFxn5", "The floatArgs matrix should have two values" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatArgs[ 0 ], answer1) ){
+        return new errorNode( "nlFxn5", "The first value of floatArgs should be { 0.1, 0.2, 0.3, 0.4 }" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatArgs[ 1 ], answer2) ){
+        return new errorNode( "nlFxn5", "The second value of floatArgs should be { -0.01, -0.02 }" );
+    }
+
+    //intArgs tests
+    if ( intArgs.size() != 3 ){
+        return new errorNode( "nlFxn5", "The intArgs matrix should have three values" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intArgs[ 0 ], answer3 ) ){
+        return new errorNode( "nlFxn5", "The first value of intargs should be { -1, -2, -3 }" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intArgs[ 1 ], answer4 ) ){
+        return new errorNode( "nlFxn5", "The second value of intargs should be { 5, 4, 3, 2 }" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intArgs[ 2 ], answer5 ) ){
+        return new errorNode( "nlFxn5", "The third value of intargs should be { 8, 9, 9 }" );
+    }
+
+    //floatOuts tests
+    if ( floatOuts.size() != 3 ){
+        return new errorNode( "nlFxn5", "The floatOuts matrix should have three values" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 0 ], answer6 ) ){
+        return new errorNode( "nlFxn5", "The first values in the floatOuts should be { 0, 1, 2 }" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 1 ], answer7 ) ){
+        return new errorNode( "nlFxn5", "The second values in the floatOuts should be { 7, -6 }" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 2 ], answer8 ) ){
+        return new errorNode( "nlFxn5", "The third values in the floatOuts should be { 0.24, 0.25 }" );
+    }
+
+    //intOuts tests
+    if ( intOuts.size() != 2 ){
+        return new errorNode( "nlFxn5", "The intOuts matrix must have a size of 2" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 0 ], answer9 ) ){
+        return new errorNode( "nlFxn5", "The first values in the intOuts should be { 1, 2, 3 }" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 1 ], answer10 ) ){
+        return new errorNode( "nlFxn5", "The second values in the intOuts should be { -5, 6, 7, 8 }" );
+    }
+
+    residual = { ( x[ 0 ] - 1. ) * ( x[ 0 ] + 1 ) * ( x[ 0 ] - 0.25 ) * ( x[ 0 ] + 0.1 ) };
+
+    jacobian = { {  ( x[ 0 ] + 1. ) * ( x[ 0 ] - 0.25 ) * ( x[ 0 ] + 0.1  )
+                  + ( x[ 0 ] - 1. ) * ( x[ 0 ] - 0.25 ) * ( x[ 0 ] + 0.1  )
+                  + ( x[ 0 ] - 1. ) * ( x[ 0 ] + 1.   ) * ( x[ 0 ] + 0.1  )
+                  + ( x[ 0 ] - 1. ) * ( x[ 0 ] + 1.   ) * ( x[ 0 ] - 0.25 ) } };
+
+    floatOuts = { floatOuts[ 0 ] + 0.1, floatOuts[ 1 ], floatOuts[ 0 ] };
+    intOuts = { intOuts[ 0 ] - 2, intOuts[ 0 ], intOuts[ 1 ] };
+
+    return NULL;
+}
+
 int testCheckTolerance(std::ofstream &results){
     /*!
      * Test the tolerance checking function.
