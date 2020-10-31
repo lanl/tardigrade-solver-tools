@@ -307,6 +307,55 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     return NULL;
 }
 
+errorOut nlFxn6( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
+                 intMatrix &intOuts ){
+    /*!
+     * A non-linear function for use in testing the solver which will require
+     * the use of the bounded homotopy solver
+     *
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
+     * /param &jacobian: The jacobian output.
+     * /param &floatOuts: Additional floating point outputs.
+     * /param &intOuts: Additional integer outputs.
+     */
+
+    floatType x1 = x[ 0 ];
+    floatType x2 = x[ 1 ];
+    floatType x3 = x[ 2 ];
+
+    residual.resize( 3 );
+
+    residual[ 0 ] = ( x1 - 1 )*( x1 + 1 )*( x1 - 0.25 )*( x1 + 0.1 );
+    residual[ 1 ] = ( x2 - 1 ) * ( x2 - 1 );
+    residual[ 2 ] = ( x1 + 5 ) * ( x3 + 1 );
+
+    floatType dr1dx1 = ( x1 - 1 ) * ( x1 - 0.25 ) * ( x1 + 0.1 )
+                     + ( x1 - 1 ) * ( x1 - 0.25 ) * ( x1 + 1 )
+                     + ( x1 - 1 ) * ( x1 + 0.1 ) * ( x1 + 1 )
+                     + ( x1 - 0.25 ) * ( x1 + 0.1 ) * ( x1 + 1 );
+
+    floatType dr1dx2 = 0.;
+    floatType dr1dx3 = 0.;
+
+    floatType dr2dx1 = 0.;
+    floatType dr2dx2 = 2 * ( x2 - 1 );
+    floatType dr2dx3 = 0.;
+
+    floatType dr3dx1 = x3 + 1;
+    floatType dr3dx2 = 0.;
+    floatType dr3dx3 = x1 + 5;
+
+    jacobian = { { dr1dx1, dr1dx2, dr1dx3 },
+                 { dr2dx1, dr2dx2, dr2dx3 },
+                 { dr3dx1, dr3dx2, dr3dx3 } };
+
+    return NULL;
+}
+
 int testCheckTolerance(std::ofstream &results){
     /*!
      * Test the tolerance checking function.
