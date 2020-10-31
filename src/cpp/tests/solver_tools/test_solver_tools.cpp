@@ -39,80 +39,80 @@ struct cerr_redirect{
         std::streambuf * old;
 };
 
-errorOut nlFxn1(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
-                intMatrix &intOuts){
+errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
+                 intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * :param const floatVector &x: The variable vector
-     * :param const floatMatrix &floatArgs: Floating point arguments to the function
-     * :param const intMatrix &intArgs: Integer arguments to the function
-     * :param floatVector &residual: The residual vector output.
-     * :param floatMatrix &jacobian: The jacobian output.
-     * :param floatMatrix &floatOuts: Additional floating point outputs.
-     * :param intMatrix &intOuts: Additional integer outputs.
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
+     * /param &jacobian: The jacobian output.
+     * /param &floatOuts: Additional floating point outputs.
+     * /param &intOuts: Additional integer outputs.
      */
 
-    if (x.size() != 2){
-        return new errorNode("nlFnx1", "x must have a size of 2");
+    if ( x.size( ) != 2 ){
+        return new errorNode( "nlFnx1", "x must have a size of 2" );
     }
 
     floatType x0 = -1;
     floatType y0 = 5.6;
 
-    residual = {x[0] - x0, x[1] - y0};
-    jacobian = {{1, 0}, {0, 1}};
+    residual = { x[0] - x0, x[1] - y0 };
+    jacobian = { { 1, 0 }, { 0, 1 } };
 
-    floatOuts = {{-1}, {-1, -2, -3}, {4, 5, 6}};
-    intOuts = {{1, 2, 8}};
+    floatOuts = { { -1 }, { -1, -2, -3 }, { 4, 5, 6 } };
+    intOuts = { { 1, 2, 8 } };
 
     return NULL;
 }
 
-errorOut nlFxn1(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual){
+errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual ){
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * :param const floatVector &x: The variable vector
-     * :param const floatMatrix &floatArgs: Floating point arguments to the function
-     * :param const intMatrix &intArgs: Integer arguments to the function
-     * :param floatVector &residual: The residual vector output.
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
      */
 
     floatMatrix Jtmp;
     floatMatrix fO;
     intMatrix iO;
-    return nlFxn1(x, floatArgs, intArgs, residual, Jtmp, fO, iO);
+    return nlFxn1( x, floatArgs, intArgs, residual, Jtmp, fO, iO );
 }
 
-errorOut nlFxn2(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
-                floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
-                intMatrix &intOuts){
+errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
+                 intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * :param const floatVector &x: The variable vector
-     * :param const floatMatrix &floatArgs: Floating point arguments to the function
-     * :param const intMatrix &intArgs: Integer arguments to the function
-     * :param floatVector &residual: The residual vector output.
-     * :param floatMatrix &jacobian: The jacobian output.
-     * :param floatMatrix &floatOuts: Additional floating point outputs.
-     * :param intMatrix &intOuts: Additional integer outputs.
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
+     * /param &jacobian: The jacobian output.
+     * /param &floatOuts: Additional floating point outputs.
+     * /param &intOuts: Additional integer outputs.
      */
 
-    if (x.size() != 3){
-        return new errorNode("nlFnx1", "x must have a size of 2");
+    if ( x.size( ) != 3 ){
+        return new errorNode( "nlFnx1", "x must have a size of 2" );
     }
 
-    residual = {(x[0] - 1)*(x[0] - 7)*x[1], (x[1] - 1)*(x[0] - 3)*x[2], x[0]*x[1]*x[2]};
-    jacobian = {{(x[0] - 7)*x[1] + (x[0] - 1)*x[1], (x[0] - 1)*(x[0] - 7), 0},
-                {   (x[1] - 1)*x[2],    (x[0] - 3)*x[2], (x[1] - 1)*(x[0] - 3)},
-                {   x[1]*x[2],    x[0]*x[2], x[0]*x[1]}};
+    residual = { ( x[ 0 ] - 1 ) * ( x[ 0 ] - 7 ) * x[ 1 ], ( x[ 1 ] - 1 ) * ( x[ 0 ] - 3 ) * x[ 2 ], x[ 0 ] * x[ 1 ] * x[ 2 ] };
+    jacobian = { { ( x[ 0 ] - 7 ) * x[ 1 ] + ( x[ 0 ] - 1 ) * x[ 1 ], ( x[ 0 ] - 1 ) * ( x[ 0 ] - 7 ), 0 },
+                 {   ( x[ 1 ] - 1 ) * x[ 2 ],    ( x[ 0 ] - 3 ) * x[ 2 ], ( x[ 1 ] - 1 ) * ( x[ 0 ] - 3 ) },
+                 {   x[ 1 ] * x[ 2 ],    x[ 0 ] * x[ 2 ], x[ 0 ] * x[ 1 ] } };
 
-    floatOuts = {{-1}, {-1, -2, -3}, {4, 5, 6}};
-    intOuts = {{1, 2, 8}};
+    floatOuts = { { -1 }, { -1, -2, -3 }, { 4, 5, 6 } };
+    intOuts = { { 1, 2, 8 } };
 
     return NULL;
 }
