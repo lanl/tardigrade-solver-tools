@@ -356,6 +356,33 @@ errorOut nlFxn6( const floatVector &x, const floatMatrix &floatArgs, const intMa
     return NULL;
 }
 
+errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                 floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
+                 intMatrix &intOuts ){
+    /*!
+     * A non-linear function for use in testing the solver which will require
+     * the use of the bounded homotopy solver
+     *
+     * /param &x: The variable vector
+     * /param &floatArgs: Floating point arguments to the function
+     * /param &intArgs: Integer arguments to the function
+     * /param &residual: The residual vector output.
+     * /param &jacobian: The jacobian output.
+     * /param &floatOuts: Additional floating point outputs.
+     * /param &intOuts: Additional integer outputs.
+     */
+
+    if ( x.size() != 1 ){
+        return new errorNode( "nlFxn7", "The x vector must have a size of 1" );
+    }
+
+    residual = { std::log( x[ 0 ] ) };
+
+    jacobian = { { 1. / x[ 0 ] } };
+
+    return NULL;
+}
+
 int testCheckTolerance(std::ofstream &results){
     /*!
      * Test the tolerance checking function.
