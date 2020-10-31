@@ -449,28 +449,28 @@ int testCheckTolerance(std::ofstream &results){
     return 0;
 }
 
-int testNewtonRaphson(std::ofstream &results){
+int testNewtonRaphson( std::ofstream &results ){
     /*!
      * Tests of the Newton-Raphson solver
      * 
-     * :param std::ofstream &results: The output file
+     * /param &results: The output file
      */
 
     //The first test
-    floatVector x0 = {1.5, 6};
+    floatVector x0 = { 1.5, 6 };
     floatVector x;
-    bool converged;
+    bool converged, fatalError;
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn1 );
 
     floatMatrix floatOut;
     intMatrix intOut;    
-    errorOut error = solverTools::newtonRaphson(func, x0, x, converged, floatOut, intOut, {}, {});
+    errorOut error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if (error){
-        error->print();
-        results << "testNewtonRaphson & False\n";
+    if ( error ){
+        error->print( );
+        results << "testNewtonRaphson nlFxn1 & False\n";
         return 1;
     }
 
@@ -478,65 +478,65 @@ int testNewtonRaphson(std::ofstream &results){
     floatMatrix Jtmp;
     floatMatrix fO;
     intMatrix iO;
-    error = nlFxn1(x, {}, {}, Rtmp, Jtmp, fO, iO);
+    error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if (error){
-        error->print();
-        results << "testNewtonRaphson & False\n";
+    if ( error ){
+        error->print( );
+        results << "testNewtonRaphson nlFxn1 & False\n";
         return 1;
     }
 
-    if (!vectorTools::fuzzyEquals(Rtmp, {0, 0})){
+    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) ){
         results << "testNewtonRaphson (test 1) & False\n";
         return 1;
     }
 
     //The second test
-    x0 = {1, 1, 1};
-    floatOut.clear();
-    intOut.clear();
-    fO.clear();
-    iO.clear();
+    x0 = { 1, 1, 1 };
+    floatOut.clear( );
+    intOut.clear( );
+    fO.clear( );
+    iO.clear( );
 
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
-    error = solverTools::newtonRaphson(func, x0, x, converged, floatOut, intOut, {}, {});
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
+    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if (error){
-        error->print();
-        results << "testNewtonRaphson & False\n";
+    if ( error ){
+        error->print( );
+        results << "testNewtonRaphson nlFxn2 & False\n";
         return 1;
     }
 
-    error = nlFxn2(x, {}, {}, Rtmp, Jtmp, fO, iO);
+    error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if (error){
-        error->print();
-        results << "testNewtonRaphson & False\n";
+    if ( error ){
+        error->print( );
+        results << "testNewtonRaphson nlFxn2 & False\n";
         return 1;
     }
 
-    if (!vectorTools::fuzzyEquals(Rtmp, {0, 0, 0})){
+    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) ){
         results << "testNewtonRaphson (test 2) & False\n";
         return 1;
     }
 
     //The third test
-    x0 = {3};
-    floatOut.clear();
-    intOut.clear();
-    fO.clear();
-    iO.clear();
+    x0 = { 3 };
+    floatOut.clear( );
+    intOut.clear( );
+    fO.clear( );
+    iO.clear( );
     
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
-    error = solverTools::newtonRaphson(func, x0, x, converged, floatOut, intOut, {}, {});
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn3 );
+    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if (error){
-        error->print();
-        results << "testNewtonRaphson & False\n";
+    if ( error ){
+        error->print( );
+        results << "testNewtonRaphson nlFxn3 & False\n";
         return 1;
     }
 
-    if (!vectorTools::fuzzyEquals(x, {0})){
+    if ( !vectorTools::fuzzyEquals( x, { 0 } ) ){
         results << "testNewtonRaphson (test 3) & false\n";
         return 1;
     }
