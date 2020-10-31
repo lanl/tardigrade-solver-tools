@@ -43,6 +43,26 @@ namespace solverTools{
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
 
+    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                    ) > residual,
+                            const floatVector &x0,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                            const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                            const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
+    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                    ) > residual,
+                            const floatVector &x0,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                            const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
+                            const bool boundMode,
+                            const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                            const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
