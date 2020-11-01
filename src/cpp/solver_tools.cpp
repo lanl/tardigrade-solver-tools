@@ -461,7 +461,7 @@ namespace solverTools{
                             const bool boundMode,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
-                            const floatType dsMin, const bool resetOuts )
+                            const floatType dsMin, const bool resetOuts ){
         /*!
          * Solve a non-linear equation using a homotopy Newton solver. This method
          * can be successful in solving very stiff equations which other techniques

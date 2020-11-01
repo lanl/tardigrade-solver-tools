@@ -840,6 +840,42 @@ int testHomotopySolver(std::ofstream &results){
         return 1;
     }
 
+    //The fifth test ( hard bounds )
+    x0 = { 10 };
+    floatOuts.clear();
+    intOuts.clear();
+
+    solverTools::solverType linearSolver;
+    floatMatrix J, Jexp;
+
+    Jexp = { { 1 } };
+
+    intVector variableIndices = { 0 };
+    intVector barrierSigns = { 0 };
+    floatVector barrierValues = { 1e-9 };
+
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn7 );
+
+    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {},
+                                         linearSolver, J, variableIndices, barrierSigns, barrierValues,
+                                         false, 20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
+
+    if ( error ){
+        error->print();
+        results << "testHomotopySolver & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( x, { 1 } ) ){
+        results << "testHomotopySolver (test 5) & false\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( J, Jexp ) ){
+        results << "testHomotopySolver (test 6) & False\n";
+        return 1;
+    }
+
     results << "testHomotopySolver & True\n";
     return 0;
     
