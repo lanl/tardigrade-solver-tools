@@ -953,6 +953,175 @@ int test_aFxn( std::ofstream &results ){
     return 0;
 }
 
+int test_computeBarrierFunction( std::ofstream &results ){
+    /*!
+     * Test the computation of the boundary function
+     *
+     * :param std::ofstream &results: The output file.
+     */
+
+    floatType x        = 0.4;
+    floatType pseudoT  = 0.25;
+    floatType logAmax  = 5;
+    floatType b        = 0.14;
+
+    floatType negativeSignAnswer = -0.5964638357684787;
+    floatType positiveSignAnswer = 1.4780926435784547;
+
+    floatType result;
+
+    errorOut error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( result, negativeSignAnswer ) ){
+        results << "test_computeBarrierFunction (test 1) & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( result, positiveSignAnswer ) ){
+        results << "test_computeBarrierFunction (test 2) & False\n";
+        return 1;
+    }
+
+    //Test the Jacobians
+    floatType dbdx, dbdt;
+
+    //Test the Jacobians when the sign is negative
+    error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result, dbdx, dbdt );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( result, negativeSignAnswer ) ){
+        results << "test_computeBarrierFunction (test 3) & False\n";
+        return 1;
+    }
+
+    floatType eps = 1e-6;
+
+    floatType dx = eps * fabs( x ) + eps;
+    floatType dt = eps * fabs( pseudoT ) + eps;
+
+    floatType bP, bM;
+
+    error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, false, bP );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, false, bM );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) ){
+        results << "test_computeBarrierFunction (test 4) & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, false, bP );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, false, bM );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) ){
+        results << "test_computeBarrierFunction (test 5) & False\n";
+        return 1;
+    }
+
+    //Test the Jacobians when the sign is positive
+    error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result, dbdx, dbdt );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( result, positiveSignAnswer ) ){
+        results << "test_computeBarrierFunction (test 6) & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, true, bP );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, true, bM );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) ){
+        results << "test_computeBarrierFunction (test 7) & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, true, bP );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, true, bM );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierFunction & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) ){
+        results << "test_computeBarrierFunction (test 8) & False\n";
+        return 1;
+    }
+
+    results << "test_computeBarrierFunction & True\n";
+    return 0;
+}
+
 int test_applyBoundaryLimitation( std::ofstream &results ){
     /*!
      * Test of the application of the boundary conditions.
