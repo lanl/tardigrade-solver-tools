@@ -814,9 +814,9 @@ namespace solverTools{
         /*!
          * Compute the a parameter for the Barrier Function
          *
-         * :param const floatType &pseudoT: The pseudo time ( 0 - 1 )
-         * :param const floatType logAMax: The logarithm of the maximum a parameter value.
-         * :param const floatType &a: The current value of a
+         * /param  &pseudoT: The pseudo time ( 0 - 1 )
+         * /param  logAMax: The logarithm of the maximum a parameter value.
+         * /param  &a: The current value of a
          */
 
         a = std::exp( pseudoT * logAMax );
@@ -829,10 +829,10 @@ namespace solverTools{
          * Compute the a parameter for the Barrier Function along with the derivative w.r.t.
          * the pseudo time.
          *
-         * :param const floatType &pseudoT: The pseudo time ( 0 - 1 )
-         * :param const floatType logAMax: The logarithm of the maximum a parameter value.
-         * :param const floatType &a: The current value of a
-         * :param const floatType &dadt: The Jacobian of a w.r.t. pseudoT.
+         * /param &pseudoT: The pseudo time ( 0 - 1 )
+         * /param logAMax: The logarithm of the maximum a parameter value.
+         * /param &a: The current value of a
+         * /param &dadt: The Jacobian of a w.r.t. pseudoT.
          */
 
         errorOut error = aFxn( pseudoT, logAMax, a );
