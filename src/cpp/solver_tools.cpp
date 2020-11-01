@@ -151,7 +151,7 @@ namespace solverTools{
          *     and 1 for a positive ( upper ) bound
          * \param &boundValues: The values of the boundaries.
          * \param boundMode: The mode for the boundary. See applyBoundaryLimitation for
-         *     more details..
+         *     more details.
          * \param maxNLIterations: The maximum number of non-linear iterations.
          * \param tolr: The relative tolerance
          * \param tola: The absolute tolerance
@@ -388,6 +388,125 @@ namespace solverTools{
          * \param resetOuts: Flag for whether the outputs should be reset at each step
          */
 
+        solverType linearSolver;
+        floatMatrix J;
+        return homotopySolver( residual, x0, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts, floatArgs, intArgs, linearSolver, J,
+                               maxNLIterations, tolr, tola, alpha, maxLSIterations, ds0, dsMin, resetOuts );
+
+    }
+
+    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
+                             const floatVector &x0,
+                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                             const floatType alpha, const unsigned int maxLSIterations,const floatType ds0,
+                             const floatType dsMin, const bool resetOuts ){
+        /*!
+         * Solve a non-linear equation using a homotopy Newton solver. This method
+         * can be successful in solving very stiff equations which other techniques
+         * struggle to capture. It effectively breaks the solve up into sub-steps
+         * of easier to solve equations which will eventually converge to the
+         * more difficult problem.
+         *
+         * The residual function should have inputs of the form
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param &intArgs: Additional integer arguments to the residual
+         * \param &residual: The residual vector
+         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         *
+         * The main routine accepts the following parameters:
+         * \param &x0: The initial iterate of x.
+         * \param &x: The converged value of the solver.
+         * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &fatalErrorFlag: A flag which indicates if there has been a fatal error in the solve
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &floatArgs: The additional floating-point arguments.
+         * \param &intArgs: The additional integer arguments.
+         * \param &linearSolver: The linear solver object used in the solution of the nonlinear solve.
+         *     Note that the linear solver will always be the same as that is defined in solverTools.
+         *     This contains the decomposed matrix which is useful for Jacobian calculations.
+         * \param &J: The Jacobian matrix of the nonlinear solve.
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param alpha: The line search criteria.
+         * \param maxLSIterations: The maximum number of line-search iterations.
+         * \param ds0: The initial step size.
+         * \param dsMin: The minimum step size.
+         * \param resetOuts: Flag for whether the outputs should be reset at each step
+         */
+
+        intVector boundVariableIndices(0);
+        intVector boundSigns(0);
+        floatVector boundValues(0);
+        bool boundMode = false;
+        return homotopySolver( residual, x0, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts, floatArgs, intArgs, linearSolver, J,
+                               boundVariableIndices, boundSigns, boundValues, boundMode,
+                               maxNLIterations, tolr, tola, alpha, maxLSIterations, ds0, dsMin, resetOuts );
+
+    }
+
+    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
+                            const floatVector &x0,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                            const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
+                            const bool boundMode,
+                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                            const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
+                            const floatType dsMin, const bool resetOuts )
+        /*!
+         * Solve a non-linear equation using a homotopy Newton solver. This method
+         * can be successful in solving very stiff equations which other techniques
+         * struggle to capture. It effectively breaks the solve up into sub-steps
+         * of easier to solve equations which will eventually converge to the
+         * more difficult problem.
+         *
+         * The residual function should have inputs of the form
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param &intArgs: Additional integer arguments to the residual
+         * \param &residual: The residual vector
+         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         *
+         * The main routine accepts the following parameters:
+         * \param &x0: The initial iterate of x.
+         * \param &x: The converged value of the solver.
+         * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &fatalErrorFlag: A flag which indicates if there has been a fatal error in the solve
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &floatArgs: The additional floating-point arguments.
+         * \param &intArgs: The additional integer arguments.
+         * \param &linearSolver: The linear solver object used in the solution of the nonlinear solve.
+         *     Note that the linear solver will always be the same as that is defined in solverTools.
+         *     This contains the decomposed matrix which is useful for Jacobian calculations.
+         * \param &J: The Jacobian matrix of the nonlinear solve.
+         * \param &boundVariableIndices: The indices of variables that have hard bounds
+         * \param &boundSigns: The signs of the bounds. 0 for a negative ( lower ) bound
+         *     and 1 for a positive ( upper ) bound
+         * \param &boundValues: The values of the boundaries.
+         * \param boundMode: The mode for the boundary. See applyBoundaryLimitation for
+         *     more details.
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param alpha: The line search criteria.
+         * \param maxLSIterations: The maximum number of line-search iterations.
+         * \param ds0: The initial step size.
+         * \param dsMin: The minimum step size.
+         * \param resetOuts: Flag for whether the outputs should be reset at each step
+         */
+
         //Initialize the homotopy solver
         floatType ds = ds0;
         floatType s  = 0;
@@ -403,7 +522,6 @@ namespace solverTools{
 
         //Define the homotopy residual equation
         floatVector Rinit;
-        floatMatrix J;
 
         //Compute the initial residual
         errorOut error = residual( x0, floatArgs, intArgs, Rinit, J, floatOuts, intOuts );
@@ -481,9 +599,20 @@ namespace solverTools{
                 else{
     
                     dxh = ds * xdot;
+
+                    error = applyBoundaryLimitation( xh, boundVariableIndices, boundSigns, boundValues, dxh, tolr, tola, boundMode );
     
+                    if ( error ){
+                        errorOut result = new errorNode( "homotopySolve", "Fatal error in application of boundary limitations" );
+                        result->addNext( error );
+                        fatalErrorFlag = true;
+                        return result;
+                    }
+
                     error = newtonRaphson( homotopyResidual, xh + dxh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
-                                           floatArgs, intArgs, maxNLIterations, tolr, tola,
+                                           floatArgs, intArgs, linearSolver, J, boundVariableIndices, boundSigns, boundValues,
+                                           boundMode,
+                                           maxNLIterations, tolr, tola,
                                            alpha, maxLSIterations, resetOuts );
     
                 }
