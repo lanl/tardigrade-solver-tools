@@ -1173,4 +1173,280 @@ namespace solverTools{
         return NULL;
     }
 
+    errorOut barrierHomotopySolver( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
+                                                             floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                           ) > residual,
+                                    const floatType &dt, const floatVector &x0,
+                                    const intVector &variableIndices, const intVector &residualIndices,
+                                    const intVector &barrierSigns, const floatVector &barrierValues,
+                                    const floatVector &logAMaxValues,
+                                    const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                    const bool &implicitRefine,
+                                    floatVector &x, bool &convergeFlag, bool &fatalErrorFlag,
+                                    floatMatrix &floatOuts, intMatrix &intOuts,
+                                    const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                                    const floatType alpha, const unsigned int maxLSIterations, const bool resetOuts ){
+        /*!
+         * Perform a non-linear solve using a homotopy method with barriers.
+         *
+         * Note that if barriers are added to a variable multiple times or to a single component of the residual
+         * equation several times unexpected responses can result.
+         *
+         * /param residual: The residual function to initialize
+         * /param &dt: The pseudo-time step size.
+         * /param &x0: The initial iterate of the solution vector. It is strongly suggested to
+         *     use a vector which
+         * /param &variableIndices: The indices of the variables which are to have barrier conditions
+         *     applied.
+         * /param &residualIndices: The indices of the residual vector which should have the barrier
+         *     equations applied.
+         * /param &barrierSigns: The signs of the barriers.
+         * /param &barrierValues: The locations of the barriers.
+         * /param &logAMaxValues: The log of the maximum values of the a parameter.
+         *     these should be as large as possible without causing numeric issues. Values of 10 seem to work well
+         *     for the exponential barrier.
+         * /param &floatArgs: The floating point arguments for the residual equation.
+         * /param &intArgs: The integar arguments for the residual equation.
+         * /param &implicitRefine: Boolean which indicates if an implicit refining of the
+         *     explicit pseudo-time step should occur. This can add significant computational expense
+         *     and should only be used if necessary.
+         * /param &x0: The initial iterate of the solution vector.
+         * /param &x: The solution vector.
+         * /param &convergeFlag: The flag which indicates convergence.
+         * /param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
+         * /param &floatOuts: The floating point outputs for the residual equation.
+         * /param &intOuts: The integer outputs for the residual equation.
+         * /param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
+         *     solve.
+         * /param tolr: The relative tolerance for the Newton-Raphson solve.
+         * /param tola: The absolute tolerance for the Newton-Raphson solve.
+         * /param alpha: The alpha parameter for the line search.
+         * /param maxLSIterations: The maximum number of line search iterations.
+         * /param resetOuts: The flag for whether the output matrices should be reset
+         *     prior to each iteration.
+         * 
+         * The residual function should have inputs of the form
+         * /param &x: A vector of the variable to be solved.
+         * /param &floatArgs: Additional floating point arguments to residual
+         * /param &intArgs: Additional integer arguments to the residual
+         * /param &residual: The residual vector
+         * /param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * /param &floatOuts: Additional floating point values to return.
+         * /param &intOuts: Additional integer values to return.
+         * /param &linearSolver: The linear solver object.
+         * /param &J: The Jacobian matrix.
+         */
+
+        solverType linearSolver;
+        floatMatrix jacobian;
+        return barrierHomotopySolver( residual, dt, x0, variableIndices, residualIndices, barrierSigns, barrierValues,
+                                      logAMaxValues, floatArgs, intArgs, implicitRefine, x, convergeFlag, fatalErrorFlag,
+                                      floatOuts, intOuts, linearSolver, jacobian,
+                                      maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
+    }
+
+    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                           ) > residual,
+                                    const floatType &dt, const floatVector &x0,
+                                    const intVector &variableIndices, const intVector &residualIndices,
+                                    const intVector &barrierSigns, const floatVector &barrierValues,
+                                    const floatVector &logAMaxValues,
+                                    const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                    const bool &implicitRefine,
+                                    floatVector &x, bool &convergeFlag, bool &fatalErrorFlag,
+                                    floatMatrix &floatOuts, intMatrix &intOuts, solverType &linearSolver, floatMatrix &jacobian,
+                                    const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                                    const floatType alpha, const unsigned int maxLSIterations, const bool resetOuts ){
+        /*!
+         * Perform a non-linear solve using a homotopy method with barriers.
+         *
+         * Note that if barriers are added to a variable multiple times or to a single component of the residual
+         * equation several times unexpected responses can result.
+         *
+         * /param residual: The residual function to initialize
+         * /param &dt: The pseudo-time step size.
+         * /param &x0: The initial iterate of the solution vector. It is strongly suggested to
+         *     use a vector which
+         * /param &variableIndices: The indices of the variables which are to have barrier conditions
+         *     applied.
+         * /param &residualIndices: The indices of the residual vector which should have the barrier
+         *     equations applied.
+         * /param &barrierSigns: The signs of the barriers.
+         * /param &barrierValues: The locations of the barriers.
+         * /param &logAMaxValues: The log of the maximum values of the a parameter.
+         *     these should be as large as possible without causing numeric issues. Values of 10 seem to work well
+         *     for the exponential barrier.
+         * /param &floatArgs: The floating point arguments for the residual equation.
+         * /param &intArgs: The integar arguments for the residual equation.
+         * /param &implicitRefine: Boolean which indicates if an implicit refining of the
+         *     explicit pseudo-time step should occur. This can add significant computational expense
+         *     and should only be used if necessary.
+         * /param &x0: The initial iterate of the solution vector.
+         * /param &x: The solution vector.
+         * /param &convergeFlag: The flag which indicates convergence.
+         * /param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
+         * /param &floatOuts: The floating point outputs for the residual equation.
+         * /param &intOuts: The integer outputs for the residual equation.
+         * /param &linearSolver: The linear solver object.
+         * /param &J: The Jacobian matrix.
+         * /param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
+         *     solve.
+         * /param tolr: The relative tolerance for the Newton-Raphson solve.
+         * /param tola: The absolute tolerance for the Newton-Raphson solve.
+         * /param alpha: The alpha parameter for the line search.
+         * /param maxLSIterations: The maximum number of line search iterations.
+         * /param resetOuts: The flag for whether the output matrices should be reset
+         *     prior to each iteration.
+         * 
+         * The residual function should have inputs of the form
+         * /param &x: A vector of the variable to be solved.
+         * /param &floatArgs: Additional floating point arguments to residual
+         * /param &intArgs: Additional integer arguments to the residual
+         * /param &residual: The residual vector
+         * /param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * /param &floatOuts: Additional floating point values to return.
+         * /param &intOuts: Additional integer values to return.
+         * /param &linearSolver: The linear solver object.
+         * /param &J: The Jacobian matrix.
+         */
+
+        //Initialize the pseudo time
+        floatType pseudoTime = 0.;
+
+        //Initialize the output error
+        errorOut error;
+
+        //Form argument matrices
+        floatMatrix homotopyFloatArgs( floatArgs.size() + 3 );
+        intMatrix   homotopyIntArgs( intArgs.size() + 3 );
+
+        homotopyFloatArgs[ 0 ] = { pseudoTime };
+        homotopyFloatArgs[ 1 ] = barrierValues;
+        homotopyFloatArgs[ 2 ] = logAMaxValues;
+
+        for ( unsigned int i = 0; i < floatArgs.size(); i++ ){
+            homotopyFloatArgs[ 3 + i ] = floatArgs[ i ];
+        }
+
+        homotopyIntArgs[ 0 ] = variableIndices;
+        homotopyIntArgs[ 1 ] = residualIndices;
+        homotopyIntArgs[ 2 ] = barrierSigns;
+
+        for ( unsigned int i = 0; i < intArgs.size(); i++ ){
+            homotopyIntArgs[ 3 + i ] = intArgs[ i ];
+        }
+
+        //Form output matrices
+        floatMatrix homotopyFloatOuts = floatOuts;
+        intMatrix homotopyIntOuts = intOuts;
+
+        //Wrap the barrier homotopy function
+        stdFncNLFJ homotopyResidual;
+        homotopyResidual = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+                               floatVector &r, floatMatrix &J, floatMatrix &fO, intMatrix &iO ){
+
+            error = computeBarrierHomotopyResidual( residual, x_, floatArgs_, intArgs_, r, J, fO, iO );
+
+            if ( error ){
+                errorOut result = new errorNode( "barrierHomotopySolver::homotopyResidual", "Error in wrapped barrier homotopy residual function" );
+                result->addNext( error );
+                return result;
+            }
+
+            return static_cast<errorOut>(NULL);
+        };
+
+        //Perform solve to initialize x0
+
+        error = newtonRaphson( homotopyResidual, x0, x, convergeFlag, fatalErrorFlag, homotopyFloatOuts, homotopyIntOuts,
+                               homotopyFloatArgs, homotopyIntArgs,
+                               maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts
+                             );
+
+        if ( error ){
+            errorOut result = new errorNode( "barrierHomotopySolver", "Error in initial Newton-Raphson solve" );
+            result->addNext( error );
+            return result;
+        }
+
+        //Initialize variables
+        floatVector R, x0_update;
+        floatMatrix J;
+        unsigned int rank;
+
+        while ( pseudoTime < 1.0 ){
+
+            //Reset the additional outputs
+            homotopyFloatOuts = floatOuts;
+            homotopyIntOuts = intOuts;
+
+            //Update the pseudo time
+            homotopyFloatArgs[ 0 ][ 0 ] = pseudoTime;
+
+            //Evaluate the homotopy residual
+            error = computeBarrierHomotopyResidual( residual, x, homotopyFloatArgs, homotopyIntArgs,
+                                                    R, J, homotopyFloatOuts, homotopyIntOuts );
+
+            if ( error ){
+                errorOut result = new errorNode( "barrierHomotopySolver", "Error in computation of homotopy residual" );
+                result->addNext( error );
+                return result;
+            }
+
+            //Solve for the new dt
+            floatType dPT = dt;
+            if ( pseudoTime + dt > 1. ){
+                dPT = ( 1 - pseudoTime );
+            }
+
+            //Solve for the new dx
+            x -= dPT * vectorTools::solveLinearSystem( J, homotopyFloatOuts[ 0 ], rank );
+
+            //Update the pseudo-time
+            pseudoTime += dt;
+            if ( pseudoTime > 1.0 ){
+                pseudoTime = 1.0;
+            }
+
+            //Refine answer if required. This runs an implicit solver to solve the
+            //homotopy function which ensures that the derivatives used for the
+            //next pseudo-time step are valid
+            if ( implicitRefine ){
+                homotopyFloatOuts = floatOuts;
+                homotopyIntOuts = intOuts;
+
+                homotopyFloatArgs[ 0 ][ 0 ] = pseudoTime;
+                x0_update = x;
+
+                error = newtonRaphson( homotopyResidual, x0_update, x, convergeFlag, fatalErrorFlag,
+                                       homotopyFloatOuts, homotopyIntOuts,
+                                       homotopyFloatArgs, homotopyIntArgs,
+                                       maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts
+                                     );
+
+                if ( error ){
+                    errorOut result = new errorNode( "barrierHomotopySolver", "Error in Newton-Raphson solve during implicit update" );
+                    result->addNext( error );
+                    return result;
+                }
+            }
+        }
+
+        //Using the initialized value of x, run a Newton-Raphson solver
+        x0_update = x;
+        error = newtonRaphson( residual, x0_update, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
+                               floatArgs, intArgs, linearSolver, jacobian,
+                               maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
+
+        if ( error ){
+            errorOut result = new errorNode( "barrierHomotopySolver",
+                                             "Error in the final Newton-Raphson solution of the barrier homotopy solver" );
+            result->addNext( error );
+            return result;
+        }
+
+        return NULL;
+    }
+
 }
