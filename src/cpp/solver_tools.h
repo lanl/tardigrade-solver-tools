@@ -37,6 +37,11 @@ namespace solverTools{
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&,
                                     floatMatrix&, floatMatrix&, intMatrix&) > stdFncNLFJ;
 
+    typedef errorOut(*LagrangianFunctionWithGradient)(const floatVector&, const floatMatrix&, const intMatrix&, floatType&, floatVector&,
+                                                     floatMatrix &, intMatrix &);
+
+    typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatType&, floatVector&,
+                                    floatMatrix&, intMatrix&) > stdFncLagrangianG;
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
