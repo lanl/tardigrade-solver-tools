@@ -383,6 +383,134 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
     return NULL;
 }
 
+errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                      floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts ){
+    /*!
+     * A lagrangian used to test the optimization tools
+     *
+     * /param &x: A vector of the variable to be solved.
+     * /param &floatArgs: Additional floating point arguments to residual
+     * /param &intArgs: Additional integer arguments to the residual
+     * /param &value: The value of the Lagrangian
+     * /param &gradient: The gradient of the Lagrangian
+     * /param &floatOuts: Additional floating point values to return.
+     * /param &intOuts: Additional integer values to return.
+     */
+
+    if ( x.size() != 1 ){
+        return new errorNode( "lagrangian1", "The x vector must have a size of 1" );
+    }
+
+    value = ( x[ 0 ] - 1 ) * ( x[ 0 ] + 3 );
+    gradient = { ( x[ 0 ] + 3 ) + ( x[ 0 ] - 1 ) };
+
+    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    intOuts = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    return NULL;
+}
+
+errorOut lagrangian2( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                      floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts ){
+    /*!
+     * A lagrangian used to test the optimization tools
+     *
+     * /param &x: A vector of the variable to be solved.
+     * /param &floatArgs: Additional floating point arguments to residual
+     * /param &intArgs: Additional integer arguments to the residual
+     * /param &value: The value of the Lagrangian
+     * /param &gradient: The gradient of the Lagrangian
+     * /param &floatOuts: Additional floating point values to return.
+     * /param &intOuts: Additional integer values to return.
+     */
+
+    if ( x.size() != 3 ){
+        return new errorNode( "lagrangian2", "The x vector must have a size of 3" );
+    }
+
+    if ( floatOuts.size() != 1 ){
+        return new errorNode( "lagrangian2", "The floatOuts must have a size of 1" );
+    }
+
+    if ( intOuts.size() != 1 ){
+        return new errorNode( "lagrangian2", "The intOuts must have a size of 1" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 0 ], { 0.1, 0.2, 0.3, 0.4 } ) ){
+        return new errorNode( "lagrangian2", "The first value of the floatOuts is incorrect" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 0 ], { -1, -2 } ) ){
+        return new errorNode( "lagrangian2", "The first value of the intOuts is incorrect" );
+    }
+
+    floatType _x = x[ 0 ];
+    floatType _y = x[ 1 ];
+    floatType _L = x[ 2 ];
+
+    value = _x + _y + _L * ( _x * _x + _y * _y - 1 );
+
+    gradient = { 1 + 2 * _L * _x,
+                 1 + 2 * _L * _y,
+                 _x * _x + _y * _y - 1 };
+
+    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    return NULL;
+}
+
+errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                      floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts
+                    ){
+    /*!
+     * A lagrangian used to test the optimization tools
+     *
+     * /param &x: A vector of the variable to be solved.
+     * /param &floatArgs: Additional floating point arguments to residual
+     * /param &intArgs: Additional integer arguments to the residual
+     * /param &value: The value of the Lagrangian
+     * /param &gradient: The gradient of the Lagrangian
+     * /param &floatOuts: Additional floating point values to return.
+     * /param &intOuts: Additional integer values to return.
+     */
+
+    if ( x.size() != 3 ){
+        return new errorNode( "lagrangian3", "The x vector must have a size of 3" );
+    }
+
+    if ( floatOuts.size() != 1 ){
+        return new errorNode( "lagrangian3", "The floatOuts must have a size of 1" );
+    }
+
+    if ( intOuts.size() != 1 ){
+        return new errorNode( "lagrangian3", "The intOuts must have a size of 1" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 0 ], { 0.1, 0.2, 0.3, 0.4 } ) ){
+        return new errorNode( "lagrangian3", "The first value of the floatOuts is incorrect" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 0 ], { -1, -2 } ) ){
+        return new errorNode( "lagrangian3", "The first value of the intOuts is incorrect" );
+    }
+
+    floatType _x = x[ 0 ];
+    floatType _y = x[ 1 ];
+    floatType _L = x[ 2 ];
+
+    value = _x * _x * _y + _L * ( _x * _x + _y * _y - 3 );
+
+    gradient = { 2 * _x * _y + 2 * _L * _x,
+                 _x * _x + 2 * _L * _y,
+                 _x * _x + _y * _y - 3 };
+
+    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    return NULL;
+}
+
 int testCheckTolerance(std::ofstream &results){
     /*!
      * Test the tolerance checking function.
