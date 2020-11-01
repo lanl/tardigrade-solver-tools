@@ -1928,6 +1928,111 @@ int test_BFGS2( std::ofstream &results ){
     return 0;
 }
 
+int test_homotopyBFGS( std::ofstream &results ){
+    /*!
+     * Test of the homotopy BFGS optimization algorithm.
+     *
+     * :param std::ofstream &results: The output file
+     */
+
+    solverTools::stdFncLagrangianG func;
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian1);
+
+    solverTools::floatVector x0 = { 0. };
+    solverTools::floatVector x;
+
+    bool convergeFlag, fatalErrorFlag;
+    solverTools::floatMatrix floatArgs, floatOuts;
+    solverTools::intMatrix intArgs, intOuts;
+
+    floatVector xAnswer = { -1 };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    intMatrix intOutsAnswer = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
+                                                floatOuts, intOuts, floatArgs, intArgs,
+                                                100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
+                                              );
+
+    if ( error ){
+        error->print();
+        results << "test_homotopyBFGS & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( x, xAnswer ) ){
+        results << "test_homotopyBFGS (test 1) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
+        results << "test_homotopyBFGS (test 2) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
+        results << "test_homotopyBFGS (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_homotopyBFGS & True\n";
+    return 0;
+}
+
+int test_homotopyBFGS2( std::ofstream &results ){
+    /*!
+     * Test of the BFGS optimization algorithm.
+     *
+     * :param std::ofstream &results: The output file
+     */
+
+    solverTools::stdFncLagrangianG func;
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian2);
+
+    solverTools::floatVector x0 = { 0., 0., 0. };
+    solverTools::floatVector x;
+
+    bool convergeFlag, fatalErrorFlag;
+    solverTools::floatMatrix floatArgs, floatOuts;
+    solverTools::intMatrix intArgs, intOuts;
+
+    floatOuts = { { .1, .2, .3, .4 } };
+    intOuts = { { -1, -2 } };
+
+    floatVector xAnswer = { -std::sqrt( 2. ) / 2, -std::sqrt( 2. ) / 2 };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    intMatrix intOutsAnswer = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
+                                                floatOuts, intOuts, floatArgs, intArgs,
+                                                100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
+                                              );
+
+    if ( error ){
+        error->print();
+        results << "test_homotopyBFGS2 & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer ) ){
+        results << "test_homotopyBFGS2 (test 1) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
+        results << "test_homotopyBFGS2 (test 2) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
+        results << "test_homotopyBFGS2 (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_homotopyBFGS2 & True\n";
+    return 0;
+}
+
 int main( ){
     /*!
     The main loop which runs the tests defined in the 
@@ -1959,6 +2064,8 @@ int main( ){
     //Tests of the BFGS optimizer
     test_BFGS( results );
     test_BFGS2( results );
+    test_homotopyBFGS( results );
+    test_homotopyBFGS2( results );
 
     //Close the results file
     results.close( );
