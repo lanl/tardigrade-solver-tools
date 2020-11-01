@@ -848,6 +848,85 @@ namespace solverTools{
         return NULL;
     }
 
+    errorOut computeBarrierFunction( const floatType &x, const floatType &pseudoT, const floatType &logAmax,
+                                     const floatType &b, const bool &sign, floatType &barrierFunction ){
+        /*!
+         * Compute the barrier function for a positivity constraint.
+         *
+         * b = exp( s * a * ( b - x ) ) - 1
+         *
+         * /param &x: The constrained variable value.
+         * /param &pseudoT: The value of the pseudo time.
+         * /param &logAmax: The log of the maximum value of the a parameter.
+         * /param &b: The offset variable ( i.e. the location of the barrier )
+         * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
+         *     negative ( 0 ) boundary.
+         * /param &barrierFunction: The value of the barrier function.
+         */
+
+        floatType a;
+        errorOut error = aFxn( pseudoT, logAmax, a );
+
+        if ( error ){
+            errorOut result = new errorNode( "computeBarrierFunction", "Error in the computation of the a value" );
+            result->addNext( error );
+            return result;
+        }
+
+        floatType s = 1;
+        if ( sign ){
+            s = -1;
+        }
+
+        barrierFunction = std::exp( s * a * ( b - x ) ) - 1;
+
+        return NULL;
+    }
+
+    errorOut computeBarrierFunction( const floatType &x, const floatType &pseudoT, const floatType &logAmax,
+                                      const floatType &b, const bool &sign, floatType &barrierFunction,
+                                      floatType &dbdx, floatType &dbdt ){
+        /*!
+         * Compute the barrier function for a positivity constraint.
+         *
+         * b = exp( s * a * ( b - x ) ) - 1
+         *
+         * s =  1 ( negative boundary )
+         * s = -1 ( positive boundary )
+         *
+         * /param &x: The constrained variable value.
+         * /param &pseudoT: The value of the pseudo time.
+         * /param &logAmax: The log of the maximum value of the a parameter.
+         * /param &b: The offset variable ( i.e. the location of the barrier )
+         * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
+         *     negative ( 0 ) boundary.
+         * /param &barrierFunction: The value of the barrier function.
+         * /param &dbdx: The Jacobian of the barrier function w.r.t. the variable value.
+         * /param &dbdt: the Jacobian of the barrier function w.r.t. the pseudo time.
+         */
+
+        floatType a, dadt;
+        errorOut error = aFxn( pseudoT, logAmax, a, dadt );
+
+        if ( error ){
+            errorOut result = new errorNode( "computeBarrierFunction (jacobian)", "Error in the computation of the a value" );
+            result->addNext( error );
+            return result;
+        }
+
+        floatType s = 1;
+        if ( sign ){
+            s = -1;
+        }
+
+        barrierFunction = std::exp( s * a * ( b - x ) ) - 1;
+
+        dbdx = -s * a * std::exp( s * a * ( b - x ) );
+        dbdt = s * ( b - x ) * std::exp( s * a * ( b - x ) ) * dadt;
+
+        return NULL;
+    }
+
     errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
                                       const floatVector &barrierValues, floatVector &dx, const floatType tolr,
                                       const floatType tola, const bool mode ){
