@@ -972,11 +972,11 @@ namespace solverTools{
          */
 
         if ( floatArgs.size() < 3 ){
-            return new errorNode( "computeHomotopyResidual", "floatArgs must have at least a size of 3" );
+            return new errorNode( "computeBarrierHomotopyResidual", "floatArgs must have at least a size of 3" );
         }
 
         if ( intArgs.size() < 3 ){
-            return new errorNode( "computeHomotopyResidual", "intArgs must have at least a size of 3" );
+            return new errorNode( "computeBarrierHomotopyResidual", "intArgs must have at least a size of 3" );
         }
 
         //Extract the floatArgs values
@@ -1005,44 +1005,7 @@ namespace solverTools{
             output_message            += "    barrierValues:   " + std::to_string( barrierValues.size() ) + "\n";
             output_message            += "    logAMaxValues:   " + std::to_string( logAMaxValues.size() ) + "\n";
             output_message            += "    barrierSigns:    " + std::to_string( barrierSigns.size() ) + "\n";
-            return new errorNode( "computeHomotopyResidual", output_message.c_str() );
-        }
-
-        if ( floatArgs.size() < 3 ){
-            return new errorNode( "computeHomotopyResidual", "floatArgs must have at least a size of 3" );
-        }
-
-        if ( intArgs.size() < 3 ){
-            return new errorNode( "computeHomotopyResidual", "intArgs must have at least a size of 3" );
-        }
-
-        //Extract the floatArgs values
-        floatType pseudoTime      = floatArgs[ 0 ][ 0 ];
-        floatVector barrierValues = floatArgs[ 1 ];
-        floatVector logAMaxValues = floatArgs[ 2 ];
-
-        floatMatrix floatArgsOriginalResidual( floatArgs.begin() + 3, floatArgs.begin() + floatArgs.size() );
-
-        //Extract the intArgs values
-        intVector variableIndices = intArgs[ 0 ];
-        intVector residualIndices = intArgs[ 1 ];
-        std::vector< bool > barrierSigns( intArgs[ 2 ].size() );
-        for ( unsigned int i = 0; i < barrierSigns.size(); i++ ){
-            barrierSigns[ i ] = ( bool )intArgs[ 2 ][ i ];
-        }
-
-        intMatrix intArgsOriginalResidual( intArgs.begin() + 3, intArgs.begin() + intArgs.size() );
-
-        unsigned int nBarriers = variableIndices.size();
-
-        if ( ( residualIndices.size() != nBarriers ) || ( barrierValues.size() != nBarriers ) || ( logAMaxValues.size() != nBarriers ) || ( barrierSigns.size() != nBarriers ) ){
-            std::string output_message = "The sizes of variableIndices, residualIndices, barrierValues, and logAMaxValues are not the same\n";
-            output_message            += "    variableIndices: " + std::to_string( variableIndices.size() ) + "\n";
-            output_message            += "    residualIndices: " + std::to_string( residualIndices.size() ) + "\n";
-            output_message            += "    barrierValues:   " + std::to_string( barrierValues.size() ) + "\n";
-            output_message            += "    logAMaxValues:   " + std::to_string( logAMaxValues.size() ) + "\n";
-            output_message            += "    barrierSigns:    " + std::to_string( barrierSigns.size() ) + "\n";
-            return new errorNode( "computeHomotopyResidual", output_message.c_str() );
+            return new errorNode( "computeBarrierHomotopyResidual", output_message.c_str() );
         }
 
         //Evaluate the original residual
@@ -1061,7 +1024,7 @@ namespace solverTools{
         jacobian = originalJacobian;
 
         if ( error ){
-            errorOut result = new errorNode( "computeHomotopyResidual", "Error in the computation of the plastic deformation residual" );
+            errorOut result = new errorNode( "computeBarrierHomotopyResidual", "Error in the computation of the plastic deformation residual" );
             result->addNext( error );
             return result;
         }
@@ -1083,7 +1046,7 @@ namespace solverTools{
 
             if ( error ){
                 std::string output_message = "Error in the computation of barrier function " + std::to_string( i );
-                errorOut result = new errorNode( "computeHomotopyResidual", output_message.c_str() );
+                errorOut result = new errorNode( "computeBarrierHomotopyResidual", output_message.c_str() );
                 result->addNext( error );
                 return result;
             }
@@ -1093,7 +1056,7 @@ namespace solverTools{
 
             if ( error ){
                 std::string output_message = "Error in the computation of the a parameter of barrier equation " + std::to_string( i );
-                errorOut result = new errorNode( "computeHomotopyResidual", output_message.c_str() );
+                errorOut result = new errorNode( "computeBarrierHomotopyResidual", output_message.c_str() );
                 result->addNext( error );
                 return result;
             }

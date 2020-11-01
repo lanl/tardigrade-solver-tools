@@ -1122,6 +1122,331 @@ int test_computeBarrierFunction( std::ofstream &results ){
     return 0;
 }
 
+int test_computeBarrierHomotopyResidual( std::ofstream &results ){
+    /*!
+     * Test the computation of the barrier homotopy residual
+     *
+     * :param std::ofstream &results: The output file
+     */
+
+
+    solverTools::stdFncNLFJ func;
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn5);
+
+    floatVector x0 = { 0. };
+    floatMatrix floatArgsDefault =
+        {
+            { 0.28 }, //The pseudo-time
+            { 0.1 },  //The barrier value
+            { 10. },  //The logAMax values
+            { .1, .2, .3, .4 }, //Function Parameters
+            { -0.01, -0.02 }
+        };
+
+    intMatrix intArgsDefault =
+        {
+            { 0 }, //Variable indices
+            { 0 }, //Residual indices
+            { 0 }, //Barrier signs
+            { -1, -2, -3 }, //Function parameters
+            { 5, 4, 3, 2 },
+            { 8, 9, 9 }
+        };
+
+    floatVector residualResult;
+    floatMatrix jacobian;
+
+    floatMatrix floatOutsDefault =
+        {
+            { 0, 1, 2 },
+            { 7, -6 },
+            { .24, .25 }
+        };
+
+    intMatrix intOutsDefault =
+        {
+            { 1, 2, 3 },
+            { -5, 6, 7, 8 },
+        };
+
+    floatMatrix floatArgs = floatArgsDefault;
+    intMatrix   intArgs   = intArgsDefault;
+    floatMatrix floatOuts = floatOutsDefault;
+    intMatrix   intOuts   = intOutsDefault;
+
+    floatVector residualAnswer = { 0.2775586103363596 };
+
+#ifdef DEBUG_MODE
+    debugMap DEBUG;
+#endif
+
+    errorOut error = solverTools::computeBarrierHomotopyResidual( func, x0, floatArgs, intArgs, residualResult, jacobian,
+                                                                  floatOuts, intOuts
+#ifdef DEBUG_MODE
+                                                                  , DEBUG
+#endif
+                                                                );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( residualAnswer, residualResult ) ){
+        results << "test_computeBarrierHomotopyResidual (test 1) & False\n";
+        return 1;
+    }
+
+    //Check that the non-homotopy outputs are as expected.
+    if ( floatOuts.size() != 4 ){
+        results << "test_computeBarrierHomotopyResidual (test 2) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 1 ], floatOutsDefault[ 0 ] + 0.1 ) ){
+        results << "test_computeBarrierHomotopyResidual (test 3) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 2 ], floatOutsDefault[ 1 ] ) ){
+        results << "test_computeBarrierHomotopyResidual (test 4) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 3 ], floatOutsDefault[ 0 ] ) ){
+        results << "test_computeBarrierHomotopyResidual (test 5) & False\n";
+        return 1;
+    }
+
+    if ( intOuts.size() != 3 ){
+        results << "test_computeBarrierHomotopyResidual (test 6) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 0 ], intOutsDefault[ 0 ] - 2 ) ){
+        results << "test_computeBarrierHomotopyResidual (test 7) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 1 ], intOutsDefault[ 0 ] ) ){
+        results << "test_computeBarrierHomotopyResidual (test 8) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 2 ], intOutsDefault[ 1 ] ) ){
+        results << "test_computeBarrierHomotopyResidual (test 9) & False\n";
+        return 1;
+    }
+
+    //Test the Jacobians
+    floatType eps = 1e-6;
+
+    //Test drdx
+    floatVector dx = eps * x0 + eps;
+
+    floatVector rP, rM;
+    floatMatrix JP, JM;
+
+    floatOuts = floatOutsDefault;
+    intOuts   = intOutsDefault;
+
+    error = solverTools::computeBarrierHomotopyResidual( func, x0 + dx, floatArgs, intArgs, rP, JP,
+                                                         floatOuts, intOuts );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual & False\n";
+        return 1;
+    }
+
+    floatOuts = floatOutsDefault;
+    intOuts   = intOutsDefault;
+
+    error = solverTools::computeBarrierHomotopyResidual( func, x0 - dx, floatArgs, intArgs, rM, JM,
+                                                         floatOuts, intOuts );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual & False\n";
+        return 1;
+    }
+
+    floatVector gradCol = ( rP - rM ) / ( 2 * dx[ 0 ] );
+
+    if ( !vectorTools::fuzzyEquals( gradCol, jacobian[ 0 ] ) ){
+        results << "test_computeBarrierHomotopyResidual (test 10) & False\n";
+        return 1;
+    }
+
+    //test drdt
+    eps = 1e-7;
+    floatType dt = eps * floatArgsDefault[ 0 ][ 0 ] + eps;
+
+    floatArgs = floatArgsDefault;
+    floatArgs[ 0 ][ 0 ] += dt;
+
+    floatOuts = floatOutsDefault;
+    intOuts   = intOutsDefault;
+
+    error = solverTools::computeBarrierHomotopyResidual( func, x0, floatArgs, intArgs, rP, JP,
+                                                         floatOuts, intOuts );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual & False\n";
+        return 1;
+    }
+
+    floatArgs = floatArgsDefault;
+    floatArgs[ 0 ][ 0 ] -= dt;
+
+    floatOuts = floatOutsDefault;
+    intOuts   = intOutsDefault;
+
+    error = solverTools::computeBarrierHomotopyResidual( func, x0, floatArgs, intArgs, rM, JM,
+                                                         floatOuts, intOuts );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual & False\n";
+        return 1;
+    }
+
+    gradCol = ( rP - rM ) / ( 2 * dt );
+
+    if ( !vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ], 1e-5 ) ){
+        results << "test_computeBarrierHomotopyResidulal (test 11) & False\n";
+        return 1;
+    }
+
+    results << "test_computeBarrierHomotopyResidual & True\n";
+    return 0;
+}
+
+int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
+    /*!
+     * Test for the computation of the barrier homotopy residual.
+     *
+     * :param std::ofstream &results: The output file.
+     */
+
+
+    solverTools::stdFncNLFJ func;
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn6);
+
+    floatVector          x = { 0.15, 0.1, -1.2 };
+    floatType   pseudoTime = 0.24;
+
+    floatVector logAMaxVals = { 10, 6 };
+    floatVector bvals       = { 0.1, -1.1 };
+
+    intVector   variableIndices = { 0, 2 };
+    intVector   residualIndices = { 2, 1 };
+    intVector   signs           = { 0, 1 };
+
+    floatMatrix floatArgs = { { pseudoTime }, bvals, logAMaxVals };
+    intMatrix   intArgs   = { variableIndices, residualIndices, signs };
+
+    floatMatrix floatOuts = { {} };
+    intMatrix   intOuts   = { {} };
+
+    floatVector residualAnswer = { 0.0244375 ,  0.53651154, -0.97499937 };
+
+    floatVector residualResult;
+    floatMatrix jacobian;
+
+    errorOut error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, residualResult, jacobian,
+                                                                  floatOuts, intOuts );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual2 & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( residualResult, residualAnswer ) ){
+        results << "test_computeBarrierHomotopyResidual2 (test 1) & False\n";
+        return 1;
+    }
+
+    //Tests of the Jacobians
+
+    //Test the Jacobian w.r.t. x
+    floatType eps = 1e-7;
+    for ( unsigned int i = 0; i < x.size(); i++ ){
+        floatVector delta( x.size(), 0 );
+        delta[ i ] = eps * fabs( x[ i ] ) + eps;
+
+        floatVector rP, rM;
+
+        error = solverTools::computeBarrierHomotopyResidual( func, x + delta, floatArgs, intArgs, rP, jacobian,
+                                                             floatOuts, intOuts );
+
+        if ( error ){
+            error->print();
+            results << "test_computeBarrierHomotopyResidual2 & False\n";
+            return 1;
+        }
+
+        error = solverTools::computeBarrierHomotopyResidual( func, x - delta, floatArgs, intArgs, rM, jacobian,
+                                                             floatOuts, intOuts );
+
+        if ( error ){
+            error->print();
+            results << "test_computeBarrierHomotopyResidual2 & False\n";
+            return 1;
+        }
+
+        floatVector gradCol = ( rP - rM ) / ( 2 * delta[ i ] );
+
+        for ( unsigned int j = 0; j < gradCol.size(); j++ ){
+            if ( !vectorTools::fuzzyEquals( gradCol[ j ], jacobian[ j ][ i ] ) ){
+                results << "test_computeBarrierHomotopyResult2 (test 2) & False\n";
+                return 1;
+            }
+        }
+    }
+
+    //Test the Jacobian w.r.t. t
+    floatType dt = eps * fabs( pseudoTime ) + eps;
+
+    floatVector rP, rM;
+
+    floatArgs[ 0 ][ 0 ] = pseudoTime + dt;
+
+    error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, rP, jacobian,
+                                                         floatOuts, intOuts );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual2 & False\n";
+        return 1;
+    }
+
+    floatArgs[ 0 ][ 0 ] = pseudoTime - dt;
+
+    error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, rM, jacobian,
+                                                         floatOuts, intOuts );
+
+    if ( error ){
+        error->print();
+        results << "test_computeBarrierHomotopyResidual2 & False\n";
+        return 1;
+    }
+
+    floatVector gradCol = ( rP - rM ) / ( 2 * dt );
+
+    if ( !vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ] ) ){
+        results << "test_computeBarrierHomotopyResidual2 (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_computeBarrierHomotopyResidual2 & True\n";
+    return 0;
+}
+
+
 int test_applyBoundaryLimitation( std::ofstream &results ){
     /*!
      * Test of the application of the boundary conditions.
@@ -1212,6 +1537,12 @@ int main( ){
     testCheckLSCriteria( results );
     testHomotopySolver( results );
     test_applyBoundaryLimitation( results );
+
+    //Tests of the barrier homotopy solver
+    test_aFxn( results );
+    test_computeBarrierFunction( results );
+    test_computeBarrierHomotopyResidual( results );
+    test_computeBarrierHomotopyResidual2( results );
 
     //Close the results file
     results.close( );
