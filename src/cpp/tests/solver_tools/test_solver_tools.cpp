@@ -881,6 +881,78 @@ int testHomotopySolver(std::ofstream &results){
     
 }
 
+int test_aFxn( std::ofstream &results ){
+    /*!
+     * Test the computation of the a parameter in the Barrier function.
+     *
+     * :param std::ofstream &results: The output file.
+     */
+
+    floatType pseudoT = .72;
+    floatType logAfxn = 5.2;
+
+    floatType answer  = 42.26671935907283;
+
+    floatType result;
+
+    errorOut error = solverTools::aFxn( pseudoT, logAfxn, result );
+
+    if ( error ){
+        error->print();
+        results << "test_aFxn & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( result, answer ) ){
+        results << "test_aFxn (test 1) & False\n";
+        return 1;
+    }
+
+    floatType dadT;
+
+    error = solverTools::aFxn( pseudoT, logAfxn, result, dadT );
+
+    if ( error ){
+        error->print();
+        results << "test_aFxn & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( result, answer ) ){
+        results << "test_aFxn (test 2) & False\n";
+        return 1;
+    }
+
+    floatType eps = 1e-6;
+    floatType delta = eps * pseudoT + eps;
+
+    floatType aP, aM;
+
+    error = solverTools::aFxn( pseudoT + delta, logAfxn, aP );
+
+    if ( error ){
+        error->print();
+        results << "test_aFxn & False\n";
+        return 1;
+    }
+
+    error = solverTools::aFxn( pseudoT - delta, logAfxn, aM );
+
+    if ( error ){
+        error->print();
+        results << "test_aFxn & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( ( aP - aM ) / ( 2 * delta ), dadT ) ){
+        results << "test_aFxn (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_aFxn & True\n";
+    return 0;
+}
+
 int test_applyBoundaryLimitation( std::ofstream &results ){
     /*!
      * Test of the application of the boundary conditions.
@@ -948,6 +1020,8 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
     results << "test_applyBoundaryLimitation & True\n";
     return 0;
 }
+
+
 
 int main( ){
     /*!

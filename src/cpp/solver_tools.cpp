@@ -810,6 +810,44 @@ namespace solverTools{
         return NULL;
     }
 
+    errorOut aFxn( const floatType &pseudoT, const floatType logAMax, floatType &a ){
+        /*!
+         * Compute the a parameter for the Barrier Function
+         *
+         * :param const floatType &pseudoT: The pseudo time ( 0 - 1 )
+         * :param const floatType logAMax: The logarithm of the maximum a parameter value.
+         * :param const floatType &a: The current value of a
+         */
+
+        a = std::exp( pseudoT * logAMax );
+
+        return NULL;
+    }
+
+    errorOut aFxn( const floatType &pseudoT, const floatType logAMax, floatType &a, floatType &dadt ){
+        /*!
+         * Compute the a parameter for the Barrier Function along with the derivative w.r.t.
+         * the pseudo time.
+         *
+         * :param const floatType &pseudoT: The pseudo time ( 0 - 1 )
+         * :param const floatType logAMax: The logarithm of the maximum a parameter value.
+         * :param const floatType &a: The current value of a
+         * :param const floatType &dadt: The Jacobian of a w.r.t. pseudoT.
+         */
+
+        errorOut error = aFxn( pseudoT, logAMax, a );
+
+        if ( error ){
+            errorOut result = new errorNode( "aFxn (jacobian)", "Error in computation of a" );
+            result->addNext( error );
+            return result;
+        }
+
+        dadt = logAMax * a;
+
+        return NULL;
+    }
+
     errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
                                       const floatVector &barrierValues, floatVector &dx, const floatType tolr,
                                       const floatType tola, const bool mode ){
