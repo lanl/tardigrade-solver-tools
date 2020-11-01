@@ -1687,4 +1687,142 @@ namespace solverTools{
             return new errorNode( "BFGS", "BFGS did not converge" );
         }
     }
+
+    errorOut homotopyBFGS( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatType &, floatVector &, floatMatrix &, intMatrix &
+                                                   ) > lagrangianGradientFunction,
+                           const floatVector &x0,
+                           floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                           const floatMatrix &floatArgs, const intMatrix &intArgs,
+                           const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                           const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
+                           const floatType dsMin, const bool resetOuts, const floatType maxdx ){
+        /*!
+         * Optimize a non-linear equation using a homotopy BFGS method. This method
+         * can be successful in solving very stiff equations which other techniques
+         * struggle to capture. It effectively breaks the solve up into sub-steps
+         * of easier to solve equations which will eventually converge to the
+         * more difficult problem.
+         *
+         * WARNING: This function is less tested than would be desired and should be used with caution.
+         *
+         * The lagrangian function should have inputs of the form
+         * /param &x: A vector of the variable to be solved.
+         * /param &floatArgs: Additional floating point arguments to residual
+         * /param &intArgs: Additional integer arguments to the residual
+         * /param &lagrangian: The residual vector
+         * /param &lagrangianGradient: The jacobian matrix of the residual w.r.t. x
+         * /param &floatOuts: Additional floating point values to return.
+         * /param &intOuts: Additional integer values to return.
+         *
+         * The main routine accepts the following parameters:
+         * /param &x0: The initial iterate of x.
+         * /param &x: The converged value of the solver.
+         * /param &convergeFlag: A flag which indicates whether the solver converged.
+         * /param &floatOuts: Additional floating point values to return.
+         * /param &intOuts: Additional integer values to return.
+         * /param &floatArgs: The additional floating-point arguments.
+         * /param &intArgs: The additional integer arguments.
+         * /param maxNLIterations: The maximum number of non-linear iterations.
+         * /param tolr: The relative tolerance
+         * /param tola: The absolute tolerance
+         * /param alpha: The line search criteria.
+         * /param maxLSIterations: The maximum number of line-search iterations.
+         * /param ds0: The initial pseudo-time step. Defaults to 1.0
+         * /param dsMin: The minimum pseudo-time step size. Defaults to 0.1
+         * /param resetOuts: The flag for whether the output matrices should be reset
+         *     prior to each iteration.
+         * /param const floatType maxdx: The maximum allowable change in the solution vector. If negative this is ignored.
+         */
+
+        //Initialize the homotopy solver
+        floatType ds = ds0;
+        floatType s  = 0;
+        floatVector xh = x0;
+
+        //Save the floatOuts and intOuts
+        floatMatrix oldFloatOuts = floatOuts;
+        intMatrix   oldIntOuts   = intOuts;
+
+        //Initialize the error output
+        errorOut error;
+
+
+        //Define the homotopy residual
+        stdFncLagrangianG homotopyLagrangianGradient;
+        homotopyLagrangianGradient = [&]( const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+                                          floatType &l, floatVector &dldx, floatMatrix &fO, intMatrix &iO ){
+
+            floatType L;
+            floatVector dLdx;
+
+            error = lagrangianGradientFunction( x_, floatArgs_, intArgs_, L, dLdx, fO, iO );
+
+            if (error){
+                errorOut result = new errorNode("homotopyBFGS::homotopyLagrangianGradient", "error in lagrangian gradient calculation");
+                result->addNext(error);
+                return result;
+            }
+
+            l = 0.5 * ( 1 - s ) * vectorTools::dot( x_ - x0, x_ - x0 ) + s * L;
+            dldx = ( 1 - s ) * ( x_ - x0 ) + s * dLdx;
+
+            return static_cast<errorOut>(NULL);
+        };
+
+        //Begin the homotopy loop
+        while ( s < 1 ){
+            //Update s
+            s += ds;
+            s = std::min( s, 1. );
+
+            //Initialize the solver
+            convergeFlag = false;
+
+            if ( !resetOuts ){
+                oldFloatOuts = floatOuts;
+                oldIntOuts   = intOuts;
+            }
+            else{
+                floatOuts = oldFloatOuts;
+                intOuts = oldIntOuts;
+            }
+
+            //Begin the adaptive homotopy loop
+            while ( !convergeFlag ){
+
+                error = BFGS( homotopyLagrangianGradient, xh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
+                              floatArgs, intArgs,
+                              maxNLIterations, tolr, tola,
+                              alpha, maxLSIterations, resetOuts, maxdx );
+
+                if ( fatalErrorFlag ){
+                    errorOut result = new errorNode( "homotopyBFGS", "Fatal error in Newton Raphson solution" );
+                    result->addNext( error );
+                    return result;
+                }
+
+                else if ( ( !convergeFlag ) && ( ds / 2 > dsMin ) ){
+                    s -= ds;
+                    ds = std::max( ds / 2, dsMin );
+                    s += ds;
+
+                    floatOuts = oldFloatOuts;
+                    intOuts   = oldIntOuts;
+                }
+
+                else if ( ( !convergeFlag ) && ( ds / 2 < dsMin ) ){
+                    errorOut result = new errorNode( "homotopyBFGS", "Homotopy solver did not converge" );
+                    result->addNext( error );
+                    return result;
+                }
+            }
+
+            xh = x;
+        }
+
+        //Solver completed successfully
+        return NULL;
+    }
+
 }
