@@ -96,6 +96,34 @@ namespace solverTools{
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const floatType ds0 = 1.0,
                             const floatType dsMin = 0.1, const bool resetOuts = false );
 
+    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                           ) > residual,
+                                    const floatType &dt, const floatVector &x0,
+                                    const intVector &variableIndices, const intVector &residualIndices,
+                                    const intVector &barrierSigns, const floatVector &barrierValues,
+                                    const floatVector &logAMaxValues,
+                                    const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                    const bool &implicitRefine,
+                                    floatVector &x, bool &convergeFlag, bool &fatalErrorFlag,
+                                    floatMatrix &floatOuts, intMatrix &intOuts,
+                                    const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                                    const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
+    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                           ) > residual,
+                                    const floatType &dt, const floatVector &x0,
+                                    const intVector &variableIndices, const intVector &residualIndices,
+                                    const intVector &barrierSigns, const floatVector &barrierValues,
+                                    const floatVector &logAMaxValues,
+                                    const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                    const bool &implicitRefine,
+                                    floatVector &x, bool &convergeFlag, bool &fatalErrorFlag,
+                                    floatMatrix &floatOuts, intMatrix &intOuts, solverType &linearSolver, floatMatrix &J,
+                                    const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                                    const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
 
     errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha=1e-4);
