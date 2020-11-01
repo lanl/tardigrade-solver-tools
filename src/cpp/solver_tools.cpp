@@ -298,8 +298,8 @@ namespace solverTools{
                     }
                     else{
                         fatalErrorFlag = true;
-                        errorOut result = new errorNode("newtonRaphson", "Error in line-search");
-                        result->addNext(error);
+                        errorOut result = new errorNode( "newtonRaphson", "Error in line-search" );
+                        result->addNext( error );
                         return result;
                     }
                 }
@@ -314,7 +314,7 @@ namespace solverTools{
             if ( !lsCheck ){
                 convergeFlag = false;
                 fatalErrorFlag = false;
-                return new errorNode("newtonRaphson", "The line-search failed to converge.");
+                return new errorNode( "newtonRaphson", "The line-search failed to converge." );
             }
             else{
                 Rp = R;
@@ -334,7 +334,7 @@ namespace solverTools{
         //Check if the solution converged
         if ( !converged ){
             convergeFlag = false;
-            return new errorNode("newtonRaphson", "The Newton-Raphson solver failed to converge.");
+            return new errorNode( "newtonRaphson", "The Newton-Raphson solver failed to converge." );
         }
         else{
             //Update x
@@ -408,30 +408,30 @@ namespace solverTools{
         //Compute the initial residual
         errorOut error = residual( x0, floatArgs, intArgs, Rinit, J, floatOuts, intOuts );
 
-        if (error){
+        if ( error ){
             fatalErrorFlag = true;
-            errorOut result = new errorNode("homotopySolver", "error in initial residual calculation");
-            result->addNext(error);
+            errorOut result = new errorNode( "homotopySolver", "error in initial residual calculation" );
+            result->addNext( error );
             return result;
         }
 
         //Define the homotopy residual
         stdFncNLFJ homotopyResidual;
-        homotopyResidual = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
-                            floatVector &r, floatMatrix &J, floatMatrix &fO, intMatrix &iO){
+        homotopyResidual = [&]( const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+                                floatVector &r, floatMatrix &_J, floatMatrix &fO, intMatrix &iO ){
 
             floatVector R;
 
-            error = residual( x_, floatArgs_, intArgs_, R, J, fO, iO );
+            error = residual( x_, floatArgs_, intArgs_, R, _J, fO, iO );
 
-            if (error){
+            if ( error ){
                 r = R;
-                errorOut result = new errorNode("homotopySolver::homotopyResidual", "error in residual calculation");
-                result->addNext(error);
+                errorOut result = new errorNode( "homotopySolver::homotopyResidual", "error in residual calculation" );
+                result->addNext( error );
                 return result;
             }
 
-            r = R - (1 - s) * Rinit;
+            r = R - ( 1 - s ) * Rinit;
 
             return static_cast< errorOut >( NULL );
         };
@@ -443,7 +443,10 @@ namespace solverTools{
             s += ds;
             s = std::min( s, 1. );
 
-            if ( !resetouts ){
+            //Initialize the solver
+            convergeFlag = false;
+
+            if ( !resetOuts ){
                 oldFloatOuts = floatOuts;
                 oldIntOuts   = intOuts;
             }
@@ -456,7 +459,7 @@ namespace solverTools{
             while ( !convergeFlag ){
 
                 //Compute the eplicit estimate of xh ( this is kind of what makes it a homotopy )
-                error = homotopyResidual( xh, floatARgs, intArgs, rh, J, floatOuts, intOuts );
+                error = homotopyResidual( xh, floatArgs, intArgs, rh, J, floatOuts, intOuts );
     
                 if ( error ){
                     fatalErrorFlag = true;
@@ -465,12 +468,12 @@ namespace solverTools{
                     result->addNext( error );
                     return result;
                 }
-    
+
                 floatOuts = oldFloatOuts;
                 intOuts   = oldIntOuts;
     
                 xdot = -vectorTools::solveLinearSystem( J, rh, rank );
-    
+   
                 if ( rank != J.size( ) ){
                     convergeFlag = false;
                     fatalErrorFlag = false;
@@ -481,7 +484,7 @@ namespace solverTools{
     
                     error = newtonRaphson( homotopyResidual, xh + dxh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
                                            floatArgs, intArgs, maxNLIterations, tolr, tola,
-                                           alpha, maxLSIterations);
+                                           alpha, maxLSIterations, resetOuts );
     
                 }
     
@@ -505,7 +508,7 @@ namespace solverTools{
                 }
             }
 
-            xd = x;
+            xh = x;
         }
 
         //Solver completed successfully

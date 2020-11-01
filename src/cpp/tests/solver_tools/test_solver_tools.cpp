@@ -103,7 +103,7 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
      */
 
     if ( x.size( ) != 3 ){
-        return new errorNode( "nlFnx1", "x must have a size of 2" );
+        return new errorNode( "nlFnx2", "x must have a size of 3" );
     }
 
     residual = { ( x[ 0 ] - 1 ) * ( x[ 0 ] - 7 ) * x[ 1 ], ( x[ 1 ] - 1 ) * ( x[ 0 ] - 3 ) * x[ 2 ], x[ 0 ] * x[ 1 ] * x[ 2 ] };
@@ -558,21 +558,35 @@ int testNewtonRaphson( std::ofstream &results ){
     floatVector boundValues = { 1e-9 };
     floatMatrix Jexp = { { 1. } };
 
-    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, {}, {}, linearSolver, J,
-                                        boundVariableIndices, boundSigns, boundValues, false );
+    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, {}, {}, linearSolver, J );
 
     if ( error ){
         error->print();
         results << "testNewtonRaphson nlFxn7 & False\n";
         return 1;
     }
-                                                                                                            if ( !vectorTools::fuzzyEquals( x, { 1. } ) ){
+    if ( !vectorTools::fuzzyEquals( x, { 1. } ) ){
         results << "testNewtonRaphson (test 4) & False\n";
         return 1;
     }
 
     if ( !vectorTools::fuzzyEquals( J, Jexp ) ){
         results << "testNewtonRaphson (test 5) & False\n";
+        return 1;
+    }
+
+    //The fifth test: This test makes sure that when a Newton-Raphson iteration fails it
+    //correctly returns a failure to converge.
+    x0 = { -5. };
+    floatOut.clear( );
+    intOut.clear( );
+
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn4 );
+
+    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { }, 5 );
+
+    if ( converged ){
+        results << "testNewtonRaphson (test 6) & False\n";
         return 1;
     }
 
@@ -719,19 +733,19 @@ int testHomotopySolver(std::ofstream &results){
      */
 
     //The first test
-    floatVector x0 = {1.5, 6};
+    floatVector x0 = { 1.5, 6 };
     floatVector x;
     bool converged, fatalErrorFlag;
     floatMatrix floatOuts;
     intMatrix intOuts;
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
-    
-    errorOut error = solverTools::homotopySolver(func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {});
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn1 );
+   
+    errorOut error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    if (error){
-        error->print();
+    if ( error ){
+        error->print( );
         results << "testHomotopySolver & False\n";
         return 1;
     }
@@ -740,16 +754,16 @@ int testHomotopySolver(std::ofstream &results){
     floatMatrix Jtmp;
     floatMatrix fO;
     intMatrix iO;
-    error = nlFxn1(x, {}, {}, Rtmp, Jtmp, fO, iO);
+    error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if (error){
-        error->print();
+    if ( error ){
+        error->print( );
         results << "testHomotopySolver & False\n";
         return 1;
     }
 
-    if (!vectorTools::fuzzyEquals(Rtmp, {0, 0})){
-        std::cout << "Rtmp: "; vectorTools::print(Rtmp);
+    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) ){
+        std::cout << "Rtmp: "; vectorTools::print( Rtmp );
         results << "testHomotopySolver (test 1) & False\n";
         return 1;
     }
@@ -761,46 +775,68 @@ int testHomotopySolver(std::ofstream &results){
     fO.clear();
     iO.clear();
 
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn2);
-    error = solverTools::homotopySolver(func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {});
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
+    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    if (error){
-        error->print();
+    if ( error ){
+        error->print( );
         results << "testHomotopySolver & False\n";
         return 1;
     }
 
-    error = nlFxn2(x, {}, {}, Rtmp, Jtmp, fO, iO);
+    error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if (error){
-        error->print();
-        results << "testNewtonRaphson & False\n";
+    if ( error ){
+        error->print( );
+        results << "testHomotpySolver & False\n";
         return 1;
     }
 
-    if (!vectorTools::fuzzyEquals(Rtmp, {0, 0, 0})){
+    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) ){
         results << "testHomotopySolver (test 2) & False\n";
         return 1;
     }
 
     //The third test
-    x0 = {3};
-    floatOuts.clear();
-    intOuts.clear();
-    fO.clear();
-    iO.clear();
+    x0 = { 3 };
+    floatOuts.clear( );
+    intOuts.clear( );
+    fO.clear( );
+    iO.clear( );
     
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn3);
-    error = solverTools::homotopySolver(func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {});
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn3 );
+    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
+                                         20, 1e-9, 1e-9, 1e-4, 5, 0.2, 0.01 );
 
-    if (error){
+    if ( error ){
+        error->print( );
+        results << "testHomotopySolver & False\n";
+        return 1;
+    }
+
+    if (!vectorTools::fuzzyEquals( x, { 0 } ) ){
+        results << "testHomotopySolver (test 3) & false\n";
+        return 1;
+    }
+
+    //The fourth test
+    x0 = { 3 };
+    floatOuts.clear( );
+    intOuts.clear( );
+
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn4 );
+
+    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
+                                         20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
+
+    if ( error ){
         error->print();
         results << "testHomotopySolver & False\n";
         return 1;
     }
 
-    if (!vectorTools::fuzzyEquals(x, {0})){
-        results << "testHomotopySolver (test 3) & false\n";
+    if ( !vectorTools::fuzzyEquals( x, { 0 } ) ){
+        results << "testHomotopySolver (test 4) & False\n";
         return 1;
     }
 
