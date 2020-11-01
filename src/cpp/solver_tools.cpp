@@ -1449,4 +1449,242 @@ namespace solverTools{
         return NULL;
     }
 
+    errorOut BFGS( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
+                                            floatType &, floatVector &, floatMatrix &, intMatrix &
+                                          ) > lagrangianGradientFunction,
+                   const floatVector &x0,
+                   floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                   const floatMatrix &floatArgs, const intMatrix &intArgs,
+                   const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                   const floatType alpha, const unsigned int maxLSIterations, const bool resetOuts,
+                   const floatType stepSize, const floatType maxdx ){
+        /*!
+         * An implementation of the Broyden–Fletcher–Goldfarb–Shanno (BFGS) algorithm for solving optimization problems.
+         *
+         * /param lagrangianFunction: The Lagrangian function
+         * /param lagrangianGradientFunction: The gradient of the Lagrangian function.
+         * /param &x0: The intial iterate of x
+         * /param &x: The converged value of x
+         * /param &convergeFlag: A flag indicating if convergence has been achieved.
+         * /param &fatalErrorFlag: A flag indicating if a fatal error was encountered.
+         * /param &floatOuts: A matrix of floating-point outputs.
+         * /param &intOuts: A matrix of integer outputs.
+         * /param &floatArgs: A matrix of floating-point arguments.
+         * /param &intArgs: A matrix of integer arguments.
+         * /param maxNLIterations: The maximum number of non-linear iterations.
+         * /param tolr: The relative tolerance.
+         * /param tola: The absolute tolerance.
+         * /param alpha: The line-search parameter.
+         * /param maxLSIterations: The maximum number of line-search reductions.
+         * /param resetOuts: The flag to indicate if the floating-point outputs should be reset at each
+         *     iteration.
+         * /param stepSize: The estimated step size. Defaults to 1.
+         * /param maxdx: The maximum allowable step size in terms of the norm of the solution
+         *     vector. If negative this is ignored.
+         *
+         * The lagrangianGradient function should have inputs of the form
+         * /param &x: A vector of the variable to be solved.
+         * /param &floatArgs: Additional floating point arguments to residual
+         * /param intMatrix &intArgs: Additional integer arguments to the residual
+         * /param &value: The value of the Lagrangian.
+         * /param &gradient: The gradient of the Lagrangian function.
+         * /param &floatOuts: Additional floating point values to return.
+         * /param &intOuts: Additional integer values to return.
+         */
+
+        //Solve for the initial gradient of the Lagrangian
+        floatType lagrangian_k, lagrangian_kp1;
+        floatVector lagrangianGradient_k, lagrangianGradient_kp1;
+
+        floatMatrix floatOuts0;
+        intMatrix intOuts0;
+
+        if ( resetOuts ){
+            floatOuts0 = floatOuts;
+            intOuts0 = intOuts;
+        }
+
+        errorOut error = lagrangianGradientFunction( x0, floatArgs, intArgs, lagrangian_kp1, lagrangianGradient_kp1,
+                                                     floatOuts, intOuts );
+
+        if ( error ){
+            errorOut result = new errorNode( "BFGS", "Error in computation of the Lagrangian Gradient" );
+            result->addNext( error );
+            convergeFlag = false;
+            fatalErrorFlag = true;
+            return result;
+        }
+
+        //Set the initial iterate of the hessian
+        floatMatrix B = ( vectorTools::l2norm( lagrangianGradient_kp1 ) / stepSize ) * vectorTools::eye< floatType >( lagrangianGradient_kp1.size() );
+
+        //Set the tolerance for each value individually
+        floatVector tol = floatVector( lagrangianGradient_kp1.size(), 0 );
+        for ( unsigned int i = 0; i < lagrangianGradient_kp1.size(); i++ ){
+            tol[ i ] = tolr * fabs( lagrangianGradient_kp1[ i ] ) + tola;
+        }
+
+        //Check if convergence has been achieved
+        bool converged;
+        error = checkTolerance( lagrangianGradient_kp1, tol, converged );
+
+        if ( error ){
+            errorOut result = new errorNode( "BFGS", "Error in tolerence check" );
+            result->addNext( error );
+            fatalErrorFlag = true;
+            return result;
+        }
+
+        //Copy lagrangianGradient_kp1 to lagrangianGradient_p
+        lagrangian_k = lagrangian_kp1;
+        lagrangianGradient_k = lagrangianGradient_kp1;
+
+        //Initialize the iteration
+        floatType theta;
+        floatType pNorm;
+        floatVector r, p, s, y, Bs;
+        floatType ys;
+        floatType sBs;
+
+        floatMatrix floatOuts_k;
+        intMatrix intOuts_k;
+
+        x = x0;
+
+        unsigned int niter = 0;
+        unsigned int nLSIterations;
+        //Begin the iteration loop
+        while ( ( !converged ) && ( niter < maxNLIterations ) ){
+
+            //Compute the direction
+            unsigned int rank;
+            p = -vectorTools::solveLinearSystem( B, lagrangianGradient_k, rank );
+            pNorm = vectorTools::l2norm( p );
+
+            //Apply maximum dx step size limitation
+            if ( ( maxdx > 0 ) && ( pNorm > maxdx ) ){
+
+                p *= ( maxdx / pNorm );
+            }
+
+            if ( rank < lagrangianGradient_k.size() ){
+                convergeFlag = false;
+                fatalErrorFlag = false;
+                return new errorNode( "BFGS", "The approximate Hessian is singular" );
+            }
+
+            if ( resetOuts ){
+                floatOuts = floatOuts0;
+                intOuts = intOuts0;
+            }
+
+            //Save the current value of the outputs
+            if ( resetOuts ){
+                floatOuts_k = floatOuts0;
+                intOuts_k = intOuts0;
+                floatOuts = floatOuts0;
+                intOuts = intOuts0;
+
+            }
+            else{
+                floatOuts_k = floatOuts;
+                intOuts_k = intOuts;
+            }
+
+            error = lagrangianGradientFunction( x + p, floatArgs, intArgs, lagrangian_kp1, lagrangianGradient_kp1,
+                                                floatOuts, intOuts );
+
+            if ( error ){
+                errorOut result = new errorNode( "BFGS", "Error in computation of the Lagrangian gradient function" );
+                result->addNext( error );
+                fatalErrorFlag = true;
+                return result;
+            }
+
+            //Begin the line search
+            floatType lambda = 1;
+            nLSIterations = 0;
+
+            while ( ( lagrangian_kp1 > ( 1 - alpha ) * lagrangian_k ) && ( nLSIterations < maxLSIterations ) ){
+
+                //Reduce the LS step-size
+                lambda *= 0.5;
+
+                floatOuts = floatOuts_k;
+                intOuts = intOuts_k;
+
+                error = lagrangianGradientFunction( x + lambda * p, floatArgs, intArgs, lagrangian_kp1, lagrangianGradient_kp1,
+                                                    floatOuts, intOuts );
+
+                if ( error ){
+                    errorOut result = new errorNode( "BFGS", "Error in the computation of the Lagrangian gradient function of the line search" );
+                    result->addNext( error );
+                    fatalErrorFlag = true;
+                    return result;
+                }
+
+                nLSIterations++;
+            }
+
+            if ( lagrangian_kp1 > ( 1 - alpha ) * lagrangian_k ){
+                convergeFlag = false;
+                fatalErrorFlag = false;
+                return new errorNode( "BFGS", "Line search did not converge" );
+            }
+            else{
+
+                //Continue with BFGS update
+
+                //Compute s
+                s = lambda * p;
+
+                //Update x
+                x += s;
+
+                //Compute y
+                y = lagrangianGradient_kp1 - lagrangianGradient_k;
+
+                //Compute the damping factor
+                theta = 1.;
+
+                //Update the approximation of the hessian
+                ys = vectorTools::dot( y, s );
+                Bs = vectorTools::dot( B, s );
+                sBs = vectorTools::dot( s, Bs );
+
+                if ( ys < 0.2 * sBs ){
+                    theta = 0.8 * sBs / ( sBs - ys );
+                }
+
+                r = theta * y  + ( 1 - theta ) * Bs;
+
+
+                B += vectorTools::dyadic( r, r ) / vectorTools::dot( s, r )
+                   - vectorTools::dyadic( Bs, Bs ) / vectorTools::dot( s, Bs );
+
+                //Update the previous values
+                lagrangian_k = lagrangian_kp1;
+                lagrangianGradient_k = lagrangianGradient_kp1;
+
+                //Check the convergence tolerence
+                error = checkTolerance( lagrangianGradient_kp1, tol, converged );
+
+                if ( error ){
+                    return new errorNode( "BFGS", "Error in the tolerence check at end of iteration" );
+                }
+            }
+        }
+
+        if ( converged ){
+            convergeFlag = true;
+            fatalErrorFlag = false;
+            return NULL;
+        }
+        else{
+            convergeFlag = false;
+            fatalErrorFlag = false;
+
+            return new errorNode( "BFGS", "BFGS did not converge" );
+        }
+    }
 }
