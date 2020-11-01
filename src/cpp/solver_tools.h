@@ -124,6 +124,26 @@ namespace solverTools{
                                     const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                                     const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
 
+    errorOut BFGS( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
+                                           floatType &, floatVector &, floatMatrix &, intMatrix &
+                                         ) > lagrangianGradient,
+                   const floatVector &x0,
+                   floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                   const floatMatrix &floatArgs, const intMatrix &intArgs,
+                   const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                   const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false,
+                   const floatType stepSize = 1., const floatType maxdx = -1 );
+
+    errorOut homotopyBFGS( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatType &, floatVector &, floatMatrix &, intMatrix &
+                                                   ) > lagrangianGradientFunction,
+                           const floatVector &x0,
+                           floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                           const floatMatrix &floatArgs, const intMatrix &intArgs,
+                           const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                           const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const floatType ds0 = 1.,
+                           const floatType dsMin = 0.1, const bool resetOuts = false, const floatType maxdx = -1 );
+
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
 
     errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha=1e-4);
