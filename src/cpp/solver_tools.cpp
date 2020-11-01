@@ -927,6 +927,203 @@ namespace solverTools{
         return NULL;
     }
 
+    errorOut computeBarrierHomotopyResidual( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
+                                                                      floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                                    ) > computeOriginalResidual,
+                                             const solverTools::floatVector &x,
+                                             const solverTools::floatMatrix &floatArgs, const solverTools::intMatrix &intArgs,
+                                             solverTools::floatVector &residual, solverTools::floatMatrix &jacobian,
+                                             solverTools::floatMatrix &floatOuts, solverTools::intMatrix &intOuts
+                                           ){
+        /*!
+         * Compute the residual function for the barrier homotopy approach. This approach allows the user
+         * to define barrier functions which enable a bounded root finding approach which can be very useful
+         * when roots outside of the desired solution space have stronger basins of attraction than the
+         * desired roots.
+         *
+         * WARNING: If two residualIndices are identical, then only the second one will be used and the
+         *          first equation will not be observed.
+         *
+         * TODO: Add two-sided boundaries.
+         *
+         * /param &x: The solution vector.
+         * /param &floatArgs: The floating point arguments.
+         * /param &intArgs: The integer arguments.
+         * /param &residual: The residual vector.
+         * /param &jacobian: The Jacobian matrix.
+         * /param &floatOuts: The additional floating-point outputs.
+         * /param &intOuts: The additional integer outputs.
+         * /param &DEBUG: The debug output.
+         *
+         * Note that floatArgs is modified such that
+         * floatArgs[ 0 ][ 0 ]   = pseudoTime ( the homotopy pseudo-time )
+         * floatArgs[ 1 ]        = barrierValues ( the values at which the barrier function activates )
+         * floatArgs[ 2 ]        = logAMaxValues ( the maximum values of the a parameter for the barrier function )
+         * floatArgs[ 1 -> end ] = originalResidual floatArgs ( the floatArgs of the original residual function )
+         *
+         * Note that intArgs is modified such that
+         * intArgs[ 0 ] = variableIndices ( the indices of the variables which have the barrier functions applied )
+         * intArgs[ 1 ] = residualIndices ( the indices of the residual vector at which the barrier functions are applied )
+         * intArgs[ 2 ] = barrierSigns ( the signs of the barrier functions 0 for negative barrier
+         *     ( lower boundary ) and 1 for a positive barrier ( upper boundary )
+         * intArgs[ 3 -> end ] = originalResidual intArgs ( the intArgs of the original residual function )
+         *
+         * The pseudo-time allows us to change the influence of the barrier function on the output.
+         */
+
+        if ( floatArgs.size() < 3 ){
+            return new errorNode( "computeHomotopyResidual", "floatArgs must have at least a size of 3" );
+        }
+
+        if ( intArgs.size() < 3 ){
+            return new errorNode( "computeHomotopyResidual", "intArgs must have at least a size of 3" );
+        }
+
+        //Extract the floatArgs values
+        floatType pseudoTime      = floatArgs[ 0 ][ 0 ];
+        floatVector barrierValues = floatArgs[ 1 ];
+        floatVector logAMaxValues = floatArgs[ 2 ];
+
+        floatMatrix floatArgsOriginalResidual( floatArgs.begin() + 3, floatArgs.begin() + floatArgs.size() );
+
+        //Extract the intArgs values
+        intVector variableIndices = intArgs[ 0 ];
+        intVector residualIndices = intArgs[ 1 ];
+        std::vector< bool > barrierSigns( intArgs[ 2 ].size() );
+        for ( unsigned int i = 0; i < barrierSigns.size(); i++ ){
+            barrierSigns[ i ] = ( bool )intArgs[ 2 ][ i ];
+        }
+
+        intMatrix intArgsOriginalResidual( intArgs.begin() + 3, intArgs.begin() + intArgs.size() );
+
+        unsigned int nBarriers = variableIndices.size();
+
+        if ( ( residualIndices.size() != nBarriers ) || ( barrierValues.size() != nBarriers ) || ( logAMaxValues.size() != nBarriers ) || ( barrierSigns.size() != nBarriers ) ){
+            std::string output_message = "The sizes of variableIndices, residualIndices, barrierValues, and logAMaxValues are not the same\n";
+            output_message            += "    variableIndices: " + std::to_string( variableIndices.size() ) + "\n";
+            output_message            += "    residualIndices: " + std::to_string( residualIndices.size() ) + "\n";
+            output_message            += "    barrierValues:   " + std::to_string( barrierValues.size() ) + "\n";
+            output_message            += "    logAMaxValues:   " + std::to_string( logAMaxValues.size() ) + "\n";
+            output_message            += "    barrierSigns:    " + std::to_string( barrierSigns.size() ) + "\n";
+            return new errorNode( "computeHomotopyResidual", output_message.c_str() );
+        }
+
+        if ( floatArgs.size() < 3 ){
+            return new errorNode( "computeHomotopyResidual", "floatArgs must have at least a size of 3" );
+        }
+
+        if ( intArgs.size() < 3 ){
+            return new errorNode( "computeHomotopyResidual", "intArgs must have at least a size of 3" );
+        }
+
+        //Extract the floatArgs values
+        floatType pseudoTime      = floatArgs[ 0 ][ 0 ];
+        floatVector barrierValues = floatArgs[ 1 ];
+        floatVector logAMaxValues = floatArgs[ 2 ];
+
+        floatMatrix floatArgsOriginalResidual( floatArgs.begin() + 3, floatArgs.begin() + floatArgs.size() );
+
+        //Extract the intArgs values
+        intVector variableIndices = intArgs[ 0 ];
+        intVector residualIndices = intArgs[ 1 ];
+        std::vector< bool > barrierSigns( intArgs[ 2 ].size() );
+        for ( unsigned int i = 0; i < barrierSigns.size(); i++ ){
+            barrierSigns[ i ] = ( bool )intArgs[ 2 ][ i ];
+        }
+
+        intMatrix intArgsOriginalResidual( intArgs.begin() + 3, intArgs.begin() + intArgs.size() );
+
+        unsigned int nBarriers = variableIndices.size();
+
+        if ( ( residualIndices.size() != nBarriers ) || ( barrierValues.size() != nBarriers ) || ( logAMaxValues.size() != nBarriers ) || ( barrierSigns.size() != nBarriers ) ){
+            std::string output_message = "The sizes of variableIndices, residualIndices, barrierValues, and logAMaxValues are not the same\n";
+            output_message            += "    variableIndices: " + std::to_string( variableIndices.size() ) + "\n";
+            output_message            += "    residualIndices: " + std::to_string( residualIndices.size() ) + "\n";
+            output_message            += "    barrierValues:   " + std::to_string( barrierValues.size() ) + "\n";
+            output_message            += "    logAMaxValues:   " + std::to_string( logAMaxValues.size() ) + "\n";
+            output_message            += "    barrierSigns:    " + std::to_string( barrierSigns.size() ) + "\n";
+            return new errorNode( "computeHomotopyResidual", output_message.c_str() );
+        }
+
+        //Evaluate the original residual
+        floatVector originalResidual;
+        floatMatrix originalJacobian;
+        floatMatrix originalFloatOuts = floatOuts;
+        errorOut error = computeOriginalResidual( x,
+                                                  floatArgsOriginalResidual, intArgsOriginalResidual,
+                                                  originalResidual, originalJacobian,
+                                                  originalFloatOuts, intOuts
+#ifdef DEBUG_MODE
+                                                  , DEBUG
+#endif
+                                                );
+        residual = originalResidual;
+        jacobian = originalJacobian;
+
+        if ( error ){
+            errorOut result = new errorNode( "computeHomotopyResidual", "Error in the computation of the plastic deformation residual" );
+            result->addNext( error );
+            return result;
+        }
+
+        //Compute the values of the barrier functions and the weighting functions
+        floatType barrierFunction = 0;
+        floatType dbdx = 0;
+        floatType dbdt = 0;
+        floatType a    = 1;
+        floatType dadt = 0;
+
+        //Update the gradients of the residuals and Jacobian
+        floatVector dresidualdt( residual.size(), 0 );
+
+        for ( unsigned int i = 0; i < nBarriers; i++ ){
+            error = computeBarrierFunction( x[ variableIndices[ i ] ], pseudoTime, logAMaxValues[ i ],
+                                            barrierValues[ i ], barrierSigns[ i ],
+                                            barrierFunction, dbdx, dbdt );
+
+            if ( error ){
+                std::string output_message = "Error in the computation of barrier function " + std::to_string( i );
+                errorOut result = new errorNode( "computeHomotopyResidual", output_message.c_str() );
+                result->addNext( error );
+                return result;
+            }
+
+            //Compute the weighting values
+            error = aFxn( pseudoTime, logAMaxValues[ i ], a, dadt );
+
+            if ( error ){
+                std::string output_message = "Error in the computation of the a parameter of barrier equation " + std::to_string( i );
+                errorOut result = new errorNode( "computeHomotopyResidual", output_message.c_str() );
+                result->addNext( error );
+                return result;
+            }
+
+            //Assemble the homotopy residual
+            residual[ residualIndices[ i ] ] = ( 1. - 1. / a ) * originalResidual[ residualIndices[ i ] ] + ( 1. / a ) * barrierFunction;
+
+            //Assemble the derivative of the homotopy residual w.r.t. the pseudo time
+            dresidualdt[ residualIndices[ i ] ] = 1 / ( a * a ) * dadt * originalResidual[ residualIndices[ i ] ]
+                                                - 1 / ( a * a ) * dadt * barrierFunction
+                                                + ( 1 / a ) * dbdt;
+
+            //Add the terms to the jacobian ( dresidualdx )
+            for ( unsigned int j = 0; j < jacobian[ i ].size(); j++ ){
+                jacobian[ residualIndices[ i ] ][ j ] = ( 1. - 1. / a ) * originalJacobian[ residualIndices[ i ] ][ j ];
+            }
+
+            jacobian[ residualIndices[ i ] ][ variableIndices[ i ] ] += ( 1. / a ) * dbdx;
+        }
+
+        //Save the jacobian of the residual w.r.t. the pseudo time. This is inserted at the beginning of the floatOuts.
+        floatOuts = floatMatrix( originalFloatOuts.size() + 1 );
+        floatOuts[ 0 ] = dresidualdt;
+        for ( unsigned int i = 0; i < originalFloatOuts.size(); i++ ){
+            floatOuts[ i + 1 ] = originalFloatOuts[ i ];
+        }
+
+        return NULL;
+    }
+
     errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
                                       const floatVector &barrierValues, floatVector &dx, const floatType tolr,
                                       const floatType tola, const bool mode ){
