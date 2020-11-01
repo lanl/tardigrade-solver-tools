@@ -137,6 +137,26 @@ namespace solverTools{
                             const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps=1e-6,
                             const floatType tolr=1e-6, const floatType tola=1e-6, const bool suppressOutput = false);
 
+    errorOut aFxn( const floatType &pseudoT, const floatType logAmax, floatType &a );
+
+    errorOut aFxn( const floatType &pseudoT, const floatType logAMax, floatType &a, floatType &dadt );
+
+    errorOut computeBarrierFunction( const floatType &x, const floatType &pseudoT, const floatType &logAmax,
+                                     const floatType &b, const bool &sign, floatType &barrierFunction );
+
+    errorOut computeBarrierFunction( const floatType &x, const floatType &pseudoT, const floatType &logAmax,
+                                     const floatType &b, const bool &sign, floatType &barrierFunction,
+                                     floatType &dbdx, floatType &dbdt );
+
+    errorOut computeBarrierHomotopyResidual( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                                    ) > computeOriginalResidual,
+                                             const floatVector &x,
+                                             const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                             floatVector &residual, floatMatrix &jacobian,
+                                             floatMatrix &floatOuts, intMatrix &intOuts
+                                           );
+
     errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
                                       const floatVector &barrierValues, floatVector &dx,
                                       const floatType tolr = 1e-9, const floatType tola = 1e-9, const bool mode = false );
