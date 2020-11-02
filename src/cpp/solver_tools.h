@@ -96,6 +96,34 @@ namespace solverTools{
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const floatType ds0 = 1.0,
                             const floatType dsMin = 0.1, const bool resetOuts = false );
 
+    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                           ) > residual,
+                                    const floatType &dt, const floatVector &x0,
+                                    const intVector &variableIndices, const intVector &residualIndices,
+                                    const intVector &barrierSigns, const floatVector &barrierValues,
+                                    const floatVector &logAMaxValues,
+                                    const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                    const bool &implicitRefine,
+                                    floatVector &x, bool &convergeFlag, bool &fatalErrorFlag,
+                                    floatMatrix &floatOuts, intMatrix &intOuts,
+                                    const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                                    const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
+    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                           ) > residual,
+                                    const floatType &dt, const floatVector &x0,
+                                    const intVector &variableIndices, const intVector &residualIndices,
+                                    const intVector &barrierSigns, const floatVector &barrierValues,
+                                    const floatVector &logAMaxValues,
+                                    const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                    const bool &implicitRefine,
+                                    floatVector &x, bool &convergeFlag, bool &fatalErrorFlag,
+                                    floatMatrix &floatOuts, intMatrix &intOuts, solverType &linearSolver, floatMatrix &J,
+                                    const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                                    const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
     errorOut checkTolerance( const floatVector &R, const floatVector &tol, bool &result);
 
     errorOut checkLSCriteria( const floatVector &R, const floatVector &Rp, bool &result, const floatType alpha=1e-4);
@@ -108,6 +136,26 @@ namespace solverTools{
                             const floatVector &x0,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps=1e-6,
                             const floatType tolr=1e-6, const floatType tola=1e-6, const bool suppressOutput = false);
+
+    errorOut aFxn( const floatType &pseudoT, const floatType logAmax, floatType &a );
+
+    errorOut aFxn( const floatType &pseudoT, const floatType logAMax, floatType &a, floatType &dadt );
+
+    errorOut computeBarrierFunction( const floatType &x, const floatType &pseudoT, const floatType &logAmax,
+                                     const floatType &b, const bool &sign, floatType &barrierFunction );
+
+    errorOut computeBarrierFunction( const floatType &x, const floatType &pseudoT, const floatType &logAmax,
+                                     const floatType &b, const bool &sign, floatType &barrierFunction,
+                                     floatType &dbdx, floatType &dbdt );
+
+    errorOut computeBarrierHomotopyResidual( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                                    ) > computeOriginalResidual,
+                                             const floatVector &x,
+                                             const floatMatrix &floatArgs, const intMatrix &intArgs,
+                                             floatVector &residual, floatMatrix &jacobian,
+                                             floatMatrix &floatOuts, intMatrix &intOuts
+                                           );
 
     errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
                                       const floatVector &barrierValues, floatVector &dx,
