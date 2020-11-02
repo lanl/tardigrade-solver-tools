@@ -16,10 +16,10 @@ namespace solverTools{
     errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
-                            const floatType alpha, const unsigned int maxLSIterations){
+                            const floatType alpha, const unsigned int maxLSIterations, const bool resetOuts ){
         /*!
          * The main Newton-Raphson non-linear solver routine. An implementation
          * of a typical Newton-Raphson solver which can take an arbitrary
@@ -38,6 +38,7 @@ namespace solverTools{
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &fatalErrorFlag: A flag which indicates if a fatal error has occurred
          * \param &floatOuts: Additional floating point values to return.
          * \param &intOuts: Additional integer values to return.
          * \param &floatArgs: The additional floating-point arguments.
@@ -47,6 +48,8 @@ namespace solverTools{
          * \param tola: The absolute tolerance
          * \param alpha: The line search criteria.
          * \param maxLSIterations: The maximum number of line-search iterations.
+         * \param resetOuts: A flag for whether the output matrices should be reset
+         *     prior to each iteration.
          */
 
         //Compute the initial residual and jacobian
@@ -55,21 +58,41 @@ namespace solverTools{
         floatVector R, Rp;
         floatMatrix J;
 
+        //Make copies of the initial float out values
+        floatMatrix oldFloatOuts = floatOuts;
+        intMatrix   oldIntOuts   = intOuts;
+
         errorOut error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
-        if (error){
-            errorOut result = new errorNode("newtonRaphson", "Error in computation of initial residual");
-            result->addNext(error);
-            return result;
+        if ( error ){
+            if ( ( R.size( ) == 101 ) && ( J.size( ) == 212 ) ){ // This is supposed to detect a failure in convergence of a sub non-linear solve. I don't like this approach and will be setting up an issue to change it
+                convergeFlag = false;
+                fatalErrorFlag = false;
+                errorOut result = new errorNode( "newtonRaphson", "Convergence error in intial residual" );
+                result->addNext( error );
+                return result;
+            }
+            else {
+                fatalErrorFlag = true;
+                errorOut result = new errorNode("newtonRaphson", "Error in computation of initial residual");
+                result->addNext(error);
+                return result;
+            }
         }
 
         if (R.size() != x0.size()){
+            fatalErrorFlag = true;
             return new errorNode("newtonRaphson", "The residual and x0 don't have the same lengths. The problem is ill-defined.");
         }
 
+        if ( resetOuts ){
+            floatOuts = oldFloatOuts;
+            intOuts = oldIntOuts;
+        }
+
         //Set the tolerance for each value individually
-        floatVector tol = floatVector(R.size(), 0);
-        for (unsigned int i=0; i<R.size(); i++){tol[i] = tolr*fabs(R[i]) + tola;}
+        floatVector tol = floatVector( R.size( ), 0 );
+        for ( unsigned int i = 0; i < R.size( ); i++ ){ tol[ i ] = tolr * fabs( R[ i ] ) + tola; }
 
         //Copy R to Rp
         Rp = R;
@@ -81,37 +104,55 @@ namespace solverTools{
         bool converged, lsCheck;
         checkTolerance(R, tol, converged);
         unsigned int rank;
-        floatMatrix oldFloatOuts = floatOuts; //Copy the float outs
-        intMatrix   oldIntOuts   = intOuts;   //Copy the int outs
+        convergeFlag = false;
+        fatalErrorFlag = false;
 
         //Begin the iteration loop
         while ((!converged) && (nNLIterations<maxNLIterations)){
 
             //Perform the linear solve
             ddx = -vectorTools::solveLinearSystem( J, R, rank);
-            dx += ddx;
 
             //Check the rank to make sure the linear system has a unique solution
             if (rank != R.size()){
+                convergeFlag = false;
                 return new errorNode("newtonRaphson", "The jacobian matrix is singular");
+            }
+
+            //Update dx
+            dx += ddx;
+
+            if ( resetOuts ){
+                floatOuts = oldFloatOuts;
+                intOuts = oldIntOuts;
             }
 
             //Compute the new residual
             error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
             if (error){
-                errorOut result = new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration");
-                result->addNext(error);
-                return result;
+                if ( ( R.size( ) == 101 ) && ( J.size( ) == 212 ) ){ //TODO: Replace with something better
+                    errorOut result = new errorNode( "newtonRaphson", "Convergence error in sub Newton-Raphson process" );
+                    result->addNext( error );
+                    fatalErrorFlag = false;
+                    convergeFlag = false;
+                    return result;
+                }
+                else{
+                    fatalErrorFlag = true;
+                    errorOut result = new errorNode("newtonRaphson", "Error in residual calculation in non-linear iteration");
+                    result->addNext(error);
+                    return result;
+                }
             }
 
             //Check the line search criteria
-            checkLSCriteria(R, Rp, lsCheck, alpha);
+            checkLSCriteria( R, Rp, lsCheck, alpha );
             nLSIterations = 0;
             lambda = 1;
 
             //Enter line-search if required
-            while ((!lsCheck) && (nLSIterations < maxLSIterations)){
+            while ( ( !lsCheck ) && ( nLSIterations < maxLSIterations ) ){
 
                 //Extract ddx from dx
                 dx -= lambda * ddx;
@@ -129,27 +170,40 @@ namespace solverTools{
                 //Compute the new residual
                 error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
 
-                if (error){
-                    errorOut result = new errorNode("newtonRaphson", "Error in line-search");
-                    result->addNext(error);
-                    return result;
+                if ( error ){
+                    if ( ( R.size( ) == 101 ) && ( J.size( ) == 212 ) ){//TODO: I continue to hate this
+                        errorOut result = new errorNode( "newtonRaphson", "Convergence error in residual function" );
+                        result->addNext( error );
+                        fatalErrorFlag = false;
+                        convergeFlag = false;
+                        return result;
+                    }
+                    else{
+                        fatalErrorFlag = true;
+                        errorOut result = new errorNode("newtonRaphson", "Error in line-search");
+                        result->addNext(error);
+                        return result;
+                    }
                 }
 
                 //Perform the line-search check
-                checkLSCriteria(R, Rp, lsCheck, alpha);
+                checkLSCriteria( R, Rp, lsCheck, alpha );
 
                 //Increment the number of line-search iterations
                 nLSIterations++;
             }
 
-            if (!lsCheck){
+            if ( !lsCheck ){
                 convergeFlag = false;
+                fatalErrorFlag = false;
                 return new errorNode("newtonRaphson", "The line-search failed to converge.");
             }
             else{
                 Rp = R;
-                oldFloatOuts = floatOuts;
-                oldIntOuts   = intOuts;
+                if ( !resetOuts ){
+                    oldFloatOuts = floatOuts;
+                    oldIntOuts   = intOuts;
+                }
             }
 
             //Check if the solution is converged
@@ -160,7 +214,7 @@ namespace solverTools{
         }
 
         //Check if the solution converged
-        if (!converged){
+        if ( !converged ){
             convergeFlag = false;
             return new errorNode("newtonRaphson", "The Newton-Raphson solver failed to converge.");
         }
@@ -176,7 +230,7 @@ namespace solverTools{
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
                             const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
                             const floatType alpha, const unsigned int maxLSIterations, const unsigned int homotopySteps){
@@ -200,6 +254,7 @@ namespace solverTools{
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &fatalErrorFlag: A flag which indicates if there has been a fatal error in the solve
          * \param &floatOuts: Additional floating point values to return.
          * \param &intOuts: Additional integer values to return.
          * \param &floatArgs: The additional floating-point arguments.
@@ -255,7 +310,7 @@ namespace solverTools{
             //Update s
             s += ds;
 
-            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, floatOuts, intOuts,
+            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
                                    floatArgs, intArgs, maxNLIterations, tolr, tola,
                                    alpha, maxLSIterations);
 
