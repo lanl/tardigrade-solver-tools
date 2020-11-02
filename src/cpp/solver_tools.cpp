@@ -820,9 +820,9 @@ namespace solverTools{
         /*!
          * Compute the a parameter for the Barrier Function
          *
-         * /param  &pseudoT: The pseudo time ( 0 - 1 )
-         * /param  logAMax: The logarithm of the maximum a parameter value.
-         * /param  &a: The current value of a
+         * \param  &pseudoT: The pseudo time ( 0 - 1 )
+         * \param  logAMax: The logarithm of the maximum a parameter value.
+         * \param  &a: The current value of a
          */
 
         a = std::exp( pseudoT * logAMax );
@@ -837,10 +837,10 @@ namespace solverTools{
          * 
          * \f$a = exp( log(A^{max}) t^s )
          *
-         * /param &pseudoT: The pseudo time ( 0 - 1 )
-         * /param logAMax: The logarithm of the maximum 'a' parameter value.
-         * /param &a: The current value of 'a'
-         * /param &dadt: The Jacobian of a w.r.t. pseudoT.
+         * \param &pseudoT: The pseudo time ( 0 - 1 )
+         * \param logAMax: The logarithm of the maximum 'a' parameter value.
+         * \param &a: The current value of 'a'
+         * \param &dadt: The Jacobian of a w.r.t. pseudoT.
          */
 
         errorOut error = aFxn( pseudoT, logAMax, a );
@@ -868,13 +868,13 @@ namespace solverTools{
          * - \f$s =  1\f$ is a negative boundary
          * - \f$s = -1\f$ is a positive boundary
          *
-         * /param &x: The constrained variable value ( \f$x\f$ ).
-         * /param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
-         * /param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
-         * /param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
-         * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
+         * \param &x: The constrained variable value ( \f$x\f$ ).
+         * \param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
+         * \param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
+         * \param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
+         * \param &sign: A boolean which indicates if this is a positive ( 1 ) or
          *     negative ( 0 ) boundary ( \f$s\f$ ).
-         * /param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
+         * \param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
          */
 
         floatType a;
@@ -909,15 +909,15 @@ namespace solverTools{
          * - \f$s =  1\f$ is a negative boundary
          * - \f$s = -1\f$ is a positive boundary
          *
-         * /param &x: The constrained variable value ( \f$x\f$ ).
-         * /param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
-         * /param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
-         * /param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
-         * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
+         * \param &x: The constrained variable value ( \f$x\f$ ).
+         * \param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
+         * \param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
+         * \param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
+         * \param &sign: A boolean which indicates if this is a positive ( 1 ) or
          *     negative ( 0 ) boundary ( \f$s\f$ ).
-         * /param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
-         * /param &dbdx: The Jacobian of the barrier function w.r.t. the variable value.
-         * /param &dbdt: the Jacobian of the barrier function w.r.t. the pseudo time.
+         * \param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
+         * \param &dbdx: The Jacobian of the barrier function w.r.t. the variable value.
+         * \param &dbdt: the Jacobian of the barrier function w.r.t. the pseudo time.
          */
 
         floatType a, dadt;
@@ -968,13 +968,13 @@ namespace solverTools{
          *
          * \todo{Add two-sided boundaries.}
          *
-         * /param &x: The solution vector.
-         * /param &floatArgs: The floating point arguments.
-         * /param &intArgs: The integer arguments.
-         * /param &residual: The residual vector.
-         * /param &jacobian: The Jacobian matrix.
-         * /param &floatOuts: The additional floating-point outputs.
-         * /param &intOuts: The additional integer outputs.
+         * \param &x: The solution vector.
+         * \param &floatArgs: The floating point arguments.
+         * \param &intArgs: The integer arguments.
+         * \param &residual: The residual vector.
+         * \param &jacobian: The Jacobian matrix.
+         * \param &floatOuts: The additional floating-point outputs.
+         * \param &intOuts: The additional integer outputs.
          *
          * Note that floatArgs is modified such that
          * `floatArgs[ 0 ][ 0 ]`   = `pseudoTime` ( the homotopy pseudo-time )
@@ -1115,15 +1115,15 @@ namespace solverTools{
          * a last resort if even homotopy has failed as it is increasingly likely that it will
          * not result in convergence.
          *
-         * /param &x0: The base vector from which dx extends.
-         * /param &variableIndices: The indices of the vector that have constraints applied to them.
-         * /param &barrierSigns: The sign of the barrier 0 is a negative barrier ( i.e. lower bound )
-         * /   1 is a positive barrier ( i.e. upper bound )
-         * /param &barrierValues: The locations of the barriers.
-         * /param &dx: The change in x vector.
-         * /param &tolr: The relative tolerance. Defaults to 1e-9
-         * /param &tola: The absolute tolerence. Defautls to 1e-9
-         * /param mode: The mode of the boundary limitation. If false, all of dx is scaled, if true
+         * \param &x0: The base vector from which dx extends.
+         * \param &variableIndices: The indices of the vector that have constraints applied to them.
+         * \param &barrierSigns: The sign of the barrier 0 is a negative barrier ( i.e. lower bound )
+         *     1 is a positive barrier ( i.e. upper bound )
+         * \param &barrierValues: The locations of the barriers.
+         * \param &dx: The change in x vector.
+         * \param &tolr: The relative tolerance. Defaults to 1e-9
+         * \param &tola: The absolute tolerence. Defautls to 1e-9
+         * \param mode: The mode of the boundary limitation. If false, all of dx is scaled, if true
          *     only the value that violates the constraint is set to the constraint.
          */
 
@@ -1210,49 +1210,49 @@ namespace solverTools{
          * Note that if barriers are added to a variable multiple times or to a single component of the residual
          * equation several times unexpected responses can result.
          *
-         * /param residual: The residual function to initialize
-         * /param &dt: The pseudo-time step size.
-         * /param &x0: The initial iterate of the solution vector. It is strongly suggested to
+         * \param residual: The residual function to initialize
+         * \param &dt: The pseudo-time step size.
+         * \param &x0: The initial iterate of the solution vector. It is strongly suggested to
          *     use a vector which
-         * /param &variableIndices: The indices of the variables which are to have barrier conditions
+         * \param &variableIndices: The indices of the variables which are to have barrier conditions
          *     applied.
-         * /param &residualIndices: The indices of the residual vector which should have the barrier
+         * \param &residualIndices: The indices of the residual vector which should have the barrier
          *     equations applied.
-         * /param &barrierSigns: The signs of the barriers.
-         * /param &barrierValues: The locations of the barriers.
-         * /param &logAMaxValues: The log of the maximum values of the a parameter.
+         * \param &barrierSigns: The signs of the barriers.
+         * \param &barrierValues: The locations of the barriers.
+         * \param &logAMaxValues: The log of the maximum values of the a parameter.
          *     these should be as large as possible without causing numeric issues. Values of 10 seem to work well
          *     for the exponential barrier.
-         * /param &floatArgs: The floating point arguments for the residual equation.
-         * /param &intArgs: The integar arguments for the residual equation.
-         * /param &implicitRefine: Boolean which indicates if an implicit refining of the
+         * \param &floatArgs: The floating point arguments for the residual equation.
+         * \param &intArgs: The integar arguments for the residual equation.
+         * \param &implicitRefine: Boolean which indicates if an implicit refining of the
          *     explicit pseudo-time step should occur. This can add significant computational expense
          *     and should only be used if necessary.
-         * /param &x0: The initial iterate of the solution vector.
-         * /param &x: The solution vector.
-         * /param &convergeFlag: The flag which indicates convergence.
-         * /param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
-         * /param &floatOuts: The floating point outputs for the residual equation.
-         * /param &intOuts: The integer outputs for the residual equation.
-         * /param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
+         * \param &x0: The initial iterate of the solution vector.
+         * \param &x: The solution vector.
+         * \param &convergeFlag: The flag which indicates convergence.
+         * \param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
+         * \param &floatOuts: The floating point outputs for the residual equation.
+         * \param &intOuts: The integer outputs for the residual equation.
+         * \param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
          *     solve.
-         * /param tolr: The relative tolerance for the Newton-Raphson solve.
-         * /param tola: The absolute tolerance for the Newton-Raphson solve.
-         * /param alpha: The alpha parameter for the line search.
-         * /param maxLSIterations: The maximum number of line search iterations.
-         * /param resetOuts: The flag for whether the output matrices should be reset
+         * \param tolr: The relative tolerance for the Newton-Raphson solve.
+         * \param tola: The absolute tolerance for the Newton-Raphson solve.
+         * \param alpha: The alpha parameter for the line search.
+         * \param maxLSIterations: The maximum number of line search iterations.
+         * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
          * 
          * The residual function should have inputs of the form
-         * /param &x: A vector of the variable to be solved.
-         * /param &floatArgs: Additional floating point arguments to residual
-         * /param &intArgs: Additional integer arguments to the residual
-         * /param &residual: The residual vector
-         * /param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * /param &floatOuts: Additional floating point values to return.
-         * /param &intOuts: Additional integer values to return.
-         * /param &linearSolver: The linear solver object.
-         * /param &J: The Jacobian matrix.
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param &intArgs: Additional integer arguments to the residual
+         * \param &residual: The residual vector
+         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &linearSolver: The linear solver object.
+         * \param &J: The Jacobian matrix.
          */
 
         solverType linearSolver;
@@ -1282,51 +1282,51 @@ namespace solverTools{
          * Note that if barriers are added to a variable multiple times or to a single component of the residual
          * equation several times unexpected responses can result.
          *
-         * /param residual: The residual function to initialize
-         * /param &dt: The pseudo-time step size.
-         * /param &x0: The initial iterate of the solution vector. It is strongly suggested to
+         * \param residual: The residual function to initialize
+         * \param &dt: The pseudo-time step size.
+         * \param &x0: The initial iterate of the solution vector. It is strongly suggested to
          *     use a vector which
-         * /param &variableIndices: The indices of the variables which are to have barrier conditions
+         * \param &variableIndices: The indices of the variables which are to have barrier conditions
          *     applied.
-         * /param &residualIndices: The indices of the residual vector which should have the barrier
+         * \param &residualIndices: The indices of the residual vector which should have the barrier
          *     equations applied.
-         * /param &barrierSigns: The signs of the barriers.
-         * /param &barrierValues: The locations of the barriers.
-         * /param &logAMaxValues: The log of the maximum values of the a parameter.
+         * \param &barrierSigns: The signs of the barriers.
+         * \param &barrierValues: The locations of the barriers.
+         * \param &logAMaxValues: The log of the maximum values of the a parameter.
          *     these should be as large as possible without causing numeric issues. Values of 10 seem to work well
          *     for the exponential barrier.
-         * /param &floatArgs: The floating point arguments for the residual equation.
-         * /param &intArgs: The integar arguments for the residual equation.
-         * /param &implicitRefine: Boolean which indicates if an implicit refining of the
+         * \param &floatArgs: The floating point arguments for the residual equation.
+         * \param &intArgs: The integar arguments for the residual equation.
+         * \param &implicitRefine: Boolean which indicates if an implicit refining of the
          *     explicit pseudo-time step should occur. This can add significant computational expense
          *     and should only be used if necessary.
-         * /param &x0: The initial iterate of the solution vector.
-         * /param &x: The solution vector.
-         * /param &convergeFlag: The flag which indicates convergence.
-         * /param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
-         * /param &floatOuts: The floating point outputs for the residual equation.
-         * /param &intOuts: The integer outputs for the residual equation.
-         * /param &linearSolver: The linear solver object.
-         * /param &J: The Jacobian matrix.
-         * /param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
+         * \param &x0: The initial iterate of the solution vector.
+         * \param &x: The solution vector.
+         * \param &convergeFlag: The flag which indicates convergence.
+         * \param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
+         * \param &floatOuts: The floating point outputs for the residual equation.
+         * \param &intOuts: The integer outputs for the residual equation.
+         * \param &linearSolver: The linear solver object.
+         * \param &J: The Jacobian matrix.
+         * \param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
          *     solve.
-         * /param tolr: The relative tolerance for the Newton-Raphson solve.
-         * /param tola: The absolute tolerance for the Newton-Raphson solve.
-         * /param alpha: The alpha parameter for the line search.
-         * /param maxLSIterations: The maximum number of line search iterations.
-         * /param resetOuts: The flag for whether the output matrices should be reset
+         * \param tolr: The relative tolerance for the Newton-Raphson solve.
+         * \param tola: The absolute tolerance for the Newton-Raphson solve.
+         * \param alpha: The alpha parameter for the line search.
+         * \param maxLSIterations: The maximum number of line search iterations.
+         * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
          * 
          * The residual function should have inputs of the form
-         * /param &x: A vector of the variable to be solved.
-         * /param &floatArgs: Additional floating point arguments to residual
-         * /param &intArgs: Additional integer arguments to the residual
-         * /param &residual: The residual vector
-         * /param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * /param &floatOuts: Additional floating point values to return.
-         * /param &intOuts: Additional integer values to return.
-         * /param &linearSolver: The linear solver object.
-         * /param &J: The Jacobian matrix.
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param &intArgs: Additional integer arguments to the residual
+         * \param &residual: The residual vector
+         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &linearSolver: The linear solver object.
+         * \param &J: The Jacobian matrix.
          */
 
         //Initialize the pseudo time
@@ -1479,35 +1479,35 @@ namespace solverTools{
         /*!
          * An implementation of the Broyden–Fletcher–Goldfarb–Shanno (BFGS) algorithm for solving optimization problems.
          *
-         * /param lagrangianFunction: The Lagrangian function
-         * /param lagrangianGradientFunction: The gradient of the Lagrangian function.
-         * /param &x0: The intial iterate of x
-         * /param &x: The converged value of x
-         * /param &convergeFlag: A flag indicating if convergence has been achieved.
-         * /param &fatalErrorFlag: A flag indicating if a fatal error was encountered.
-         * /param &floatOuts: A matrix of floating-point outputs.
-         * /param &intOuts: A matrix of integer outputs.
-         * /param &floatArgs: A matrix of floating-point arguments.
-         * /param &intArgs: A matrix of integer arguments.
-         * /param maxNLIterations: The maximum number of non-linear iterations.
-         * /param tolr: The relative tolerance.
-         * /param tola: The absolute tolerance.
-         * /param alpha: The line-search parameter.
-         * /param maxLSIterations: The maximum number of line-search reductions.
-         * /param resetOuts: The flag to indicate if the floating-point outputs should be reset at each
+         * \param lagrangianFunction: The Lagrangian function
+         * \param lagrangianGradientFunction: The gradient of the Lagrangian function.
+         * \param &x0: The intial iterate of x
+         * \param &x: The converged value of x
+         * \param &convergeFlag: A flag indicating if convergence has been achieved.
+         * \param &fatalErrorFlag: A flag indicating if a fatal error was encountered.
+         * \param &floatOuts: A matrix of floating-point outputs.
+         * \param &intOuts: A matrix of integer outputs.
+         * \param &floatArgs: A matrix of floating-point arguments.
+         * \param &intArgs: A matrix of integer arguments.
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance.
+         * \param tola: The absolute tolerance.
+         * \param alpha: The line-search parameter.
+         * \param maxLSIterations: The maximum number of line-search reductions.
+         * \param resetOuts: The flag to indicate if the floating-point outputs should be reset at each
          *     iteration.
-         * /param stepSize: The estimated step size. Defaults to 1.
-         * /param maxdx: The maximum allowable step size in terms of the norm of the solution
+         * \param stepSize: The estimated step size. Defaults to 1.
+         * \param maxdx: The maximum allowable step size in terms of the norm of the solution
          *     vector. If negative this is ignored.
          *
          * The lagrangianGradient function should have inputs of the form
-         * /param &x: A vector of the variable to be solved.
-         * /param &floatArgs: Additional floating point arguments to residual
-         * /param intMatrix &intArgs: Additional integer arguments to the residual
-         * /param &value: The value of the Lagrangian.
-         * /param &gradient: The gradient of the Lagrangian function.
-         * /param &floatOuts: Additional floating point values to return.
-         * /param &intOuts: Additional integer values to return.
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param intMatrix &intArgs: Additional integer arguments to the residual
+         * \param &value: The value of the Lagrangian.
+         * \param &gradient: The gradient of the Lagrangian function.
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
          */
 
         //Solve for the initial gradient of the Lagrangian
@@ -1725,32 +1725,32 @@ namespace solverTools{
          * WARNING: This function is less tested than would be desired and should be used with caution.
          *
          * The lagrangian function should have inputs of the form
-         * /param &x: A vector of the variable to be solved.
-         * /param &floatArgs: Additional floating point arguments to residual
-         * /param &intArgs: Additional integer arguments to the residual
-         * /param &lagrangian: The residual vector
-         * /param &lagrangianGradient: The jacobian matrix of the residual w.r.t. x
-         * /param &floatOuts: Additional floating point values to return.
-         * /param &intOuts: Additional integer values to return.
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param &intArgs: Additional integer arguments to the residual
+         * \param &lagrangian: The residual vector
+         * \param &lagrangianGradient: The jacobian matrix of the residual w.r.t. x
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
          *
          * The main routine accepts the following parameters:
-         * /param &x0: The initial iterate of x.
-         * /param &x: The converged value of the solver.
-         * /param &convergeFlag: A flag which indicates whether the solver converged.
-         * /param &floatOuts: Additional floating point values to return.
-         * /param &intOuts: Additional integer values to return.
-         * /param &floatArgs: The additional floating-point arguments.
-         * /param &intArgs: The additional integer arguments.
-         * /param maxNLIterations: The maximum number of non-linear iterations.
-         * /param tolr: The relative tolerance
-         * /param tola: The absolute tolerance
-         * /param alpha: The line search criteria.
-         * /param maxLSIterations: The maximum number of line-search iterations.
-         * /param ds0: The initial pseudo-time step. Defaults to 1.0
-         * /param dsMin: The minimum pseudo-time step size. Defaults to 0.1
-         * /param resetOuts: The flag for whether the output matrices should be reset
+         * \param &x0: The initial iterate of x.
+         * \param &x: The converged value of the solver.
+         * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &floatArgs: The additional floating-point arguments.
+         * \param &intArgs: The additional integer arguments.
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param alpha: The line search criteria.
+         * \param maxLSIterations: The maximum number of line-search iterations.
+         * \param ds0: The initial pseudo-time step. Defaults to 1.0
+         * \param dsMin: The minimum pseudo-time step size. Defaults to 0.1
+         * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
-         * /param const floatType maxdx: The maximum allowable change in the solution vector. If negative this is ignored.
+         * \param const floatType maxdx: The maximum allowable change in the solution vector. If negative this is ignored.
          */
 
         //Initialize the homotopy solver

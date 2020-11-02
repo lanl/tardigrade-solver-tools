@@ -45,13 +45,13 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     if ( x.size( ) != 2 ){
@@ -75,10 +75,10 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
      */
 
     floatMatrix Jtmp;
@@ -93,13 +93,13 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     if ( x.size( ) != 3 ){
@@ -122,10 +122,10 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
     /*!
      * A non-linear function for use in testing the solver.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
      */
 
     floatMatrix Jtmp;
@@ -141,13 +141,13 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will 
      * require the use of the line-search algorithm.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     residual = { std::exp( -x[ 0 ] ) - 1 };
@@ -163,10 +163,10 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will 
      * require the use of the line-search algorithm.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
      */
     floatMatrix Jtmp;
     floatMatrix fO;
@@ -181,13 +181,13 @@ errorOut nlFxn4( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will
      * require the use of the line-search algorithm.
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     residual = { std::tanh( x[ 0 ] ) };
@@ -202,13 +202,13 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will require
      * the use of the bounded homotopy solver
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     //floatArgs answers
@@ -314,13 +314,13 @@ errorOut nlFxn6( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will require
      * the use of the bounded homotopy solver
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     floatType x1 = x[ 0 ];
@@ -363,13 +363,13 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will require
      * the use of the bounded homotopy solver
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     if ( x.size() != 1 ){
@@ -388,13 +388,13 @@ errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const 
     /*!
      * A lagrangian used to test the optimization tools
      *
-     * /param &x: A vector of the variable to be solved.
-     * /param &floatArgs: Additional floating point arguments to residual
-     * /param &intArgs: Additional integer arguments to the residual
-     * /param &value: The value of the Lagrangian
-     * /param &gradient: The gradient of the Lagrangian
-     * /param &floatOuts: Additional floating point values to return.
-     * /param &intOuts: Additional integer values to return.
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &value: The value of the Lagrangian
+     * \param &gradient: The gradient of the Lagrangian
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
      */
 
     if ( x.size() != 1 ){
@@ -415,13 +415,13 @@ errorOut lagrangian2( const floatVector &x, const floatMatrix &floatArgs, const 
     /*!
      * A lagrangian used to test the optimization tools
      *
-     * /param &x: A vector of the variable to be solved.
-     * /param &floatArgs: Additional floating point arguments to residual
-     * /param &intArgs: Additional integer arguments to the residual
-     * /param &value: The value of the Lagrangian
-     * /param &gradient: The gradient of the Lagrangian
-     * /param &floatOuts: Additional floating point values to return.
-     * /param &intOuts: Additional integer values to return.
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &value: The value of the Lagrangian
+     * \param &gradient: The gradient of the Lagrangian
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
      */
 
     if ( x.size() != 3 ){
@@ -466,13 +466,13 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
     /*!
      * A lagrangian used to test the optimization tools
      *
-     * /param &x: A vector of the variable to be solved.
-     * /param &floatArgs: Additional floating point arguments to residual
-     * /param &intArgs: Additional integer arguments to the residual
-     * /param &value: The value of the Lagrangian
-     * /param &gradient: The gradient of the Lagrangian
-     * /param &floatOuts: Additional floating point values to return.
-     * /param &intOuts: Additional integer values to return.
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &value: The value of the Lagrangian
+     * \param &gradient: The gradient of the Lagrangian
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
      */
 
     if ( x.size() != 3 ){
@@ -581,7 +581,7 @@ int testNewtonRaphson( std::ofstream &results ){
     /*!
      * Tests of the Newton-Raphson solver
      * 
-     * /param &results: The output file
+     * \param &results: The output file
      */
 
     //The first test
@@ -1811,7 +1811,7 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
 
     if ( error ){
         error->print( );
-        results << "test_applyBoundaryLimitation (test 3) & False\n";
+        results << "test_applyBoundaryLimitation & False\n";
         return 1;
     }
 
