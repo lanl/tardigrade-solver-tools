@@ -1010,7 +1010,7 @@ int testHomotopySolver(std::ofstream &results){
 
 int test_aFxn( std::ofstream &results ){
     /*!
-     * Test the computation of the a parameter in the Barrier function.
+     * Test the computation of the "\f$a\f$" parameter in the Barrier function.
      *
      * :param std::ofstream &results: The output file.
      */
