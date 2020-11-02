@@ -1581,7 +1581,6 @@ namespace solverTools{
 
             //Apply maximum dx step size limitation
             if ( ( maxdx > 0 ) && ( pNorm > maxdx ) ){
-
                 p *= ( maxdx / pNorm );
             }
 
@@ -1676,7 +1675,6 @@ namespace solverTools{
 
                 r = theta * y  + ( 1 - theta ) * Bs;
 
-
                 B += vectorTools::dyadic( r, r ) / vectorTools::dot( s, r )
                    - vectorTools::dyadic( Bs, Bs ) / vectorTools::dot( s, Bs );
 
@@ -1722,7 +1720,8 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * WARNING: This function is less tested than would be desired and should be used with caution.
+         * \warning \b \emoji :warning: \emoji :warning: \emoji :warning: WARNING \emoji :warning: \emoji :warning: \emoji :warning:
+         *     WARNING: This function is less tested than would be desired and should be used with caution.
          *
          * The lagrangian function should have inputs of the form
          * \param &x: A vector of the variable to be solved.
