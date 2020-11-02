@@ -833,11 +833,13 @@ namespace solverTools{
     errorOut aFxn( const floatType &pseudoT, const floatType logAMax, floatType &a, floatType &dadt ){
         /*!
          * Compute the a parameter for the Barrier Function along with the derivative w.r.t.
-         * the pseudo time.
+         * the pseudo time ( \f$t^s\f$ ).
+         * 
+         * \f$a = exp( log(A^{max}) t^s )
          *
          * /param &pseudoT: The pseudo time ( 0 - 1 )
-         * /param logAMax: The logarithm of the maximum a parameter value.
-         * /param &a: The current value of a
+         * /param logAMax: The logarithm of the maximum 'a' parameter value.
+         * /param &a: The current value of 'a'
          * /param &dadt: The Jacobian of a w.r.t. pseudoT.
          */
 
@@ -857,24 +859,29 @@ namespace solverTools{
     errorOut computeBarrierFunction( const floatType &x, const floatType &pseudoT, const floatType &logAmax,
                                      const floatType &b, const bool &sign, floatType &barrierFunction ){
         /*!
-         * Compute the barrier function for a positivity constraint.
+         * Compute the barrier function for the constraint.
          *
-         * b = exp( s * a * ( b - x ) ) - 1
+         * \f$b = exp( s a( t^s ) ( b - x ) ) - 1\f$
          *
-         * /param &x: The constrained variable value.
-         * /param &pseudoT: The value of the pseudo time.
-         * /param &logAmax: The log of the maximum value of the a parameter.
-         * /param &b: The offset variable ( i.e. the location of the barrier )
+         * where
+         * 
+         * - \f$s =  1\f$ is a negative boundary
+         * - \f$s = -1\f$ is a positive boundary
+         *
+         * /param &x: The constrained variable value ( \f$x\f$ ).
+         * /param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
+         * /param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
+         * /param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
          * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
-         *     negative ( 0 ) boundary.
-         * /param &barrierFunction: The value of the barrier function.
+         *     negative ( 0 ) boundary ( \f$s\f$ ).
+         * /param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
          */
 
         floatType a;
         errorOut error = aFxn( pseudoT, logAmax, a );
 
         if ( error ){
-            errorOut result = new errorNode( "computeBarrierFunction", "Error in the computation of the a value" );
+            errorOut result = new errorNode( "computeBarrierFunction", "Error in the computation of the 'a' value" );
             result->addNext( error );
             return result;
         }
@@ -893,20 +900,22 @@ namespace solverTools{
                                       const floatType &b, const bool &sign, floatType &barrierFunction,
                                       floatType &dbdx, floatType &dbdt ){
         /*!
-         * Compute the barrier function for a positivity constraint.
+         * Compute the barrier function for a positivity constraint where the barrier is defined as
          *
-         * b = exp( s * a * ( b - x ) ) - 1
+         * \f$b = exp( s * a * ( b - x ) ) - 1\f$
          *
-         * s =  1 ( negative boundary )
-         * s = -1 ( positive boundary )
+         * where
+         * 
+         * - \f$s =  1\f$ is a negative boundary
+         * - \f$s = -1\f$ is a positive boundary
          *
-         * /param &x: The constrained variable value.
-         * /param &pseudoT: The value of the pseudo time.
-         * /param &logAmax: The log of the maximum value of the a parameter.
-         * /param &b: The offset variable ( i.e. the location of the barrier )
+         * /param &x: The constrained variable value ( \f$x\f$ ).
+         * /param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
+         * /param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
+         * /param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
          * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
-         *     negative ( 0 ) boundary.
-         * /param &barrierFunction: The value of the barrier function.
+         *     negative ( 0 ) boundary ( \f$s\f$ ).
+         * /param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
          * /param &dbdx: The Jacobian of the barrier function w.r.t. the variable value.
          * /param &dbdt: the Jacobian of the barrier function w.r.t. the pseudo time.
          */
@@ -915,7 +924,7 @@ namespace solverTools{
         errorOut error = aFxn( pseudoT, logAmax, a, dadt );
 
         if ( error ){
-            errorOut result = new errorNode( "computeBarrierFunction (jacobian)", "Error in the computation of the a value" );
+            errorOut result = new errorNode( "computeBarrierFunction (jacobian)", "Error in the computation of the 'a' value" );
             result->addNext( error );
             return result;
         }
@@ -946,11 +955,18 @@ namespace solverTools{
          * to define barrier functions which enable a bounded root finding approach which can be very useful
          * when roots outside of the desired solution space have stronger basins of attraction than the
          * desired roots.
+         * 
+         * The updated residual is defined as
+         * 
+         * \f$R^b = \sum_{i=1}^{N^{barriers}} \left[\left( 1 - \frac{1}{a(t^s)} \right) R + \frac{1}{a\left(t^s\right)} b \right]\f$
+         * 
+         * where \f$R^b\f$ is the barrier residual, \f$N^{barriers}\f$ are the number of barrier functions to add,
+         * \f$a\f$ is a parameter that is a function of pseudo-time \f$t^s\f$, and \f$b\f$ is the barrier function.
          *
-         * WARNING: If two residualIndices are identical, then only the second one will be used and the
-         *          first equation will not be observed.
+         * \warning \b \emoji :warning: \emoji :warning: \emoji :warning: WARNING \emoji :warning: \emoji :warning: \emoji :warning:
+         *     WARNING: If two `residualIndices` are identical, then only the second one will be used and the  first equation will not be observed.
          *
-         * TODO: Add two-sided boundaries.
+         * \todo{Add two-sided boundaries.}
          *
          * /param &x: The solution vector.
          * /param &floatArgs: The floating point arguments.
@@ -959,20 +975,19 @@ namespace solverTools{
          * /param &jacobian: The Jacobian matrix.
          * /param &floatOuts: The additional floating-point outputs.
          * /param &intOuts: The additional integer outputs.
-         * /param &DEBUG: The debug output.
          *
          * Note that floatArgs is modified such that
-         * floatArgs[ 0 ][ 0 ]   = pseudoTime ( the homotopy pseudo-time )
-         * floatArgs[ 1 ]        = barrierValues ( the values at which the barrier function activates )
-         * floatArgs[ 2 ]        = logAMaxValues ( the maximum values of the a parameter for the barrier function )
-         * floatArgs[ 1 -> end ] = originalResidual floatArgs ( the floatArgs of the original residual function )
+         * `floatArgs[ 0 ][ 0 ]`   = `pseudoTime` ( the homotopy pseudo-time )
+         * `floatArgs[ 1 ]`        = `barrierValues` ( the values at which the barrier function activates )
+         * `floatArgs[ 2 ]`        = `logAMaxValues` ( the maximum values of the \f$a\f$ parameter for the barrier function )
+         * `floatArgs[ 1 -> end ]` = originalResidual `floatArgs` ( the `floatArgs` of the original residual function )
          *
          * Note that intArgs is modified such that
-         * intArgs[ 0 ] = variableIndices ( the indices of the variables which have the barrier functions applied )
-         * intArgs[ 1 ] = residualIndices ( the indices of the residual vector at which the barrier functions are applied )
-         * intArgs[ 2 ] = barrierSigns ( the signs of the barrier functions 0 for negative barrier
+         * `intArgs[ 0 ]` = `variableIndices` ( the indices of the variables which have the barrier functions applied )
+         * `intArgs[ 1 ]` = `residualIndices` ( the indices of the residual vector at which the barrier functions are applied )
+         * `intArgs[ 2 ]` = `barrierSigns` ( the signs of the barrier functions 0 for negative barrier
          *     ( lower boundary ) and 1 for a positive barrier ( upper boundary )
-         * intArgs[ 3 -> end ] = originalResidual intArgs ( the intArgs of the original residual function )
+         * `intArgs[ 3 -> end ]` = originalResidual `intArgs` ( the `intArgs` of the original residual function )
          *
          * The pseudo-time allows us to change the influence of the barrier function on the output.
          */
@@ -1022,9 +1037,6 @@ namespace solverTools{
                                                   floatArgsOriginalResidual, intArgsOriginalResidual,
                                                   originalResidual, originalJacobian,
                                                   originalFloatOuts, intOuts
-#ifdef DEBUG_MODE
-                                                  , DEBUG
-#endif
                                                 );
         residual = originalResidual;
         jacobian = originalJacobian;
@@ -1061,7 +1073,7 @@ namespace solverTools{
             error = aFxn( pseudoTime, logAMaxValues[ i ], a, dadt );
 
             if ( error ){
-                std::string output_message = "Error in the computation of the a parameter of barrier equation " + std::to_string( i );
+                std::string output_message = "Error in the computation of the 'a' parameter of barrier equation " + std::to_string( i );
                 errorOut result = new errorNode( "computeBarrierHomotopyResidual", output_message.c_str() );
                 result->addNext( error );
                 return result;
