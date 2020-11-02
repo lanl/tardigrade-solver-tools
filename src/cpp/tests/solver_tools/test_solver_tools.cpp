@@ -103,7 +103,7 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
      */
 
     if ( x.size( ) != 3 ){
-        return new errorNode( "nlFnx2", "x must have a size of 3" );
+        return new errorNode( "nlFxn2", "x must have a size of 3" );
     }
 
     residual = { ( x[ 0 ] - 1 ) * ( x[ 0 ] - 7 ) * x[ 1 ], ( x[ 1 ] - 1 ) * ( x[ 0 ] - 3 ) * x[ 2 ], x[ 0 ] * x[ 1 ] * x[ 2 ] };
@@ -891,7 +891,6 @@ int testHomotopySolver(std::ofstream &results){
     }
 
     if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) ){
-        std::cout << "Rtmp: "; vectorTools::print( Rtmp );
         results << "testHomotopySolver (test 1) & False\n";
         return 1;
     }
