@@ -516,7 +516,7 @@ namespace solverTools{
         solverType ls;
         unsigned int rank;
 
-        //Save the flowOuts and intOuts
+        //Save the floatOuts and intOuts
         floatMatrix oldFloatOuts = floatOuts;
         intMatrix   oldIntOuts   = intOuts;
 
@@ -535,21 +535,27 @@ namespace solverTools{
 
         //Define the homotopy residual
         stdFncNLFJ homotopyResidual;
-        homotopyResidual = [&]( const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
-                                floatVector &r, floatMatrix &_J, floatMatrix &fO, intMatrix &iO ){
+        homotopyResidual = [&]( const floatVector &homotopy_x, const floatMatrix &homotopy_floatArgs, const intMatrix &homotopy_intArgs,
+                                floatVector &homotopy_residual, floatMatrix &homotopy_J, floatMatrix &homotopy_floatOuts, intMatrix &homotopy_intOuts ){
+            /*!
+             * A sub-function that computes the homotopy residual. This residual takes the original function and maps
+             * it to another that is easier to solve. The variables into this function are all the same as in the
+             * original residual but we modify the residual to include an offset which makes the expression
+             * easier to solve.
+             */
 
             floatVector R;
 
-            error = residual( x_, floatArgs_, intArgs_, R, _J, fO, iO );
+            error = residual( homotopy_x, homotopy_floatArgs, homotopy_intArgs, R, homotopy_J, homotopy_floatOuts, homotopy_intOuts );
 
             if ( error ){
-                r = R;
+                homotopy_residual = R;
                 errorOut result = new errorNode( "homotopySolver::homotopyResidual", "error in residual calculation" );
                 result->addNext( error );
                 return result;
             }
 
-            r = R - ( 1 - s ) * Rinit;
+            homotopy_residual = R - ( 1 - s ) * Rinit;
 
             return static_cast< errorOut >( NULL );
         };
@@ -576,7 +582,7 @@ namespace solverTools{
             //Begin the adaptive homotopy loop
             while ( !convergeFlag ){
 
-                //Compute the eplicit estimate of xh ( this is kind of what makes it a homotopy )
+                //Compute the explicit estimate of xh ( this is kind of what makes it a homotopy )
                 error = homotopyResidual( xh, floatArgs, intArgs, rh, J, floatOuts, intOuts );
     
                 if ( error ){
