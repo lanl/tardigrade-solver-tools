@@ -52,11 +52,119 @@ namespace solverTools{
          *     prior to each iteration.
          */
 
+        solverType linearSolver;
+        floatMatrix J;
+        return newtonRaphson( residual, x0, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts, floatArgs, intArgs, linearSolver, J,
+                              maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
+    }
+
+    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
+                            const floatVector &x0,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                            const floatType alpha, const unsigned int maxLSIterations, const bool resetOuts ){
+        /*!
+         * The main Newton-Raphson non-linear solver routine. An implementation
+         * of a typical Newton-Raphson solver which can take an arbitrary
+         * residual function.
+         *
+         * The residual function should have inputs of the form
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param &intArgs: Additional integer arguments to the residual
+         * \param &residual: The residual vector
+         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         *
+         * The main routine accepts the following parameters:
+         * \param &x0: The initial iterate of x.
+         * \param &x: The converged value of the solver.
+         * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &fatalErrorFlag: A flag which indicates if a fatal error has occurred
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &floatArgs: The additional floating-point arguments.
+         * \param &intArgs: The additional integer arguments.
+         * \param &linearSolver: The linear solver used in the solve. This object
+         *     contains the decomposed Jacobian matrix which can be very useful in 
+         *     total Jacobian calculations
+         * \param &J: The Jacobian matrix. Useful in calculating total Jacobians.
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param alpha: The line search criteria.
+         * \param maxLSIterations: The maximum number of line-search iterations.
+         * \param resetOuts: A flag for whether the output matrices should be reset
+         *     prior to each iteration.
+         */
+
+        intVector boundVariableIndices(0);
+        intVector boundSigns(0);
+        floatVector boundValues(0);
+        bool boundMode = false;
+        return newtonRaphson( residual, x0, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts, floatArgs, intArgs, linearSolver, J,
+                              boundVariableIndices, boundSigns, boundValues, boundMode,
+                              maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
+    }
+
+    errorOut newtonRaphson( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
+                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix & ) > residual,
+                            const floatVector &x0,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                            const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
+                            const bool boundMode,
+                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                            const floatType alpha, const unsigned int maxLSIterations, const bool resetOuts){
+        /*!
+         * The main Newton-Raphson non-linear solver routine. An implementation
+         * of a typical Newton-Raphson solver which can take an arbitrary
+         * residual function.
+         *
+         * The residual function should have inputs of the form
+         * \param &x: A vector of the variable to be solved.
+         * \param &floatArgs: Additional floating point arguments to residual
+         * \param &intArgs: Additional integer arguments to the residual
+         * \param &residual: The residual vector
+         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         *
+         * The main routine accepts the following parameters:
+         * \param &x0: The initial iterate of x.
+         * \param &x: The converged value of the solver.
+         * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &fatalErrorFlag: A flag which indicates if a fatal error has occurred
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &floatArgs: The additional floating-point arguments.
+         * \param &intArgs: The additional integer arguments.
+         * \param &linearSolver: The linear solver used in the solve. This object
+         *     contains the decomposed Jacobian matrix which can be very useful in 
+         *     total Jacobian calculations
+         * \param &J: The Jacobian matrix. Useful in calculating total Jacobians
+         * \param &boundVariableIndices: The indices of variables that have hard bounds
+         * \param &boundSigns: The signs of the bounds. 0 for a negative ( lower ) bound
+         *     and 1 for a positive ( upper ) bound
+         * \param &boundValues: The values of the boundaries.
+         * \param boundMode: The mode for the boundary. See applyBoundaryLimitation for
+         *     more details..
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param alpha: The line search criteria.
+         * \param maxLSIterations: The maximum number of line-search iterations.
+         * \param resetOuts: A flag for whether the output matrices should be reset
+         *     prior to each iteration
+         */
+
         //Compute the initial residual and jacobian
         floatVector dx = floatVector(x0.size(), 0);
         floatVector ddx;
         floatVector R, Rp;
-        floatMatrix J;
 
         //Make copies of the initial float out values
         floatMatrix oldFloatOuts = floatOuts;
@@ -102,21 +210,31 @@ namespace solverTools{
         unsigned int nLSIterations = 0;
         float lambda = 1;
         bool converged, lsCheck;
-        checkTolerance(R, tol, converged);
+        checkTolerance( R, tol, converged );
         unsigned int rank;
         convergeFlag = false;
         fatalErrorFlag = false;
 
         //Begin the iteration loop
-        while ((!converged) && (nNLIterations<maxNLIterations)){
+        while ( ( !converged ) && ( nNLIterations<maxNLIterations ) ){
 
             //Perform the linear solve
-            ddx = -vectorTools::solveLinearSystem( J, R, rank);
+            ddx = -vectorTools::solveLinearSystem( J, R, rank, linearSolver );
 
             //Check the rank to make sure the linear system has a unique solution
-            if (rank != R.size()){
+            if ( rank != R.size( ) ){
                 convergeFlag = false;
-                return new errorNode("newtonRaphson", "The jacobian matrix is singular");
+                return new errorNode( "newtonRaphson", "The jacobian matrix is singular" );
+            }
+
+            //Apply any boundaries on the variables
+            error = applyBoundaryLimitation( x0 + dx, boundVariableIndices, boundSigns, boundValues, ddx,
+                                             tolr, tola, boundMode );
+
+            if ( error ){
+                errorOut result = new errorNode( "newtonRaphson", "Error in the application of the boundary limitations" );
+                result->addNext( error );
+                return result;
             }
 
             //Update dx
@@ -168,7 +286,7 @@ namespace solverTools{
                 intOuts   = oldIntOuts;
 
                 //Compute the new residual
-                error = residual(x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts);
+                error = residual( x0 + dx, floatArgs, intArgs, R, J, floatOuts, intOuts );
 
                 if ( error ){
                     if ( ( R.size( ) == 101 ) && ( J.size( ) == 212 ) ){//TODO: I continue to hate this
@@ -207,7 +325,7 @@ namespace solverTools{
             }
 
             //Check if the solution is converged
-            checkTolerance(R, tol, converged);
+            checkTolerance( R, tol, converged );
 
             //Increment nNLIterations
             nNLIterations++;
@@ -493,4 +611,91 @@ namespace solverTools{
 
         return NULL;
     }
+
+    errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
+                                      const floatVector &barrierValues, floatVector &dx, const floatType tolr,
+                                      const floatType tola, const bool mode ){
+        /*!
+         * Apply the boundary limitation to the update step.
+         * dx will either be scaled so that all of the variables respect the boundaries or each variable which
+         * violates the constraint will be set to the boundary value. This is should be viewed as
+         * a last resort if even homotopy has failed as it is increasingly likely that it will
+         * not result in convergence.
+         *
+         * /param &x0: The base vector from which dx extends.
+         * /param &variableIndices: The indices of the vector that have constraints applied to them.
+         * /param &barrierSigns: The sign of the barrier 0 is a negative barrier ( i.e. lower bound )
+         * /   1 is a positive barrier ( i.e. upper bound )
+         * /param &barrierValues: The locations of the barriers.
+         * /param &dx: The change in x vector.
+         * /param &tolr: The relative tolerance. Defaults to 1e-9
+         * /param &tola: The absolute tolerence. Defautls to 1e-9
+         * /param mode: The mode of the boundary limitation. If false, all of dx is scaled, if true
+         *     only the value that violates the constraint is set to the constraint.
+         */
+
+        unsigned int nBounds = variableIndices.size();
+
+        if ( ( barrierSigns.size() != nBounds ) || ( barrierValues.size() != nBounds ) ){
+
+            std::string output_message = "The defined barrier are not consistent in size\n";
+            output_message            += "    variableIndices: " + std::to_string( variableIndices.size() ) + "\n";
+            output_message            += "    barrierSigns:    " + std::to_string( barrierSigns.size() ) + "\n";                                                                                                            output_message            += "    barrierValues:   " + std::to_string( barrierValues.size() ) + "\n";
+            return new errorNode( "applyBoundaryLimitations", output_message.c_str() );
+        }
+
+        //Initialize variables
+        int index;
+        floatType tol, d;
+        floatType scaleFactor = 1.0;
+
+        //Do the barrier search
+        for ( unsigned int i = 0; i < nBounds; i++ ){
+
+            //Extract the index of the variable
+            index = variableIndices[ i ];
+ 
+            //Calculate the tolerance
+            //
+            //This relative tolerance is not the only tolerance that could be used.
+            //It does allow for the constraints to be violated but this should be very small
+            //compared to the magnitude of the previously converged value.                              
+            tol = tolr * fabs( x0[ index ] ) + tola;
+
+            //Determine the amount of constraint violation
+            d = ( x0[ index ] + dx[ index ] ) - barrierValues[ i ];
+            if ( barrierSigns[ i ] == 0 ){
+                d *= -1;
+            }
+            else if ( barrierSigns[ i ] != 1 ){
+                return new errorNode( "applyBoundaryLimitation", "The barrier sign must be zero or 1" );
+            }
+
+            d = 0.5 * ( d + fabs( d ) );
+
+            //Determine the required scale factor
+            if ( d > tol ){
+
+                if ( mode ){
+
+                    dx[ index ] = barrierValues[ i ] - x0[ index ];
+
+                }
+                else{
+
+                    scaleFactor = std::min( scaleFactor, ( barrierValues[ i ] - x0[ index ] ) / dx[ index ] );
+                }
+            }
+        }
+
+        //Scale the dx vector if appropriate
+        if ( !mode ){
+            if ( !vectorTools::fuzzyEquals( scaleFactor, 1.0 ) ){
+                dx *= scaleFactor;
+            }
+        }
+
+        return NULL;
+    }
+
 }

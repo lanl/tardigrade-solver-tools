@@ -28,6 +28,8 @@ namespace solverTools{
     typedef std::vector< floatVector > floatMatrix; //!< Define a matrix of floats
     typedef std::vector< intVector > intMatrix; //!< Define a matrix of integers
 
+    using solverType = vectorTools::solverType< floatType >; //!< Force consistency with vectorTools
+
     typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
     typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&,
@@ -40,6 +42,26 @@ namespace solverTools{
                             const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
+                            const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                            const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
+    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                    ) > residual,
+                            const floatVector &x0,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                            const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
+                            const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
+
+    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
+                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &
+                                                    ) > residual,
+                            const floatVector &x0,
+                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                            const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
+                            const bool boundMode,
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
 
@@ -63,6 +85,10 @@ namespace solverTools{
                             const floatVector &x0,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, bool &isGood, const floatType eps=1e-6,
                             const floatType tolr=1e-6, const floatType tola=1e-6, const bool suppressOutput = false);
+
+    errorOut applyBoundaryLimitation( const floatVector &x0, const intVector &variableIndices, const intVector &barrierSigns,
+                                      const floatVector &barrierValues, floatVector &dx,
+                                      const floatType tolr = 1e-9, const floatType tola = 1e-9, const bool mode = false );
 
 }
 

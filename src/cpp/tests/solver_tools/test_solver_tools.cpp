@@ -541,6 +541,41 @@ int testNewtonRaphson( std::ofstream &results ){
         return 1;
     }
 
+    //The fourth test. Tests the bounded Newton method
+    x0 = { 10. };
+    floatOut.clear();
+    intOut.clear();
+    fO.clear();
+    iO.clear();
+
+    func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn7 );
+
+    solverTools::solverType linearSolver;
+    floatMatrix J;
+
+    intVector boundVariableIndices = { 0 };
+    intVector boundSigns = { 0 };
+    floatVector boundValues = { 1e-9 };
+    floatMatrix Jexp = { { 1. } };
+
+    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, {}, {}, linearSolver, J,
+                                        boundVariableIndices, boundSigns, boundValues, false );
+
+    if ( error ){
+        error->print();
+        results << "testNewtonRaphson nlFxn7 & False\n";
+        return 1;
+    }
+    if ( !vectorTools::fuzzyEquals( x, { 1. } ) ){
+        results << "testNewtonRaphson (test 4) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( J, Jexp ) ){
+        results << "testNewtonRaphson (test 5) & False\n";
+        return 1;
+    }
+
     results << "testNewtonRaphson & True\n";
     return 0;
 }
@@ -774,7 +809,75 @@ int testHomotopySolver(std::ofstream &results){
     
 }
 
-int main(){
+int test_applyBoundaryLimitation( std::ofstream &results ){
+    /*!
+     * Test of the application of the boundary conditions.
+     *
+     * \param &results: The output file
+     */
+
+    floatVector x0 = { 1.0,  2.0, 3.0, -1.0, -2.0, -3.0 };
+    floatVector dxDefault = { 0.1, -0.5, 1.0,  0.1,  2.1, -0.5 };
+
+    intVector variableIndices = {    0,    3, 4   };
+    intVector barrierSigns    = {    1,    0, 1   };
+    floatVector barrierValues = { 1.05, -1.0, 0.0 };
+
+    floatVector dx = dxDefault;
+
+    floatVector xAnswer1 = { 1.05, 1.75, 3.5, -0.95, -0.95, -3.25 };
+    floatVector xAnswer2 = { 1.033333, 1.833333, 3.333333, -1, -1.3, -3.1666667 };
+    floatVector xAnswer3 = { 1.05, 1.5, 4, -0.8, 0.0, -3.5 };
+
+    errorOut error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx );
+
+    if ( error ){
+        error->print();
+        results << "test_applyBoundaryLimitation & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( x0 + dx, xAnswer1 ) ){
+        results << "test_applyBoundaryLimitation (test 1) & False\n";
+        return 1;
+    }
+
+    dx = dxDefault;
+    x0[ 3 ] = -0.9;
+    dx[ 3 ] = -0.3;
+
+    error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx );
+
+    if ( error ){
+        error->print( );
+        results << "test_applyBoundaryLimitation & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( x0 + dx, xAnswer2 ) ){
+        results << "test_applyBoundaryLimitation (test 2) & False\n";
+        return 1;
+    }
+
+    dx = dxDefault;
+    error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx, 1e-9, 1e-9, true );
+
+    if ( error ){
+        error->print( );
+        results << "test_applyBoundaryLimitation & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( x0 + dx, xAnswer3 ) ){
+        results << "test_applyBoundaryLimitation (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_applyBoundaryLimitation & True\n";
+    return 0;
+}
+
+int main( ){
     /*!
     The main loop which runs the tests defined in the 
     accompanying functions. Each function should output
@@ -784,18 +887,19 @@ int main(){
 
     //Open the results file
     std::ofstream results;
-    results.open("results.tex");
+    results.open( "results.tex" );
 
     //Run the tests
-    testCheckTolerance(results);
-    testNewtonRaphson(results);
-    testFiniteDifference(results);
-    testCheckJacobian(results);
-    testCheckLSCriteria(results);
-    testHomotopySolver(results);
+    testCheckTolerance( results );
+    testNewtonRaphson( results );
+    testFiniteDifference( results );
+    testCheckJacobian( results );
+    testCheckLSCriteria( results );
+    testHomotopySolver( results );
+    test_applyBoundaryLimitation( results );
 
     //Close the results file
-    results.close();
+    results.close( );
 
     return 0;
 }
