@@ -298,8 +298,8 @@ namespace solverTools{
                     }
                     else{
                         fatalErrorFlag = true;
-                        errorOut result = new errorNode("newtonRaphson", "Error in line-search");
-                        result->addNext(error);
+                        errorOut result = new errorNode( "newtonRaphson", "Error in line-search" );
+                        result->addNext( error );
                         return result;
                     }
                 }
@@ -314,7 +314,7 @@ namespace solverTools{
             if ( !lsCheck ){
                 convergeFlag = false;
                 fatalErrorFlag = false;
-                return new errorNode("newtonRaphson", "The line-search failed to converge.");
+                return new errorNode( "newtonRaphson", "The line-search failed to converge." );
             }
             else{
                 Rp = R;
@@ -334,7 +334,7 @@ namespace solverTools{
         //Check if the solution converged
         if ( !converged ){
             convergeFlag = false;
-            return new errorNode("newtonRaphson", "The Newton-Raphson solver failed to converge.");
+            return new errorNode( "newtonRaphson", "The Newton-Raphson solver failed to converge." );
         }
         else{
             //Update x
@@ -347,11 +347,12 @@ namespace solverTools{
 
     errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
-                            const floatMatrix &floatArgs, const intMatrix &intArgs,
-                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
-                            const floatType alpha, const unsigned int maxLSIterations, const unsigned int homotopySteps){
+                             const floatVector &x0,
+                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                             const floatMatrix &floatArgs, const intMatrix &intArgs,
+                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                             const floatType alpha, const unsigned int maxLSIterations,const floatType ds0,
+                             const floatType dsMin, const bool resetOuts ){
         /*!
          * Solve a non-linear equation using a homotopy Newton solver. This method
          * can be successful in solving very stiff equations which other techniques
@@ -382,64 +383,138 @@ namespace solverTools{
          * \param tola: The absolute tolerance
          * \param alpha: The line search criteria.
          * \param maxLSIterations: The maximum number of line-search iterations.
-         * \param homotopySteps: The number of homotopy steps which will be taken.
+         * \param ds0: The initial step size.
+         * \param dsMin: The minimum step size.
+         * \param resetOuts: Flag for whether the outputs should be reset at each step
          */
 
         //Initialize the homotopy solver
-        floatType ds = 1./homotopySteps;
+        floatType ds = ds0;
         floatType s  = 0;
         floatVector xh = x0;
+        floatVector xdot = x0;
+        floatVector rh, dxh;
+        solverType ls;
+        unsigned int rank;
+
+        //Save the floatOuts and intOuts
+        floatMatrix oldFloatOuts = floatOuts;
+        intMatrix   oldIntOuts   = intOuts;
 
         //Define the homotopy residual equation
         floatVector Rinit;
         floatMatrix J;
 
         //Compute the initial residual
-        errorOut error = residual(x0, floatArgs, intArgs, Rinit, J, floatOuts, intOuts);
+        errorOut error = residual( x0, floatArgs, intArgs, Rinit, J, floatOuts, intOuts );
 
-        if (error){
-            errorOut result = new errorNode("homotopySolver", "error in initial residual calculation");
-            result->addNext(error);
+        if ( error ){
+            fatalErrorFlag = true;
+            errorOut result = new errorNode( "homotopySolver", "error in initial residual calculation" );
+            result->addNext( error );
             return result;
         }
 
         //Define the homotopy residual
         stdFncNLFJ homotopyResidual;
-        homotopyResidual = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
-                            floatVector &r, floatMatrix &J, floatMatrix &fO, intMatrix &iO){
+        homotopyResidual = [&]( const floatVector &homotopy_x, const floatMatrix &homotopy_floatArgs, const intMatrix &homotopy_intArgs,
+                                floatVector &homotopy_residual, floatMatrix &homotopy_J, floatMatrix &homotopy_floatOuts, intMatrix &homotopy_intOuts ){
+            /*!
+             * A sub-function that computes the homotopy residual. This residual takes the original function and maps
+             * it to another that is easier to solve. The variables into this function are all the same as in the
+             * original residual but we modify the residual to include an offset which makes the expression
+             * easier to solve.
+             */
 
             floatVector R;
-            error = residual(x_, floatArgs_, intArgs_, R, J, fO, iO);
 
-            if (error){
-                errorOut result = new errorNode("homotopySolver::homotopyResidual", "error in residual calculation");
-                result->addNext(error);
+            error = residual( homotopy_x, homotopy_floatArgs, homotopy_intArgs, R, homotopy_J, homotopy_floatOuts, homotopy_intOuts );
+
+            if ( error ){
+                homotopy_residual = R;
+                errorOut result = new errorNode( "homotopySolver::homotopyResidual", "error in residual calculation" );
+                result->addNext( error );
                 return result;
             }
 
-            r = R - (1 - s)*Rinit;
+            homotopy_residual = R - ( 1 - s ) * Rinit;
 
-            return static_cast<errorOut>(NULL);
+            return static_cast< errorOut >( NULL );
         };
 
         //Begin the homotopy loop
-        for (unsigned int n=0; n<homotopySteps; n++){
+        while ( s < 1 ){
 
             //Update s
             s += ds;
+            s = std::min( s, 1. );
 
-            error = newtonRaphson( homotopyResidual, xh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
-                                   floatArgs, intArgs, maxNLIterations, tolr, tola,
-                                   alpha, maxLSIterations);
+            //Initialize the solver
+            convergeFlag = false;
 
-            if (error){
-                errorOut result = new errorNode("homotopySolver", "error in Newton Raphson solution");
-                result->addNext(error);
-                return result;
+            if ( !resetOuts ){
+                oldFloatOuts = floatOuts;
+                oldIntOuts   = intOuts;
+            }
+            else{
+                floatOuts = oldFloatOuts;
+                intOuts   = oldIntOuts;
+            }
+
+            //Begin the adaptive homotopy loop
+            while ( !convergeFlag ){
+
+                //Compute the explicit estimate of xh ( this is kind of what makes it a homotopy )
+                error = homotopyResidual( xh, floatArgs, intArgs, rh, J, floatOuts, intOuts );
+    
+                if ( error ){
+                    fatalErrorFlag = true;
+                    convergeFlag = false;
+                    errorOut result = new errorNode( "homotopySolver", "The explicit homotopy estimate of x failed in an unexpected way. This shouldn't happen." );
+                    result->addNext( error );
+                    return result;
+                }
+
+                floatOuts = oldFloatOuts;
+                intOuts   = oldIntOuts;
+    
+                xdot = -vectorTools::solveLinearSystem( J, rh, rank );
+   
+                if ( rank != J.size( ) ){
+                    convergeFlag = false;
+                    fatalErrorFlag = false;
+                }
+                else{
+    
+                    dxh = ds * xdot;
+    
+                    error = newtonRaphson( homotopyResidual, xh + dxh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
+                                           floatArgs, intArgs, maxNLIterations, tolr, tola,
+                                           alpha, maxLSIterations, resetOuts );
+    
+                }
+    
+                if ( fatalErrorFlag ){
+                    errorOut result = new errorNode( "homotopySolver", "Fatal error in Newton Raphson solution" );
+                    result->addNext( error );
+                    return result;
+                }
+                else if ( ( !convergeFlag ) && ( ds / 2 >= dsMin ) ){
+                    s -= ds;
+                    ds = std::max( ds / 2, dsMin );
+                    s += ds;
+    
+                    floatOuts = oldFloatOuts;
+                    intOuts   = oldIntOuts;
+                }
+                else if ( ( !convergeFlag ) && ( ds / 2 < dsMin ) ){
+                    errorOut result = new errorNode( "homotopySolver", "Homotopy solver did not converge" );
+                    result->addNext( error );
+                    return result;
+                }
             }
 
             xh = x;
-
         }
 
         //Solver completed successfully
