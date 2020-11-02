@@ -566,7 +566,7 @@ int testNewtonRaphson( std::ofstream &results ){
         results << "testNewtonRaphson nlFxn7 & False\n";
         return 1;
     }
-                                                                                                            if ( !vectorTools::fuzzyEquals( x, { 1. } ) ){
+    if ( !vectorTools::fuzzyEquals( x, { 1. } ) ){
         results << "testNewtonRaphson (test 4) & False\n";
         return 1;
     }
@@ -864,7 +864,7 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
 
     if ( error ){
         error->print( );
-        results << "test_applyBoundaryLimitation (test 3) & False\n";
+        results << "test_applyBoundaryLimitation & False\n";
         return 1;
     }
 
