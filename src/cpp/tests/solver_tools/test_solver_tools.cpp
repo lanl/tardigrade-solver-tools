@@ -900,7 +900,7 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
 
     if ( error ){
         error->print( );
-        results << "test_applyBoundaryLimitation (test 3) & False\n";
+        results << "test_applyBoundaryLimitation & False\n";
         return 1;
     }
 
