@@ -1362,10 +1362,7 @@ namespace solverTools{
         return NULL;
     }
 
-    errorOut BFGS( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                            floatType &, floatVector &, floatMatrix &, intMatrix &
-                                          ) > lagrangianGradientFunction,
-                   const floatVector &x0,
+    errorOut BFGS( stdFncLagrangianG lagrangianGradientFunction, const floatVector &x0,
                    floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                    const floatMatrix &floatArgs, const intMatrix &intArgs,
                    const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -1374,7 +1371,6 @@ namespace solverTools{
         /*!
          * An implementation of the Broyden–Fletcher–Goldfarb–Shanno (BFGS) algorithm for solving optimization problems.
          *
-         * \param lagrangianFunction: The Lagrangian function
          * \param lagrangianGradientFunction: The gradient of the Lagrangian function.
          * \param &x0: The intial iterate of x
          * \param &x: The converged value of x
@@ -1394,15 +1390,6 @@ namespace solverTools{
          * \param stepSize: The estimated step size. Defaults to 1.
          * \param maxdx: The maximum allowable step size in terms of the norm of the solution
          *     vector. If negative this is ignored.
-         *
-         * The lagrangianGradient function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param intMatrix &intArgs: Additional integer arguments to the residual
-         * \param &value: The value of the Lagrangian.
-         * \param &gradient: The gradient of the Lagrangian function.
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
          */
 
         //Solve for the initial gradient of the Lagrangian
@@ -1599,10 +1586,7 @@ namespace solverTools{
         }
     }
 
-    errorOut homotopyBFGS( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatType &, floatVector &, floatMatrix &, intMatrix &
-                                                   ) > lagrangianGradientFunction,
-                           const floatVector &x0,
+    errorOut homotopyBFGS( stdFncLagrangianG lagrangianGradientFunction, const floatVector &x0,
                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                            const floatMatrix &floatArgs, const intMatrix &intArgs,
                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -1618,19 +1602,12 @@ namespace solverTools{
          * \warning \b \emoji :warning: \emoji :warning: \emoji :warning: WARNING \emoji :warning: \emoji :warning: \emoji :warning:
          *     WARNING: This function is less tested than would be desired and should be used with caution.
          *
-         * The lagrangian function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &lagrangian: The residual vector
-         * \param &lagrangianGradient: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param lagrangianGradientFunction: The lagrangian function to optimize which also computes the gradient
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
-         * \param &convergeFlag: A flag which indicates whether the solver converged.
+         * \param &convergeFlag: A flag which indicates whether the solver converged
+         * \param &fatalErrorFlag: A flag which indicates if a fatal error has been encountered.
          * \param &floatOuts: Additional floating point values to return.
          * \param &intOuts: Additional integer values to return.
          * \param &floatArgs: The additional floating-point arguments.
@@ -1644,7 +1621,7 @@ namespace solverTools{
          * \param dsMin: The minimum pseudo-time step size. Defaults to 0.1
          * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
-         * \param const floatType maxdx: The maximum allowable change in the solution vector. If negative this is ignored.
+         * \param maxdx: The maximum allowable change in the solution vector. If negative this is ignored.
          */
 
         //Initialize the homotopy solver
