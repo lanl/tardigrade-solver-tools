@@ -30,8 +30,36 @@ namespace solverTools{
 
     using solverType = vectorTools::solverType< floatType >; //!< Force consistency with vectorTools
 
-    typedef errorOut(*NonLinearFunction)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&);
-    typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
+    /**
+     * A residual function.
+     * 
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &residual: The residual vector
+     */
+    typedef errorOut(*NonLinearFunction)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, floatVector &residual);
+    /**
+     * A residual function
+     * 
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &residual: The residual vector
+     */
+    typedef std::function< errorOut(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, floatVector &residual) > stdFncNLF;
+
+    /**
+     * A residual function including the Jacobian
+     * 
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &residual: The residual vector
+     * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
+     */
     typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&,
                                                      floatMatrix &, intMatrix &);
     /**
@@ -61,8 +89,20 @@ namespace solverTools{
     typedef errorOut(*LagrangianFunctionWithGradient)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, floatType &value, floatVector &gradient,
                                                      floatMatrix &floatOuts, intMatrix &intOuts);
 
+    /**
+     * A Lagrangian which also returns its gradient.
+     * 
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param intMatrix &intArgs: Additional integer arguments to the residual
+     * \param &value: The value of the Lagrangian.
+     * \param &gradient: The gradient of the Lagrangian function.
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
+     */
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatType&, floatVector&,
                                     floatMatrix&, intMatrix&) > stdFncLagrangianG;
+
     errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
@@ -106,10 +146,7 @@ namespace solverTools{
                              const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const floatType ds0 = 1.0,
                              const floatType dsMin = 0.1, const bool resetOuts = false );
 
-    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                           ) > residual,
-                                    const floatType &dt, const floatVector &x0,
+    errorOut barrierHomotopySolver( stdFncNLFJ residual, const floatType &dt, const floatVector &x0,
                                     const intVector &variableIndices, const intVector &residualIndices,
                                     const intVector &barrierSigns, const floatVector &barrierValues,
                                     const floatVector &logAMaxValues,
@@ -120,10 +157,7 @@ namespace solverTools{
                                     const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                                     const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
 
-    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                           ) > residual,
-                                    const floatType &dt, const floatVector &x0,
+    errorOut barrierHomotopySolver( stdFncNLFJ residual, const floatType &dt, const floatVector &x0,
                                     const intVector &variableIndices, const intVector &residualIndices,
                                     const intVector &barrierSigns, const floatVector &barrierValues,
                                     const floatVector &logAMaxValues,
