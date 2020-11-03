@@ -43,11 +43,24 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
                  intMatrix &intOuts ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. This function is a linear
+     * function of the form
      * 
-     * \param &x: The variable vector
-     * \param &floatArgs: Floating point arguments to the function
-     * \param &intArgs: Integer arguments to the function
+     * \f$ R = \left[x + 1, y - 5.6\right]\f$
+     * 
+     * which has a solution at \f$\left( -1, 5.6 \right)\f$
+     * 
+     * The function also sets floatOuts to
+     * 
+     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * 
+     * And intOuts to
+     * 
+     * \f$\left[ \left[ 1, 2, 8 \right] \right]\f$
+     * 
+     * \param &x: The variable vector. Of size 2.
+     * \param &floatArgs: Floating point arguments to the function. None expected.
+     * \param &intArgs: Integer arguments to the function. None expected.
      * \param &residual: The residual vector output.
      * \param &jacobian: The jacobian output.
      * \param &floatOuts: Additional floating point outputs.
@@ -73,9 +86,10 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
 errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
                  floatVector &residual ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. An overload that hides the jacobian,
+     * floatOut, and intOut arrays.
      * 
-     * \param &x: The variable vector
+     * \param &x: The variable vector. Of size 2
      * \param &floatArgs: Floating point arguments to the function
      * \param &intArgs: Integer arguments to the function
      * \param &residual: The residual vector output.
@@ -91,11 +105,21 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
                  intMatrix &intOuts ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. A polynomial function of the form
      * 
-     * \param &x: The variable vector
-     * \param &floatArgs: Floating point arguments to the function
-     * \param &intArgs: Integer arguments to the function
+     * \f$ R = \left[ ( x - 1 ) ( x - 7 ) y, ( y - 1 ) ( x - 3 ) z, x y z \right]\f$
+     *
+     * The function also sets floatOuts to
+     * 
+     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * 
+     * And intOuts to
+     * 
+     * \f$\left[ \left[ 1, 2, 8 \right] \right]\f$
+     * 
+     * \param &x: The variable vector. Of size 3.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
      * \param &residual: The residual vector output.
      * \param &jacobian: The jacobian output.
      * \param &floatOuts: Additional floating point outputs.
@@ -120,7 +144,8 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
 errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
                  floatVector &residual ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. The same as the previously overloaded function
+     * except this function obfuscates the computation of the Jacobian, the floatOuts, and the intOuts.
      * 
      * \param &x: The variable vector
      * \param &floatArgs: Floating point arguments to the function
@@ -139,9 +164,19 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will 
-     * require the use of the line-search algorithm.
+     * require the use of the line-search algorithm. The function is of the form
      * 
-     * \param &x: The variable vector
+     * \f$R = exp(-x) - 1\f$
+     * 
+     * The function also sets floatOuts to
+     * 
+     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * 
+     * And intOuts to
+     * 
+     * \f$\left[ \left[ 1, 2 8 \right] \right]\f$
+     * 
+     * \param &x: The variable vector. Size 1.
      * \param &floatArgs: Floating point arguments to the function
      * \param &intArgs: Integer arguments to the function
      * \param &residual: The residual vector output.
@@ -161,9 +196,10 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  floatVector &residual ){
     /*!
      * A non-linear function for use in testing the solver which will 
-     * require the use of the line-search algorithm.
+     * require the use of the line-search algorithm. The same as the overloaded nlFxn3 except
+     * this obfuscates the jacobian, the floatOuts, and the intOuts.
      * 
-     * \param &x: The variable vector
+     * \param &x: The variable vector. Size 1.
      * \param &floatArgs: Floating point arguments to the function
      * \param &intArgs: Integer arguments to the function
      * \param &residual: The residual vector output.
@@ -179,15 +215,17 @@ errorOut nlFxn4( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will
-     * require the use of the line-search algorithm.
+     * require the use of the line-search algorithm. The function is of the form
+     * 
+     * \f$R = tanh( x )\f$
      *
-     * \param &x: The variable vector
-     * \param &floatArgs: Floating point arguments to the function
-     * \param &intArgs: Integer arguments to the function
+     * \param &x: The variable vector. Of size 1.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
      * \param &residual: The residual vector output.
      * \param &jacobian: The jacobian output.
-     * \param &floatOuts: Additional floating point outputs.
-     * \param &intOuts: Additional integer outputs.
+     * \param &floatOuts: Additional floating point outputs. Unused.
+     * \param &intOuts: Additional integer outputs. Unused.
      */
 
     residual = { std::tanh( x[ 0 ] ) };
@@ -200,9 +238,37 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will require
-     * the use of the bounded homotopy solver
+     * the use of the bounded homotopy solver. This function performs error checking on the
+     * floatArgs, intArgs, floatOuts, and intOuts arrays. The function is of the form.
+     * 
+     *  \f$ R = \left[ ( x - 1 ) ( x + 1 ) ( x + 1 ) ( x - 0.25 ) ( x + 0.1 ) \right]\f$
+     * 
+     * The expected values for `floatArgs` are:
+     * 
+     * \f$ floatArgs = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right], \left[ -0.01, -0.02 \right] \right] \f$
+     * 
+     * The expected values for `intArgs` are
+     * 
+     * \f$ intArgs = \left[ \left[ -1, -2, -3 \right], \left[ 5, 4, 3, 2 \right], \left[ 8, 9, 9 \right] \right]\f$
+     * 
+     * The expected incoming values for `floatOuts` are
+     * 
+     * \f$ floatOuts = \left[ \left[0, 1, 2 \right], \left[7, -6\right], \left[0.24, 0.25\right]\right]\f$
      *
-     * \param &x: The variable vector
+     * The expected incoming values for `intOuts` are
+     * 
+     * \f$ intOuts = \left[ \left[ 1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * 
+     * The function currently throws an error if the expected values are not provided. `floatOuts` is 
+     * updated to
+     * 
+     * \f$ floatOuts = \left[ \left[ 0.1, 1.1, 2.1 \right], \left[7, -6\right], \left[0, 1, 2\right] \right]\f$
+     * 
+     * `intOuts` is updated to
+     * 
+     * \f$ intOuts = \left[ \left[ -1, 0, 1\right], \left[1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * 
+     * \param &x: The variable vector. One value.
      * \param &floatArgs: Floating point arguments to the function
      * \param &intArgs: Integer arguments to the function
      * \param &residual: The residual vector output.
@@ -312,15 +378,17 @@ errorOut nlFxn6( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will require
-     * the use of the bounded homotopy solver
+     * the use of the bounded homotopy solver. The function is of the form
+     * 
+     * \f$R = \left[ \left( x - 1 \right) \left( x + 1 \right) \left( x - 0.25 \right) \left( x + 0.1 \right), \left( y - 1 \right) \left( y - 1 \right), \left( x + 5 \right) \left( z + 1 \right) \right]\f$
      *
-     * \param &x: The variable vector
-     * \param &floatArgs: Floating point arguments to the function
-     * \param &intArgs: Integer arguments to the function
+     * \param &x: The variable vector. Three values required.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
      * \param &residual: The residual vector output.
      * \param &jacobian: The jacobian output.
-     * \param &floatOuts: Additional floating point outputs.
-     * \param &intOuts: Additional integer outputs.
+     * \param &floatOuts: Additional floating point outputs. Unused.
+     * \param &intOuts: Additional integer outputs. Unused.
      */
 
     floatType x1 = x[ 0 ];
@@ -361,15 +429,17 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will require
-     * the use of the bounded homotopy solver
+     * the use of the bounded homotopy solver. The function is of the form
      *
-     * \param &x: The variable vector
-     * \param &floatArgs: Floating point arguments to the function
-     * \param &intArgs: Integer arguments to the function
+     * \f$R = log( x )\f$
+     * 
+     * \param &x: The variable vector. One value required.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
      * \param &residual: The residual vector output.
      * \param &jacobian: The jacobian output.
-     * \param &floatOuts: Additional floating point outputs.
-     * \param &intOuts: Additional integer outputs.
+     * \param &floatOuts: Additional floating point outputs. Unused.
+     * \param &intOuts: Additional integer outputs. Unused.
      */
 
     if ( x.size() != 1 ){
@@ -386,11 +456,21 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
 errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
                       floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts ){
     /*!
-     * A lagrangian used to test the optimization tools
+     * A lagrangian used to test the optimization tools. The function is of the form.
+     * 
+     * \f$ L = ( x - 1 ) ( x + 3 )\f$
+     * 
+     * `floatOuts` is updated to
+     * 
+     * \f$floatOuts = \left[ \left[ 1, 2, 3 \right], \left[ -0.4, -0.5, -0.6 \right] \right] \f$
+     * 
+     * `intOuts` is updated to
+     * 
+     * \f$intOuts = \left[ \left[ 5, 6, 7 \right], \left[ 8 \right], \left[ 9, 10 \right] \right]\f$
      *
-     * \param &x: A vector of the variable to be solved.
-     * \param &floatArgs: Additional floating point arguments to residual
-     * \param &intArgs: Additional integer arguments to the residual
+     * \param &x: A vector of the variable to be solved. One value required.
+     * \param &floatArgs: Additional floating point arguments to residual. Unused.
+     * \param &intArgs: Additional integer arguments to the residual. Unused.
      * \param &value: The value of the Lagrangian
      * \param &gradient: The gradient of the Lagrangian
      * \param &floatOuts: Additional floating point values to return.
@@ -464,7 +544,25 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
                       floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts
                     ){
     /*!
-     * A lagrangian used to test the optimization tools
+     * A lagrangian used to test the optimization tools. The function is of the form
+     * 
+     * \f$L = x^2 y + z * \left( x^2 y^2 - 3 \right) \f$
+     * 
+     * `floatOuts` is expected to have an incoming value of
+     * 
+     * \f$ floatOuts = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right] \right] \f$
+     * 
+     * `intOuts` is expected to have an incoming value of
+     * 
+     * \f$ intOuts = \left[ \left[ 0 \right], \left[ -1, -2 \right] \right] \f$
+     * 
+     * `floatOuts is updated to
+     * 
+     * \f$ floatOuts = \left[ \left[ 1, 2, 3 \right], \left[ -0.4, -0.5, -0.6 \right], \left[ 7, 6, 5 \right] \right] \f$
+     * 
+     * `intOuts` is updated to
+     * 
+     * \f$ intOuts = \left[ \left[ -4 \right], \left[ 5, 6, 7 \right], \left[ 8 \right], \left[ 9, 10 \right] \right] \f$ 
      *
      * \param &x: A vector of the variable to be solved.
      * \param &floatArgs: Additional floating point arguments to residual
