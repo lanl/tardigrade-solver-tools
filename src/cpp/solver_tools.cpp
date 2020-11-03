@@ -24,7 +24,7 @@ namespace solverTools{
          * residual function.
          *
          * The main routine accepts the following parameters:
-         * \param &residual: The residual function
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -59,7 +59,7 @@ namespace solverTools{
          * residual function.
          *
          * The main routine accepts the following parameters:
-         * \param &residual: The residual function
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -103,7 +103,7 @@ namespace solverTools{
          * residual function.
          *
          * The main routine accepts the following parameters:
-         * \param &residual: The residual function
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -315,9 +315,7 @@ namespace solverTools{
         }
     }
 
-    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                             const floatVector &x0,
+    errorOut homotopySolver( stdFncNLFJ residual, const floatVector &x0,
                              floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                              const floatMatrix &floatArgs, const intMatrix &intArgs,
                              const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -330,16 +328,8 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -365,9 +355,7 @@ namespace solverTools{
 
     }
 
-    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                             const floatVector &x0,
+    errorOut homotopySolver( stdFncNLFJ residual, const floatVector &x0,
                              floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                              const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                              const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -380,16 +368,8 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function.
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -422,16 +402,14 @@ namespace solverTools{
 
     }
 
-    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
-                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
-                            const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
-                            const bool boundMode,
-                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
-                            const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
-                            const floatType dsMin, const bool resetOuts ){
+    errorOut homotopySolver( stdFncNLFJ residual, const floatVector &x0,
+                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                             const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
+                             const bool boundMode,
+                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                             const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
+                             const floatType dsMin, const bool resetOuts ){
         /*!
          * Solve a non-linear equation using a homotopy Newton solver. This method
          * can be successful in solving very stiff equations which other techniques
@@ -439,16 +417,8 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function.
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
