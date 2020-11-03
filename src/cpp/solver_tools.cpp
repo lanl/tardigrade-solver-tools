@@ -1150,7 +1150,6 @@ namespace solverTools{
          * \param &implicitRefine: Boolean which indicates if an implicit refining of the
          *     explicit pseudo-time step should occur. This can add significant computational expense
          *     and should only be used if necessary.
-         * \param &x0: The initial iterate of the solution vector.
          * \param &x: The solution vector.
          * \param &convergeFlag: The flag which indicates convergence.
          * \param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
@@ -1208,14 +1207,13 @@ namespace solverTools{
          * \param &implicitRefine: Boolean which indicates if an implicit refining of the
          *     explicit pseudo-time step should occur. This can add significant computational expense
          *     and should only be used if necessary.
-         * \param &x0: The initial iterate of the solution vector.
          * \param &x: The solution vector.
          * \param &convergeFlag: The flag which indicates convergence.
          * \param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
          * \param &floatOuts: The floating point outputs for the residual equation.
          * \param &intOuts: The integer outputs for the residual equation.
          * \param &linearSolver: The linear solver object.
-         * \param &J: The Jacobian matrix.
+         * \param &jacobian: The Jacobian matrix.
          * \param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
          *     solve.
          * \param tolr: The relative tolerance for the Newton-Raphson solve.
