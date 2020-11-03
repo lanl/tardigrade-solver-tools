@@ -699,16 +699,8 @@ namespace solverTools{
         /*!
          * Check if the jacobian is correct. Used as a debugging tool.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix
-         * \param &floatOuts: Additional returning floating point values.
-         * \param &intOuts: Additional return integer values.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &floatArgs: The additional floating-point arguments.
          * \param &intArgs: The additional integer arguments.
