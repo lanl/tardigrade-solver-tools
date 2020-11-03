@@ -34,35 +34,48 @@ namespace solverTools{
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&) > stdFncNLF;
     typedef errorOut(*NonLinearFunctionWithJacobian)(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&, floatMatrix&,
                                                      floatMatrix &, intMatrix &);
-    typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatVector&,
-                                    floatMatrix&, floatMatrix&, intMatrix&) > stdFncNLFJ;
-
-    typedef errorOut(*LagrangianFunctionWithGradient)(const floatVector&, const floatMatrix&, const intMatrix&, floatType&, floatVector&,
-                                                     floatMatrix &, intMatrix &);
+    /**
+     * A residual function including the Jacobian
+     * 
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &residual: The residual vector
+     * \param &jacobian: The jacobian matrix of the residual w.r.t. x
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
+     */
+    typedef std::function< errorOut(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, floatVector &residual,
+                                    floatMatrix &jacobian, floatMatrix &floatOuts, intMatrix &intOuts) > stdFncNLFJ;
+    /**
+     * A Lagrangian which also returns its gradient.
+     * 
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param intMatrix &intArgs: Additional integer arguments to the residual
+     * \param &value: The value of the Lagrangian.
+     * \param &gradient: The gradient of the Lagrangian function.
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
+     */
+    typedef errorOut(*LagrangianFunctionWithGradient)(const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs, floatType &value, floatVector &gradient,
+                                                     floatMatrix &floatOuts, intMatrix &intOuts);
 
     typedef std::function< errorOut(const floatVector&, const floatMatrix&, const intMatrix&, floatType&, floatVector&,
                                     floatMatrix&, intMatrix&) > stdFncLagrangianG;
-    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
 
-    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                    ) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                             const unsigned int maxNLIterations = 20, const floatType tolr = 1e-9, const floatType tola = 1e-9,
                             const floatType alpha = 1e-4, const unsigned int maxLSIterations = 5, const bool resetOuts = false );
 
-    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                    ) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                             const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,

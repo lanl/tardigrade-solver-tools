@@ -13,9 +13,7 @@
 
 namespace solverTools{
 
-    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -25,16 +23,8 @@ namespace solverTools{
          * of a typical Newton-Raphson solver which can take an arbitrary
          * residual function.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param &residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -58,9 +48,7 @@ namespace solverTools{
                               maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
     }
 
-    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -70,16 +58,8 @@ namespace solverTools{
          * of a typical Newton-Raphson solver which can take an arbitrary
          * residual function.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param &residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -110,9 +90,7 @@ namespace solverTools{
                               maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
     }
 
-    errorOut newtonRaphson( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix & ) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                             const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
@@ -124,16 +102,8 @@ namespace solverTools{
          * of a typical Newton-Raphson solver which can take an arbitrary
          * residual function.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param &residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -820,9 +790,9 @@ namespace solverTools{
         /*!
          * Compute the a parameter for the Barrier Function
          *
-         * \param  &pseudoT: The pseudo time ( 0 - 1 )
-         * \param  logAMax: The logarithm of the maximum a parameter value.
-         * \param  &a: The current value of a
+         * \param &pseudoT: The pseudo time ( 0 - 1 )
+         * \param logAMax: The logarithm of the maximum a parameter value.
+         * \param &a: The current value of a
          */
 
         a = std::exp( pseudoT * logAMax );
