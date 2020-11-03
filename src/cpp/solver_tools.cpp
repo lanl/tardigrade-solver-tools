@@ -644,13 +644,8 @@ namespace solverTools{
          * Note that for functions that are more (or less) complex than this you may need to
          * wrap the function.
          *
-         * The function function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to function
-         * \param &intArgs: Additional integer arguments to the function
-         * \param &value: The output value vector
-         *
          * The main routine accepts the following parameters:
+         * \param fxn: The function to compute the finite difference of
          * \param &x0: The initial iterate of x.
          * \param &grad: The finite difference gradient.
          * \param &floatArgs: The additional floating-point arguments.
