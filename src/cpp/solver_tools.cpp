@@ -762,7 +762,7 @@ namespace solverTools{
          * Compute the a parameter for the Barrier Function along with the derivative w.r.t.
          * the pseudo time ( \f$t^s\f$ ).
          * 
-         * \f$a = exp( log(A^{max}) t^s )
+         * \f$a = exp( log(A^{max}) t^s )\f$
          *
          * \param &pseudoT: The pseudo time ( 0 - 1 )
          * \param logAMax: The logarithm of the maximum 'a' parameter value.
