@@ -1131,10 +1131,7 @@ namespace solverTools{
         return NULL;
     }
 
-    errorOut barrierHomotopySolver( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                                             floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                           ) > residual,
-                                    const floatType &dt, const floatVector &x0,
+    errorOut barrierHomotopySolver( stdFncNLFJ residual, const floatType &dt, const floatVector &x0,
                                     const intVector &variableIndices, const intVector &residualIndices,
                                     const intVector &barrierSigns, const floatVector &barrierValues,
                                     const floatVector &logAMaxValues,
@@ -1182,17 +1179,6 @@ namespace solverTools{
          * \param maxLSIterations: The maximum number of line search iterations.
          * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
-         * 
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         * \param &linearSolver: The linear solver object.
-         * \param &J: The Jacobian matrix.
          */
 
         solverType linearSolver;
@@ -1203,10 +1189,7 @@ namespace solverTools{
                                       maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
     }
 
-    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                           ) > residual,
-                                    const floatType &dt, const floatVector &x0,
+    errorOut barrierHomotopySolver( stdFncNLFJ residual, const floatType &dt, const floatVector &x0,
                                     const intVector &variableIndices, const intVector &residualIndices,
                                     const intVector &barrierSigns, const floatVector &barrierValues,
                                     const floatVector &logAMaxValues,
@@ -1256,17 +1239,6 @@ namespace solverTools{
          * \param maxLSIterations: The maximum number of line search iterations.
          * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
-         * 
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         * \param &linearSolver: The linear solver object.
-         * \param &J: The Jacobian matrix.
          */
 
         //Initialize the pseudo time
