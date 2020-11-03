@@ -869,10 +869,7 @@ namespace solverTools{
         return NULL;
     }
 
-    errorOut computeBarrierHomotopyResidual( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                                                      floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                                    ) > computeOriginalResidual,
-                                             const solverTools::floatVector &x,
+    errorOut computeBarrierHomotopyResidual( stdFncNLFJ computeOriginalResidual, const solverTools::floatVector &x,
                                              const solverTools::floatMatrix &floatArgs, const solverTools::intMatrix &intArgs,
                                              solverTools::floatVector &residual, solverTools::floatMatrix &jacobian,
                                              solverTools::floatMatrix &floatOuts, solverTools::intMatrix &intOuts
@@ -894,7 +891,8 @@ namespace solverTools{
          *     WARNING: If two `residualIndices` are identical, then only the second one will be used and the  first equation will not be observed.
          *
          * \todo{Add two-sided boundaries.}
-         *
+         * 
+         * \param computeOriginalResidual: The original residual function
          * \param &x: The solution vector.
          * \param &floatArgs: The floating point arguments.
          * \param &intArgs: The integer arguments.

@@ -212,10 +212,7 @@ namespace solverTools{
                                      const floatType &b, const bool &sign, floatType &barrierFunction,
                                      floatType &dbdx, floatType &dbdt );
 
-    errorOut computeBarrierHomotopyResidual( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                                    ) > computeOriginalResidual,
-                                             const floatVector &x,
+    errorOut computeBarrierHomotopyResidual( stdFncNLFJ computeOriginalResidual, const floatVector &x,
                                              const floatMatrix &floatArgs, const intMatrix &intArgs,
                                              floatVector &residual, floatMatrix &jacobian,
                                              floatMatrix &floatOuts, intMatrix &intOuts
