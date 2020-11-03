@@ -887,7 +887,7 @@ namespace solverTools{
          * where \f$R^b\f$ is the barrier residual, \f$N^{barriers}\f$ are the number of barrier functions to add,
          * \f$a\f$ is a parameter that is a function of pseudo-time \f$t^s\f$, and \f$b\f$ is the barrier function.
          *
-         * \warning \b \emoji :warning: \emoji :warning: \emoji :warning: WARNING \emoji :warning: \emoji :warning: \emoji :warning:
+         * \warning \emoji :warning: \emoji :warning: \emoji :warning: \b WARNING \emoji :warning: \emoji :warning: \emoji :warning:
          *     WARNING: If two `residualIndices` are identical, then only the second one will be used and the  first equation will not be observed.
          *
          * \todo{Add two-sided boundaries.}
@@ -1599,7 +1599,7 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * \warning \b \emoji :warning: \emoji :warning: \emoji :warning: WARNING \emoji :warning: \emoji :warning: \emoji :warning:
+         * \warning \emoji :warning: \emoji :warning: \emoji :warning: \b WARNING \emoji :warning: \emoji :warning: \emoji :warning:
          *     WARNING: This function is less tested than would be desired and should be used with caution.
          *
          * The main routine accepts the following parameters:
