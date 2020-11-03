@@ -43,15 +43,28 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts,
                  intMatrix &intOuts ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. This function is a linear
+     * function of the form
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \f$ R = \left[x + 1, y - 5.6\right]\f$
+     * 
+     * which has a solution at \f$\left( -1, 5.6 \right)\f$
+     * 
+     * The function also sets floatOuts to
+     * 
+     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * 
+     * And intOuts to
+     * 
+     * \f$\left[ \left[ 1, 2, 8 \right] \right]\f$
+     * 
+     * \param &x: The variable vector. Of size 2.
+     * \param &floatArgs: Floating point arguments to the function. None expected.
+     * \param &intArgs: Integer arguments to the function. None expected.
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     if ( x.size( ) != 2 ){
@@ -73,12 +86,13 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
 errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
                  floatVector &residual ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. An overload that hides the jacobian,
+     * floatOut, and intOut arrays.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
+     * \param &x: The variable vector. Of size 2
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
      */
 
     floatMatrix Jtmp;
@@ -91,15 +105,25 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  floatVector &residual, floatMatrix &jacobian, floatMatrix &floatOuts, 
                  intMatrix &intOuts ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. A polynomial function of the form
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \f$ R = \left[ ( x - 1 ) ( x - 7 ) y, ( y - 1 ) ( x - 3 ) z, x y z \right]\f$
+     *
+     * The function also sets floatOuts to
+     * 
+     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * 
+     * And intOuts to
+     * 
+     * \f$\left[ \left[ 1, 2, 8 \right] \right]\f$
+     * 
+     * \param &x: The variable vector. Of size 3.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     if ( x.size( ) != 3 ){
@@ -120,12 +144,13 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
 errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
                  floatVector &residual ){
     /*!
-     * A non-linear function for use in testing the solver.
+     * A non-linear function for use in testing the solver. The same as the previously overloaded function
+     * except this function obfuscates the computation of the Jacobian, the floatOuts, and the intOuts.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
+     * \param &x: The variable vector
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
      */
 
     floatMatrix Jtmp;
@@ -139,15 +164,25 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will 
-     * require the use of the line-search algorithm.
+     * require the use of the line-search algorithm. The function is of the form
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \f$R = exp(-x) - 1\f$
+     * 
+     * The function also sets floatOuts to
+     * 
+     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * 
+     * And intOuts to
+     * 
+     * \f$\left[ \left[ 1, 2 8 \right] \right]\f$
+     * 
+     * \param &x: The variable vector. Size 1.
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     residual = { std::exp( -x[ 0 ] ) - 1 };
@@ -161,12 +196,13 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  floatVector &residual ){
     /*!
      * A non-linear function for use in testing the solver which will 
-     * require the use of the line-search algorithm.
+     * require the use of the line-search algorithm. The same as the overloaded nlFxn3 except
+     * this obfuscates the jacobian, the floatOuts, and the intOuts.
      * 
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
+     * \param &x: The variable vector. Size 1.
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
      */
     floatMatrix Jtmp;
     floatMatrix fO;
@@ -179,15 +215,17 @@ errorOut nlFxn4( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will
-     * require the use of the line-search algorithm.
+     * require the use of the line-search algorithm. The function is of the form
+     * 
+     * \f$R = tanh( x )\f$
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector. Of size 1.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs. Unused.
+     * \param &intOuts: Additional integer outputs. Unused.
      */
 
     residual = { std::tanh( x[ 0 ] ) };
@@ -200,15 +238,43 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will require
-     * the use of the bounded homotopy solver
+     * the use of the bounded homotopy solver. This function performs error checking on the
+     * floatArgs, intArgs, floatOuts, and intOuts arrays. The function is of the form.
+     * 
+     *  \f$ R = \left[ ( x - 1 ) ( x + 1 ) ( x + 1 ) ( x - 0.25 ) ( x + 0.1 ) \right]\f$
+     * 
+     * The expected values for `floatArgs` are:
+     * 
+     * \f$ floatArgs = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right], \left[ -0.01, -0.02 \right] \right] \f$
+     * 
+     * The expected values for `intArgs` are
+     * 
+     * \f$ intArgs = \left[ \left[ -1, -2, -3 \right], \left[ 5, 4, 3, 2 \right], \left[ 8, 9, 9 \right] \right]\f$
+     * 
+     * The expected incoming values for `floatOuts` are
+     * 
+     * \f$ floatOuts = \left[ \left[0, 1, 2 \right], \left[7, -6\right], \left[0.24, 0.25\right]\right]\f$
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * The expected incoming values for `intOuts` are
+     * 
+     * \f$ intOuts = \left[ \left[ 1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * 
+     * The function currently throws an error if the expected values are not provided. `floatOuts` is 
+     * updated to
+     * 
+     * \f$ floatOuts = \left[ \left[ 0.1, 1.1, 2.1 \right], \left[7, -6\right], \left[0, 1, 2\right] \right]\f$
+     * 
+     * `intOuts` is updated to
+     * 
+     * \f$ intOuts = \left[ \left[ -1, 0, 1\right], \left[1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * 
+     * \param &x: The variable vector. One value.
+     * \param &floatArgs: Floating point arguments to the function
+     * \param &intArgs: Integer arguments to the function
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs.
+     * \param &intOuts: Additional integer outputs.
      */
 
     //floatArgs answers
@@ -312,15 +378,17 @@ errorOut nlFxn6( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will require
-     * the use of the bounded homotopy solver
+     * the use of the bounded homotopy solver. The function is of the form
+     * 
+     * \f$R = \left[ \left( x - 1 \right) \left( x + 1 \right) \left( x - 0.25 \right) \left( x + 0.1 \right), \left( y - 1 \right) \left( y - 1 \right), \left( x + 5 \right) \left( z + 1 \right) \right]\f$
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \param &x: The variable vector. Three values required.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs. Unused.
+     * \param &intOuts: Additional integer outputs. Unused.
      */
 
     floatType x1 = x[ 0 ];
@@ -361,15 +429,17 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
                  intMatrix &intOuts ){
     /*!
      * A non-linear function for use in testing the solver which will require
-     * the use of the bounded homotopy solver
+     * the use of the bounded homotopy solver. The function is of the form
      *
-     * /param &x: The variable vector
-     * /param &floatArgs: Floating point arguments to the function
-     * /param &intArgs: Integer arguments to the function
-     * /param &residual: The residual vector output.
-     * /param &jacobian: The jacobian output.
-     * /param &floatOuts: Additional floating point outputs.
-     * /param &intOuts: Additional integer outputs.
+     * \f$R = log( x )\f$
+     * 
+     * \param &x: The variable vector. One value required.
+     * \param &floatArgs: Floating point arguments to the function. Unused.
+     * \param &intArgs: Integer arguments to the function. Unused.
+     * \param &residual: The residual vector output.
+     * \param &jacobian: The jacobian output.
+     * \param &floatOuts: Additional floating point outputs. Unused.
+     * \param &intOuts: Additional integer outputs. Unused.
      */
 
     if ( x.size() != 1 ){
@@ -379,6 +449,162 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
     residual = { std::log( x[ 0 ] ) };
 
     jacobian = { { 1. / x[ 0 ] } };
+
+    return NULL;
+}
+
+errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                      floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts ){
+    /*!
+     * A lagrangian used to test the optimization tools. The function is of the form.
+     * 
+     * \f$ L = ( x - 1 ) ( x + 3 )\f$
+     * 
+     * `floatOuts` is updated to
+     * 
+     * \f$floatOuts = \left[ \left[ 1, 2, 3 \right], \left[ -0.4, -0.5, -0.6 \right] \right] \f$
+     * 
+     * `intOuts` is updated to
+     * 
+     * \f$intOuts = \left[ \left[ 5, 6, 7 \right], \left[ 8 \right], \left[ 9, 10 \right] \right]\f$
+     *
+     * \param &x: A vector of the variable to be solved. One value required.
+     * \param &floatArgs: Additional floating point arguments to residual. Unused.
+     * \param &intArgs: Additional integer arguments to the residual. Unused.
+     * \param &value: The value of the Lagrangian
+     * \param &gradient: The gradient of the Lagrangian
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
+     */
+
+    if ( x.size() != 1 ){
+        return new errorNode( "lagrangian1", "The x vector must have a size of 1" );
+    }
+
+    value = ( x[ 0 ] - 1 ) * ( x[ 0 ] + 3 );
+    gradient = { ( x[ 0 ] + 3 ) + ( x[ 0 ] - 1 ) };
+
+    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    intOuts = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    return NULL;
+}
+
+errorOut lagrangian2( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                      floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts ){
+    /*!
+     * A lagrangian used to test the optimization tools
+     *
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &value: The value of the Lagrangian
+     * \param &gradient: The gradient of the Lagrangian
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
+     */
+
+    if ( x.size() != 3 ){
+        return new errorNode( "lagrangian2", "The x vector must have a size of 3" );
+    }
+
+    if ( floatOuts.size() != 1 ){
+        return new errorNode( "lagrangian2", "The floatOuts must have a size of 1" );
+    }
+
+    if ( intOuts.size() != 1 ){
+        return new errorNode( "lagrangian2", "The intOuts must have a size of 1" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 0 ], { 0.1, 0.2, 0.3, 0.4 } ) ){
+        return new errorNode( "lagrangian2", "The first value of the floatOuts is incorrect" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 0 ], { -1, -2 } ) ){
+        return new errorNode( "lagrangian2", "The first value of the intOuts is incorrect" );
+    }
+
+    floatType _x = x[ 0 ];
+    floatType _y = x[ 1 ];
+    floatType _L = x[ 2 ];
+
+    value = _x + _y + _L * ( _x * _x + _y * _y - 1 );
+
+    gradient = { 1 + 2 * _L * _x,
+                 1 + 2 * _L * _y,
+                 _x * _x + _y * _y - 1 };
+
+    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    return NULL;
+}
+
+errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const intMatrix &intArgs,
+                      floatType &value, floatVector &gradient, floatMatrix &floatOuts, intMatrix &intOuts
+                    ){
+    /*!
+     * A lagrangian used to test the optimization tools. The function is of the form
+     * 
+     * \f$L = x^2 y + z * \left( x^2 y^2 - 3 \right) \f$
+     * 
+     * `floatOuts` is expected to have an incoming value of
+     * 
+     * \f$ floatOuts = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right] \right] \f$
+     * 
+     * `intOuts` is expected to have an incoming value of
+     * 
+     * \f$ intOuts = \left[ \left[ 0 \right], \left[ -1, -2 \right] \right] \f$
+     * 
+     * `floatOuts is updated to
+     * 
+     * \f$ floatOuts = \left[ \left[ 1, 2, 3 \right], \left[ -0.4, -0.5, -0.6 \right], \left[ 7, 6, 5 \right] \right] \f$
+     * 
+     * `intOuts` is updated to
+     * 
+     * \f$ intOuts = \left[ \left[ -4 \right], \left[ 5, 6, 7 \right], \left[ 8 \right], \left[ 9, 10 \right] \right] \f$ 
+     *
+     * \param &x: A vector of the variable to be solved.
+     * \param &floatArgs: Additional floating point arguments to residual
+     * \param &intArgs: Additional integer arguments to the residual
+     * \param &value: The value of the Lagrangian
+     * \param &gradient: The gradient of the Lagrangian
+     * \param &floatOuts: Additional floating point values to return.
+     * \param &intOuts: Additional integer values to return.
+     */
+
+    if ( x.size() != 3 ){
+        return new errorNode( "lagrangian3", "The x vector must have a size of 3" );
+    }
+
+    if ( floatOuts.size() != 1 ){
+        return new errorNode( "lagrangian3", "The floatOuts must have a size of 1" );
+    }
+
+    if ( intOuts.size() != 1 ){
+        return new errorNode( "lagrangian3", "The intOuts must have a size of 1" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts[ 0 ], { 0.1, 0.2, 0.3, 0.4 } ) ){
+        return new errorNode( "lagrangian3", "The first value of the floatOuts is incorrect" );
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts[ 0 ], { -1, -2 } ) ){
+        return new errorNode( "lagrangian3", "The first value of the intOuts is incorrect" );
+    }
+
+    floatType _x = x[ 0 ];
+    floatType _y = x[ 1 ];
+    floatType _L = x[ 2 ];
+
+    value = _x * _x * _y + _L * ( _x * _x + _y * _y - 3 );
+
+    gradient = { 2 * _x * _y + 2 * _L * _x,
+                 _x * _x + 2 * _L * _y,
+                 _x * _x + _y * _y - 3 };
+
+    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     return NULL;
 }
@@ -453,7 +679,7 @@ int testNewtonRaphson( std::ofstream &results ){
     /*!
      * Tests of the Newton-Raphson solver
      * 
-     * /param &results: The output file
+     * \param &results: The output file
      */
 
     //The first test
@@ -1696,7 +1922,213 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
     return 0;
 }
 
+int test_BFGS( std::ofstream &results ){
+    /*!
+     * Test of the BFGS optimization algorithm.
+     *
+     * :param std::ofstream &results: The output file
+     */
 
+    solverTools::stdFncLagrangianG func;
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian1);
+
+    solverTools::floatVector x0 = { 0. };
+    solverTools::floatVector x;
+
+    bool convergeFlag, fatalErrorFlag;
+    solverTools::floatMatrix floatArgs, floatOuts;
+    solverTools::intMatrix intArgs, intOuts;
+
+    floatVector xAnswer = { -1 };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    intMatrix intOutsAnswer = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    errorOut error = solverTools::BFGS( func, x0, x, convergeFlag, fatalErrorFlag,
+                                        floatOuts, intOuts, floatArgs, intArgs );
+
+    if ( error ){
+        error->print();
+        results << "test_BFGS & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( x, xAnswer ) ){
+        results << "test_BFGS (test 1) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
+        results << "test_BFGS (test 2) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
+        results << "test_BFGS (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_BFGS & True\n";
+    return 0;
+}
+
+int test_BFGS2( std::ofstream &results ){
+    /*!
+     * Test of the BFGS optimization algorithm.
+     *
+     * :param std::ofstream &results: The output file
+     */
+
+    solverTools::stdFncLagrangianG func;
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian2);
+
+    solverTools::floatVector x0 = { 0., 0., 0. };
+    solverTools::floatVector x;
+
+    bool convergeFlag, fatalErrorFlag;
+    solverTools::floatMatrix floatArgs, floatOuts;
+    solverTools::intMatrix intArgs, intOuts;
+
+    floatOuts = { { .1, .2, .3, .4 } };
+    intOuts = { { -1, -2 } };
+
+    floatVector xAnswer = { -std::sqrt( 2. ) / 2, -std::sqrt( 2. ) / 2 };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    intMatrix intOutsAnswer = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    errorOut error = solverTools::BFGS( func, x0, x, convergeFlag, fatalErrorFlag,
+                                        floatOuts, intOuts, floatArgs, intArgs,
+                                        20, 1e-9, 1e-9, 1e-4, 5, true
+                                      );
+
+    if ( error ){
+        error->print();
+        results << "test_BFGS2 & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer ) ){
+        results << "test_BFGS2 (test 1) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
+        results << "test_BFGS2 (test 2) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
+        results << "test_BFGS2 (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_BFGS2 & True\n";
+    return 0;
+}
+
+int test_homotopyBFGS( std::ofstream &results ){
+    /*!
+     * Test of the homotopy BFGS optimization algorithm.
+     *
+     * :param std::ofstream &results: The output file
+     */
+
+    solverTools::stdFncLagrangianG func;
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian1);
+
+    solverTools::floatVector x0 = { 0. };
+    solverTools::floatVector x;
+
+    bool convergeFlag, fatalErrorFlag;
+    solverTools::floatMatrix floatArgs, floatOuts;
+    solverTools::intMatrix intArgs, intOuts;
+
+    floatVector xAnswer = { -1 };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    intMatrix intOutsAnswer = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
+                                                floatOuts, intOuts, floatArgs, intArgs,
+                                                100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
+                                              );
+
+    if ( error ){
+        error->print();
+        results << "test_homotopyBFGS & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( x, xAnswer ) ){
+        results << "test_homotopyBFGS (test 1) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
+        results << "test_homotopyBFGS (test 2) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
+        results << "test_homotopyBFGS (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_homotopyBFGS & True\n";
+    return 0;
+}
+
+int test_homotopyBFGS2( std::ofstream &results ){
+    /*!
+     * Test of the BFGS optimization algorithm.
+     *
+     * :param std::ofstream &results: The output file
+     */
+
+    solverTools::stdFncLagrangianG func;
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian2);
+
+    solverTools::floatVector x0 = { 0., 0., 0. };
+    solverTools::floatVector x;
+
+    bool convergeFlag, fatalErrorFlag;
+    solverTools::floatMatrix floatArgs, floatOuts;
+    solverTools::intMatrix intArgs, intOuts;
+
+    floatOuts = { { .1, .2, .3, .4 } };
+    intOuts = { { -1, -2 } };
+
+    floatVector xAnswer = { -std::sqrt( 2. ) / 2, -std::sqrt( 2. ) / 2 };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    intMatrix intOutsAnswer = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
+
+    errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
+                                                floatOuts, intOuts, floatArgs, intArgs,
+                                                100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
+                                              );
+
+    if ( error ){
+        error->print();
+        results << "test_homotopyBFGS2 & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer ) ){
+        results << "test_homotopyBFGS2 (test 1) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
+        results << "test_homotopyBFGS2 (test 2) & False\n";
+        return 1;
+    }
+
+    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
+        results << "test_homotopyBFGS2 (test 3) & False\n";
+        return 1;
+    }
+
+    results << "test_homotopyBFGS2 & True\n";
+    return 0;
+}
 
 int main( ){
     /*!
@@ -1725,6 +2157,12 @@ int main( ){
     test_computeBarrierHomotopyResidual( results );
     test_computeBarrierHomotopyResidual2( results );
     test_barrierHomotopySolver( results );
+
+    //Tests of the BFGS optimizer
+    test_BFGS( results );
+    test_BFGS2( results );
+    test_homotopyBFGS( results );
+    test_homotopyBFGS2( results );
 
     //Close the results file
     results.close( );

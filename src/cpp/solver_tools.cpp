@@ -13,9 +13,7 @@
 
 namespace solverTools{
 
-    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -25,16 +23,8 @@ namespace solverTools{
          * of a typical Newton-Raphson solver which can take an arbitrary
          * residual function.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -58,9 +48,7 @@ namespace solverTools{
                               maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
     }
 
-    errorOut newtonRaphson( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -70,16 +58,8 @@ namespace solverTools{
          * of a typical Newton-Raphson solver which can take an arbitrary
          * residual function.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -110,9 +90,7 @@ namespace solverTools{
                               maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
     }
 
-    errorOut newtonRaphson( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                                     floatVector &, floatMatrix &, floatMatrix &, intMatrix & ) > residual,
-                            const floatVector &x0,
+    errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                             const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
@@ -124,16 +102,8 @@ namespace solverTools{
          * of a typical Newton-Raphson solver which can take an arbitrary
          * residual function.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -345,9 +315,7 @@ namespace solverTools{
         }
     }
 
-    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                             const floatVector &x0,
+    errorOut homotopySolver( stdFncNLFJ residual, const floatVector &x0,
                              floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                              const floatMatrix &floatArgs, const intMatrix &intArgs,
                              const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -360,16 +328,8 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -395,9 +355,7 @@ namespace solverTools{
 
     }
 
-    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                             const floatVector &x0,
+    errorOut homotopySolver( stdFncNLFJ residual, const floatVector &x0,
                              floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
                              const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
                              const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
@@ -410,16 +368,8 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function.
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -452,16 +402,14 @@ namespace solverTools{
 
     }
 
-    errorOut homotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                    floatVector &, floatMatrix &, floatMatrix &, intMatrix &) > residual,
-                            const floatVector &x0,
-                            floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
-                            const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
-                            const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
-                            const bool boundMode,
-                            const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
-                            const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
-                            const floatType dsMin, const bool resetOuts ){
+    errorOut homotopySolver( stdFncNLFJ residual, const floatVector &x0,
+                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                             const floatMatrix &floatArgs, const intMatrix &intArgs, solverType &linearSolver, floatMatrix &J,
+                             const intVector &boundVariableIndices, const intVector &boundSigns, const floatVector &boundValues,
+                             const bool boundMode,
+                             const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                             const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
+                             const floatType dsMin, const bool resetOuts ){
         /*!
          * Solve a non-linear equation using a homotopy Newton solver. This method
          * can be successful in solving very stiff equations which other techniques
@@ -469,16 +417,8 @@ namespace solverTools{
          * of easier to solve equations which will eventually converge to the
          * more difficult problem.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * \param &floatOuts: Additional floating point values to return.
-         * \param &intOuts: Additional integer values to return.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function.
          * \param &x0: The initial iterate of x.
          * \param &x: The converged value of the solver.
          * \param &convergeFlag: A flag which indicates whether the solver converged.
@@ -704,13 +644,8 @@ namespace solverTools{
          * Note that for functions that are more (or less) complex than this you may need to
          * wrap the function.
          *
-         * The function function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to function
-         * \param &intArgs: Additional integer arguments to the function
-         * \param &value: The output value vector
-         *
          * The main routine accepts the following parameters:
+         * \param fxn: The function to compute the finite difference of
          * \param &x0: The initial iterate of x.
          * \param &grad: The finite difference gradient.
          * \param &floatArgs: The additional floating-point arguments.
@@ -759,16 +694,8 @@ namespace solverTools{
         /*!
          * Check if the jacobian is correct. Used as a debugging tool.
          *
-         * The residual function should have inputs of the form
-         * \param &x: A vector of the variable to be solved.
-         * \param &floatArgs: Additional floating point arguments to residual
-         * \param &intArgs: Additional integer arguments to the residual
-         * \param &residual: The residual vector
-         * \param &jacobian: The jacobian matrix
-         * \param &floatOuts: Additional returning floating point values.
-         * \param &intOuts: Additional return integer values.
-         *
          * The main routine accepts the following parameters:
+         * \param residual: The residual function
          * \param &x0: The initial iterate of x.
          * \param &floatArgs: The additional floating-point arguments.
          * \param &intArgs: The additional integer arguments.
@@ -820,9 +747,9 @@ namespace solverTools{
         /*!
          * Compute the a parameter for the Barrier Function
          *
-         * /param  &pseudoT: The pseudo time ( 0 - 1 )
-         * /param  logAMax: The logarithm of the maximum a parameter value.
-         * /param  &a: The current value of a
+         * \param &pseudoT: The pseudo time ( 0 - 1 )
+         * \param logAMax: The logarithm of the maximum a parameter value.
+         * \param &a: The current value of a
          */
 
         a = std::exp( pseudoT * logAMax );
@@ -835,12 +762,12 @@ namespace solverTools{
          * Compute the a parameter for the Barrier Function along with the derivative w.r.t.
          * the pseudo time ( \f$t^s\f$ ).
          * 
-         * \f$a = exp( log(A^{max}) t^s )
+         * \f$a = exp( log(A^{max}) t^s )\f$
          *
-         * /param &pseudoT: The pseudo time ( 0 - 1 )
-         * /param logAMax: The logarithm of the maximum 'a' parameter value.
-         * /param &a: The current value of 'a'
-         * /param &dadt: The Jacobian of a w.r.t. pseudoT.
+         * \param &pseudoT: The pseudo time ( 0 - 1 )
+         * \param logAMax: The logarithm of the maximum 'a' parameter value.
+         * \param &a: The current value of 'a'
+         * \param &dadt: The Jacobian of a w.r.t. pseudoT.
          */
 
         errorOut error = aFxn( pseudoT, logAMax, a );
@@ -868,13 +795,13 @@ namespace solverTools{
          * - \f$s =  1\f$ is a negative boundary
          * - \f$s = -1\f$ is a positive boundary
          *
-         * /param &x: The constrained variable value ( \f$x\f$ ).
-         * /param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
-         * /param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
-         * /param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
-         * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
+         * \param &x: The constrained variable value ( \f$x\f$ ).
+         * \param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
+         * \param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
+         * \param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
+         * \param &sign: A boolean which indicates if this is a positive ( 1 ) or
          *     negative ( 0 ) boundary ( \f$s\f$ ).
-         * /param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
+         * \param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
          */
 
         floatType a;
@@ -909,15 +836,15 @@ namespace solverTools{
          * - \f$s =  1\f$ is a negative boundary
          * - \f$s = -1\f$ is a positive boundary
          *
-         * /param &x: The constrained variable value ( \f$x\f$ ).
-         * /param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
-         * /param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
-         * /param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
-         * /param &sign: A boolean which indicates if this is a positive ( 1 ) or
+         * \param &x: The constrained variable value ( \f$x\f$ ).
+         * \param &pseudoT: The value of the pseudo time ( \f$t^s\f$ ).
+         * \param &logAmax: The log of the maximum value of the \f$a\f$ parameter.
+         * \param &b: The offset variable ( i.e. the location of the barrier ) ( \f$b\f$ )
+         * \param &sign: A boolean which indicates if this is a positive ( 1 ) or
          *     negative ( 0 ) boundary ( \f$s\f$ ).
-         * /param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
-         * /param &dbdx: The Jacobian of the barrier function w.r.t. the variable value.
-         * /param &dbdt: the Jacobian of the barrier function w.r.t. the pseudo time.
+         * \param &barrierFunction: The value of the barrier function ( \f$b\f$ ).
+         * \param &dbdx: The Jacobian of the barrier function w.r.t. the variable value.
+         * \param &dbdt: the Jacobian of the barrier function w.r.t. the pseudo time.
          */
 
         floatType a, dadt;
@@ -942,10 +869,7 @@ namespace solverTools{
         return NULL;
     }
 
-    errorOut computeBarrierHomotopyResidual( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                                                      floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                                    ) > computeOriginalResidual,
-                                             const solverTools::floatVector &x,
+    errorOut computeBarrierHomotopyResidual( stdFncNLFJ computeOriginalResidual, const solverTools::floatVector &x,
                                              const solverTools::floatMatrix &floatArgs, const solverTools::intMatrix &intArgs,
                                              solverTools::floatVector &residual, solverTools::floatMatrix &jacobian,
                                              solverTools::floatMatrix &floatOuts, solverTools::intMatrix &intOuts
@@ -963,18 +887,19 @@ namespace solverTools{
          * where \f$R^b\f$ is the barrier residual, \f$N^{barriers}\f$ are the number of barrier functions to add,
          * \f$a\f$ is a parameter that is a function of pseudo-time \f$t^s\f$, and \f$b\f$ is the barrier function.
          *
-         * \warning \b \emoji :warning: \emoji :warning: \emoji :warning: WARNING \emoji :warning: \emoji :warning: \emoji :warning:
+         * \warning \emoji :warning: \emoji :warning: \emoji :warning: \b WARNING \emoji :warning: \emoji :warning: \emoji :warning:
          *     WARNING: If two `residualIndices` are identical, then only the second one will be used and the  first equation will not be observed.
          *
          * \todo{Add two-sided boundaries.}
-         *
-         * /param &x: The solution vector.
-         * /param &floatArgs: The floating point arguments.
-         * /param &intArgs: The integer arguments.
-         * /param &residual: The residual vector.
-         * /param &jacobian: The Jacobian matrix.
-         * /param &floatOuts: The additional floating-point outputs.
-         * /param &intOuts: The additional integer outputs.
+         * 
+         * \param computeOriginalResidual: The original residual function
+         * \param &x: The solution vector.
+         * \param &floatArgs: The floating point arguments.
+         * \param &intArgs: The integer arguments.
+         * \param &residual: The residual vector.
+         * \param &jacobian: The Jacobian matrix.
+         * \param &floatOuts: The additional floating-point outputs.
+         * \param &intOuts: The additional integer outputs.
          *
          * Note that floatArgs is modified such that
          * `floatArgs[ 0 ][ 0 ]`   = `pseudoTime` ( the homotopy pseudo-time )
@@ -1115,15 +1040,15 @@ namespace solverTools{
          * a last resort if even homotopy has failed as it is increasingly likely that it will
          * not result in convergence.
          *
-         * /param &x0: The base vector from which dx extends.
-         * /param &variableIndices: The indices of the vector that have constraints applied to them.
-         * /param &barrierSigns: The sign of the barrier 0 is a negative barrier ( i.e. lower bound )
-         * /   1 is a positive barrier ( i.e. upper bound )
-         * /param &barrierValues: The locations of the barriers.
-         * /param &dx: The change in x vector.
-         * /param &tolr: The relative tolerance. Defaults to 1e-9
-         * /param &tola: The absolute tolerence. Defautls to 1e-9
-         * /param mode: The mode of the boundary limitation. If false, all of dx is scaled, if true
+         * \param &x0: The base vector from which dx extends.
+         * \param &variableIndices: The indices of the vector that have constraints applied to them.
+         * \param &barrierSigns: The sign of the barrier 0 is a negative barrier ( i.e. lower bound )
+         *     1 is a positive barrier ( i.e. upper bound )
+         * \param &barrierValues: The locations of the barriers.
+         * \param &dx: The change in x vector.
+         * \param &tolr: The relative tolerance. Defaults to 1e-9
+         * \param &tola: The absolute tolerence. Defautls to 1e-9
+         * \param mode: The mode of the boundary limitation. If false, all of dx is scaled, if true
          *     only the value that violates the constraint is set to the constraint.
          */
 
@@ -1191,10 +1116,7 @@ namespace solverTools{
         return NULL;
     }
 
-    errorOut barrierHomotopySolver( std::function< errorOut( const floatVector &, const floatMatrix &, const intMatrix &,
-                                                             floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                           ) > residual,
-                                    const floatType &dt, const floatVector &x0,
+    errorOut barrierHomotopySolver( stdFncNLFJ residual, const floatType &dt, const floatVector &x0,
                                     const intVector &variableIndices, const intVector &residualIndices,
                                     const intVector &barrierSigns, const floatVector &barrierValues,
                                     const floatVector &logAMaxValues,
@@ -1210,49 +1132,37 @@ namespace solverTools{
          * Note that if barriers are added to a variable multiple times or to a single component of the residual
          * equation several times unexpected responses can result.
          *
-         * /param residual: The residual function to initialize
-         * /param &dt: The pseudo-time step size.
-         * /param &x0: The initial iterate of the solution vector. It is strongly suggested to
+         * \param residual: The residual function to initialize
+         * \param &dt: The pseudo-time step size.
+         * \param &x0: The initial iterate of the solution vector. It is strongly suggested to
          *     use a vector which
-         * /param &variableIndices: The indices of the variables which are to have barrier conditions
+         * \param &variableIndices: The indices of the variables which are to have barrier conditions
          *     applied.
-         * /param &residualIndices: The indices of the residual vector which should have the barrier
+         * \param &residualIndices: The indices of the residual vector which should have the barrier
          *     equations applied.
-         * /param &barrierSigns: The signs of the barriers.
-         * /param &barrierValues: The locations of the barriers.
-         * /param &logAMaxValues: The log of the maximum values of the a parameter.
+         * \param &barrierSigns: The signs of the barriers.
+         * \param &barrierValues: The locations of the barriers.
+         * \param &logAMaxValues: The log of the maximum values of the a parameter.
          *     these should be as large as possible without causing numeric issues. Values of 10 seem to work well
          *     for the exponential barrier.
-         * /param &floatArgs: The floating point arguments for the residual equation.
-         * /param &intArgs: The integar arguments for the residual equation.
-         * /param &implicitRefine: Boolean which indicates if an implicit refining of the
+         * \param &floatArgs: The floating point arguments for the residual equation.
+         * \param &intArgs: The integar arguments for the residual equation.
+         * \param &implicitRefine: Boolean which indicates if an implicit refining of the
          *     explicit pseudo-time step should occur. This can add significant computational expense
          *     and should only be used if necessary.
-         * /param &x0: The initial iterate of the solution vector.
-         * /param &x: The solution vector.
-         * /param &convergeFlag: The flag which indicates convergence.
-         * /param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
-         * /param &floatOuts: The floating point outputs for the residual equation.
-         * /param &intOuts: The integer outputs for the residual equation.
-         * /param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
+         * \param &x: The solution vector.
+         * \param &convergeFlag: The flag which indicates convergence.
+         * \param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
+         * \param &floatOuts: The floating point outputs for the residual equation.
+         * \param &intOuts: The integer outputs for the residual equation.
+         * \param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
          *     solve.
-         * /param tolr: The relative tolerance for the Newton-Raphson solve.
-         * /param tola: The absolute tolerance for the Newton-Raphson solve.
-         * /param alpha: The alpha parameter for the line search.
-         * /param maxLSIterations: The maximum number of line search iterations.
-         * /param resetOuts: The flag for whether the output matrices should be reset
+         * \param tolr: The relative tolerance for the Newton-Raphson solve.
+         * \param tola: The absolute tolerance for the Newton-Raphson solve.
+         * \param alpha: The alpha parameter for the line search.
+         * \param maxLSIterations: The maximum number of line search iterations.
+         * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
-         * 
-         * The residual function should have inputs of the form
-         * /param &x: A vector of the variable to be solved.
-         * /param &floatArgs: Additional floating point arguments to residual
-         * /param &intArgs: Additional integer arguments to the residual
-         * /param &residual: The residual vector
-         * /param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * /param &floatOuts: Additional floating point values to return.
-         * /param &intOuts: Additional integer values to return.
-         * /param &linearSolver: The linear solver object.
-         * /param &J: The Jacobian matrix.
          */
 
         solverType linearSolver;
@@ -1263,10 +1173,7 @@ namespace solverTools{
                                       maxNLIterations, tolr, tola, alpha, maxLSIterations, resetOuts );
     }
 
-    errorOut barrierHomotopySolver( std::function< errorOut(const floatVector &, const floatMatrix &, const intMatrix &,
-                                                            floatVector &, floatMatrix &, floatMatrix &, intMatrix &
-                                                           ) > residual,
-                                    const floatType &dt, const floatVector &x0,
+    errorOut barrierHomotopySolver( stdFncNLFJ residual, const floatType &dt, const floatVector &x0,
                                     const intVector &variableIndices, const intVector &residualIndices,
                                     const intVector &barrierSigns, const floatVector &barrierValues,
                                     const floatVector &logAMaxValues,
@@ -1282,51 +1189,39 @@ namespace solverTools{
          * Note that if barriers are added to a variable multiple times or to a single component of the residual
          * equation several times unexpected responses can result.
          *
-         * /param residual: The residual function to initialize
-         * /param &dt: The pseudo-time step size.
-         * /param &x0: The initial iterate of the solution vector. It is strongly suggested to
+         * \param residual: The residual function to initialize
+         * \param &dt: The pseudo-time step size.
+         * \param &x0: The initial iterate of the solution vector. It is strongly suggested to
          *     use a vector which
-         * /param &variableIndices: The indices of the variables which are to have barrier conditions
+         * \param &variableIndices: The indices of the variables which are to have barrier conditions
          *     applied.
-         * /param &residualIndices: The indices of the residual vector which should have the barrier
+         * \param &residualIndices: The indices of the residual vector which should have the barrier
          *     equations applied.
-         * /param &barrierSigns: The signs of the barriers.
-         * /param &barrierValues: The locations of the barriers.
-         * /param &logAMaxValues: The log of the maximum values of the a parameter.
+         * \param &barrierSigns: The signs of the barriers.
+         * \param &barrierValues: The locations of the barriers.
+         * \param &logAMaxValues: The log of the maximum values of the a parameter.
          *     these should be as large as possible without causing numeric issues. Values of 10 seem to work well
          *     for the exponential barrier.
-         * /param &floatArgs: The floating point arguments for the residual equation.
-         * /param &intArgs: The integar arguments for the residual equation.
-         * /param &implicitRefine: Boolean which indicates if an implicit refining of the
+         * \param &floatArgs: The floating point arguments for the residual equation.
+         * \param &intArgs: The integar arguments for the residual equation.
+         * \param &implicitRefine: Boolean which indicates if an implicit refining of the
          *     explicit pseudo-time step should occur. This can add significant computational expense
          *     and should only be used if necessary.
-         * /param &x0: The initial iterate of the solution vector.
-         * /param &x: The solution vector.
-         * /param &convergeFlag: The flag which indicates convergence.
-         * /param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
-         * /param &floatOuts: The floating point outputs for the residual equation.
-         * /param &intOuts: The integer outputs for the residual equation.
-         * /param &linearSolver: The linear solver object.
-         * /param &J: The Jacobian matrix.
-         * /param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
+         * \param &x: The solution vector.
+         * \param &convergeFlag: The flag which indicates convergence.
+         * \param &fatalErrorFlag: The flag which indicates the presence of fatal errors.
+         * \param &floatOuts: The floating point outputs for the residual equation.
+         * \param &intOuts: The integer outputs for the residual equation.
+         * \param &linearSolver: The linear solver object.
+         * \param &jacobian: The Jacobian matrix.
+         * \param maxNLIterations: The maximum number of non-linear iterations for the Newton-Raphson
          *     solve.
-         * /param tolr: The relative tolerance for the Newton-Raphson solve.
-         * /param tola: The absolute tolerance for the Newton-Raphson solve.
-         * /param alpha: The alpha parameter for the line search.
-         * /param maxLSIterations: The maximum number of line search iterations.
-         * /param resetOuts: The flag for whether the output matrices should be reset
+         * \param tolr: The relative tolerance for the Newton-Raphson solve.
+         * \param tola: The absolute tolerance for the Newton-Raphson solve.
+         * \param alpha: The alpha parameter for the line search.
+         * \param maxLSIterations: The maximum number of line search iterations.
+         * \param resetOuts: The flag for whether the output matrices should be reset
          *     prior to each iteration.
-         * 
-         * The residual function should have inputs of the form
-         * /param &x: A vector of the variable to be solved.
-         * /param &floatArgs: Additional floating point arguments to residual
-         * /param &intArgs: Additional integer arguments to the residual
-         * /param &residual: The residual vector
-         * /param &jacobian: The jacobian matrix of the residual w.r.t. x
-         * /param &floatOuts: Additional floating point values to return.
-         * /param &intOuts: Additional integer values to return.
-         * /param &linearSolver: The linear solver object.
-         * /param &J: The Jacobian matrix.
          */
 
         //Initialize the pseudo time
@@ -1464,6 +1359,358 @@ namespace solverTools{
             return result;
         }
 
+        return NULL;
+    }
+
+    errorOut BFGS( stdFncLagrangianG lagrangianGradientFunction, const floatVector &x0,
+                   floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                   const floatMatrix &floatArgs, const intMatrix &intArgs,
+                   const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                   const floatType alpha, const unsigned int maxLSIterations, const bool resetOuts,
+                   const floatType stepSize, const floatType maxdx ){
+        /*!
+         * An implementation of the Broyden–Fletcher–Goldfarb–Shanno (BFGS) algorithm for solving optimization problems.
+         *
+         * \param lagrangianGradientFunction: The gradient of the Lagrangian function.
+         * \param &x0: The intial iterate of x
+         * \param &x: The converged value of x
+         * \param &convergeFlag: A flag indicating if convergence has been achieved.
+         * \param &fatalErrorFlag: A flag indicating if a fatal error was encountered.
+         * \param &floatOuts: A matrix of floating-point outputs.
+         * \param &intOuts: A matrix of integer outputs.
+         * \param &floatArgs: A matrix of floating-point arguments.
+         * \param &intArgs: A matrix of integer arguments.
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance.
+         * \param tola: The absolute tolerance.
+         * \param alpha: The line-search parameter.
+         * \param maxLSIterations: The maximum number of line-search reductions.
+         * \param resetOuts: The flag to indicate if the floating-point outputs should be reset at each
+         *     iteration.
+         * \param stepSize: The estimated step size. Defaults to 1.
+         * \param maxdx: The maximum allowable step size in terms of the norm of the solution
+         *     vector. If negative this is ignored.
+         */
+
+        //Solve for the initial gradient of the Lagrangian
+        floatType lagrangian_k, lagrangian_kp1;
+        floatVector lagrangianGradient_k, lagrangianGradient_kp1;
+
+        floatMatrix floatOuts0;
+        intMatrix intOuts0;
+
+        if ( resetOuts ){
+            floatOuts0 = floatOuts;
+            intOuts0 = intOuts;
+        }
+
+        errorOut error = lagrangianGradientFunction( x0, floatArgs, intArgs, lagrangian_kp1, lagrangianGradient_kp1,
+                                                     floatOuts, intOuts );
+
+        if ( error ){
+            errorOut result = new errorNode( "BFGS", "Error in computation of the Lagrangian Gradient" );
+            result->addNext( error );
+            convergeFlag = false;
+            fatalErrorFlag = true;
+            return result;
+        }
+
+        //Set the initial iterate of the hessian
+        floatMatrix B = ( vectorTools::l2norm( lagrangianGradient_kp1 ) / stepSize ) * vectorTools::eye< floatType >( lagrangianGradient_kp1.size() );
+
+        //Set the tolerance for each value individually
+        floatVector tol = floatVector( lagrangianGradient_kp1.size(), 0 );
+        for ( unsigned int i = 0; i < lagrangianGradient_kp1.size(); i++ ){
+            tol[ i ] = tolr * fabs( lagrangianGradient_kp1[ i ] ) + tola;
+        }
+
+        //Check if convergence has been achieved
+        bool converged;
+        error = checkTolerance( lagrangianGradient_kp1, tol, converged );
+
+        if ( error ){
+            errorOut result = new errorNode( "BFGS", "Error in tolerence check" );
+            result->addNext( error );
+            fatalErrorFlag = true;
+            return result;
+        }
+
+        //Copy lagrangianGradient_kp1 to lagrangianGradient_p
+        lagrangian_k = lagrangian_kp1;
+        lagrangianGradient_k = lagrangianGradient_kp1;
+
+        //Initialize the iteration
+        floatType theta;
+        floatType pNorm;
+        floatVector r, p, s, y, Bs;
+        floatType ys;
+        floatType sBs;
+
+        floatMatrix floatOuts_k;
+        intMatrix intOuts_k;
+
+        x = x0;
+
+        unsigned int niter = 0;
+        unsigned int nLSIterations;
+        //Begin the iteration loop
+        while ( ( !converged ) && ( niter < maxNLIterations ) ){
+
+            //Compute the direction
+            unsigned int rank;
+            p = -vectorTools::solveLinearSystem( B, lagrangianGradient_k, rank );
+            pNorm = vectorTools::l2norm( p );
+
+            //Apply maximum dx step size limitation
+            if ( ( maxdx > 0 ) && ( pNorm > maxdx ) ){
+                p *= ( maxdx / pNorm );
+            }
+
+            if ( rank < lagrangianGradient_k.size() ){
+                convergeFlag = false;
+                fatalErrorFlag = false;
+                return new errorNode( "BFGS", "The approximate Hessian is singular" );
+            }
+
+            if ( resetOuts ){
+                floatOuts = floatOuts0;
+                intOuts = intOuts0;
+            }
+
+            //Save the current value of the outputs
+            if ( resetOuts ){
+                floatOuts_k = floatOuts0;
+                intOuts_k = intOuts0;
+                floatOuts = floatOuts0;
+                intOuts = intOuts0;
+
+            }
+            else{
+                floatOuts_k = floatOuts;
+                intOuts_k = intOuts;
+            }
+
+            error = lagrangianGradientFunction( x + p, floatArgs, intArgs, lagrangian_kp1, lagrangianGradient_kp1,
+                                                floatOuts, intOuts );
+
+            if ( error ){
+                errorOut result = new errorNode( "BFGS", "Error in computation of the Lagrangian gradient function" );
+                result->addNext( error );
+                fatalErrorFlag = true;
+                return result;
+            }
+
+            //Begin the line search
+            floatType lambda = 1;
+            nLSIterations = 0;
+
+            while ( ( lagrangian_kp1 > ( 1 - alpha ) * lagrangian_k ) && ( nLSIterations < maxLSIterations ) ){
+
+                //Reduce the LS step-size
+                lambda *= 0.5;
+
+                floatOuts = floatOuts_k;
+                intOuts = intOuts_k;
+
+                error = lagrangianGradientFunction( x + lambda * p, floatArgs, intArgs, lagrangian_kp1, lagrangianGradient_kp1,
+                                                    floatOuts, intOuts );
+
+                if ( error ){
+                    errorOut result = new errorNode( "BFGS", "Error in the computation of the Lagrangian gradient function of the line search" );
+                    result->addNext( error );
+                    fatalErrorFlag = true;
+                    return result;
+                }
+
+                nLSIterations++;
+            }
+
+            if ( lagrangian_kp1 > ( 1 - alpha ) * lagrangian_k ){
+                convergeFlag = false;
+                fatalErrorFlag = false;
+                return new errorNode( "BFGS", "Line search did not converge" );
+            }
+            else{
+
+                //Continue with BFGS update
+
+                //Compute s
+                s = lambda * p;
+
+                //Update x
+                x += s;
+
+                //Compute y
+                y = lagrangianGradient_kp1 - lagrangianGradient_k;
+
+                //Compute the damping factor
+                theta = 1.;
+
+                //Update the approximation of the hessian
+                ys = vectorTools::dot( y, s );
+                Bs = vectorTools::dot( B, s );
+                sBs = vectorTools::dot( s, Bs );
+
+                if ( ys < 0.2 * sBs ){
+                    theta = 0.8 * sBs / ( sBs - ys );
+                }
+
+                r = theta * y  + ( 1 - theta ) * Bs;
+
+                B += vectorTools::dyadic( r, r ) / vectorTools::dot( s, r )
+                   - vectorTools::dyadic( Bs, Bs ) / vectorTools::dot( s, Bs );
+
+                //Update the previous values
+                lagrangian_k = lagrangian_kp1;
+                lagrangianGradient_k = lagrangianGradient_kp1;
+
+                //Check the convergence tolerence
+                error = checkTolerance( lagrangianGradient_kp1, tol, converged );
+
+                if ( error ){
+                    return new errorNode( "BFGS", "Error in the tolerence check at end of iteration" );
+                }
+            }
+        }
+
+        if ( converged ){
+            convergeFlag = true;
+            fatalErrorFlag = false;
+            return NULL;
+        }
+        else{
+            convergeFlag = false;
+            fatalErrorFlag = false;
+
+            return new errorNode( "BFGS", "BFGS did not converge" );
+        }
+    }
+
+    errorOut homotopyBFGS( stdFncLagrangianG lagrangianGradientFunction, const floatVector &x0,
+                           floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
+                           const floatMatrix &floatArgs, const intMatrix &intArgs,
+                           const unsigned int maxNLIterations, const floatType tolr, const floatType tola,
+                           const floatType alpha, const unsigned int maxLSIterations, const floatType ds0,
+                           const floatType dsMin, const bool resetOuts, const floatType maxdx ){
+        /*!
+         * Optimize a non-linear equation using a homotopy BFGS method. This method
+         * can be successful in solving very stiff equations which other techniques
+         * struggle to capture. It effectively breaks the solve up into sub-steps
+         * of easier to solve equations which will eventually converge to the
+         * more difficult problem.
+         *
+         * \warning \emoji :warning: \emoji :warning: \emoji :warning: \b WARNING \emoji :warning: \emoji :warning: \emoji :warning:
+         *     WARNING: This function is less tested than would be desired and should be used with caution.
+         *
+         * The main routine accepts the following parameters:
+         * \param lagrangianGradientFunction: The lagrangian function to optimize which also computes the gradient
+         * \param &x0: The initial iterate of x.
+         * \param &x: The converged value of the solver.
+         * \param &convergeFlag: A flag which indicates whether the solver converged
+         * \param &fatalErrorFlag: A flag which indicates if a fatal error has been encountered.
+         * \param &floatOuts: Additional floating point values to return.
+         * \param &intOuts: Additional integer values to return.
+         * \param &floatArgs: The additional floating-point arguments.
+         * \param &intArgs: The additional integer arguments.
+         * \param maxNLIterations: The maximum number of non-linear iterations.
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param alpha: The line search criteria.
+         * \param maxLSIterations: The maximum number of line-search iterations.
+         * \param ds0: The initial pseudo-time step. Defaults to 1.0
+         * \param dsMin: The minimum pseudo-time step size. Defaults to 0.1
+         * \param resetOuts: The flag for whether the output matrices should be reset
+         *     prior to each iteration.
+         * \param maxdx: The maximum allowable change in the solution vector. If negative this is ignored.
+         */
+
+        //Initialize the homotopy solver
+        floatType ds = ds0;
+        floatType s  = 0;
+        floatVector xh = x0;
+
+        //Save the floatOuts and intOuts
+        floatMatrix oldFloatOuts = floatOuts;
+        intMatrix   oldIntOuts   = intOuts;
+
+        //Initialize the error output
+        errorOut error;
+
+
+        //Define the homotopy residual
+        stdFncLagrangianG homotopyLagrangianGradient;
+        homotopyLagrangianGradient = [&]( const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+                                          floatType &l, floatVector &dldx, floatMatrix &fO, intMatrix &iO ){
+
+            floatType L;
+            floatVector dLdx;
+
+            error = lagrangianGradientFunction( x_, floatArgs_, intArgs_, L, dLdx, fO, iO );
+
+            if (error){
+                errorOut result = new errorNode("homotopyBFGS::homotopyLagrangianGradient", "error in lagrangian gradient calculation");
+                result->addNext(error);
+                return result;
+            }
+
+            l = 0.5 * ( 1 - s ) * vectorTools::dot( x_ - x0, x_ - x0 ) + s * L;
+            dldx = ( 1 - s ) * ( x_ - x0 ) + s * dLdx;
+
+            return static_cast<errorOut>(NULL);
+        };
+
+        //Begin the homotopy loop
+        while ( s < 1 ){
+            //Update s
+            s += ds;
+            s = std::min( s, 1. );
+
+            //Initialize the solver
+            convergeFlag = false;
+
+            if ( !resetOuts ){
+                oldFloatOuts = floatOuts;
+                oldIntOuts   = intOuts;
+            }
+            else{
+                floatOuts = oldFloatOuts;
+                intOuts = oldIntOuts;
+            }
+
+            //Begin the adaptive homotopy loop
+            while ( !convergeFlag ){
+
+                error = BFGS( homotopyLagrangianGradient, xh, x, convergeFlag, fatalErrorFlag, floatOuts, intOuts,
+                              floatArgs, intArgs,
+                              maxNLIterations, tolr, tola,
+                              alpha, maxLSIterations, resetOuts, maxdx );
+
+                if ( fatalErrorFlag ){
+                    errorOut result = new errorNode( "homotopyBFGS", "Fatal error in Newton Raphson solution" );
+                    result->addNext( error );
+                    return result;
+                }
+
+                else if ( ( !convergeFlag ) && ( ds / 2 > dsMin ) ){
+                    s -= ds;
+                    ds = std::max( ds / 2, dsMin );
+                    s += ds;
+
+                    floatOuts = oldFloatOuts;
+                    intOuts   = oldIntOuts;
+                }
+
+                else if ( ( !convergeFlag ) && ( ds / 2 < dsMin ) ){
+                    errorOut result = new errorNode( "homotopyBFGS", "Homotopy solver did not converge" );
+                    result->addNext( error );
+                    return result;
+                }
+            }
+
+            xh = x;
+        }
+
+        //Solver completed successfully
         return NULL;
     }
 
