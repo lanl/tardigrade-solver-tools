@@ -4,14 +4,14 @@
    contain the root `toctree` directive.
 
 ========================================
-Welcome to solver_tools's documentation!
+Welcome to |project|'s documentation!
 ========================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents
 
-   solver_tools
+   api 
 
 ==================
 Indices and tables
