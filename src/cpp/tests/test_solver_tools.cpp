@@ -620,8 +620,6 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
 BOOST_AUTO_TEST_CASE( testCheckTolerance ){
     /*!
      * Test the tolerance checking function.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     floatVector R   = {  1,   2, 3.00000, -4.0};
@@ -762,8 +760,6 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
 BOOST_AUTO_TEST_CASE( testFiniteDifference ){
     /*!
      * Test the finite difference jacobian calculator.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     //The first test
@@ -797,8 +793,6 @@ BOOST_AUTO_TEST_CASE( testFiniteDifference ){
 BOOST_AUTO_TEST_CASE( testCheckJacobian ){
     /*!
      * Test the jacobian checking utility.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     //The first test
@@ -838,8 +832,6 @@ BOOST_AUTO_TEST_CASE( testCheckJacobian ){
 BOOST_AUTO_TEST_CASE( testCheckLSCriteria ){
     /*!
      * Test the line search criteria
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     floatVector R  = {1, 2, 3, 4, 5, 6};
@@ -861,8 +853,6 @@ BOOST_AUTO_TEST_CASE( testCheckLSCriteria ){
 BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     /*!
      * Test the Homotopy solver.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     //The first test
@@ -968,8 +958,6 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
 BOOST_AUTO_TEST_CASE( test_aFxn ){
     /*!
      * Test the computation of the "\f$a\f$" parameter in the Barrier function.
-     *
-     * :param std::ofstream &results: The output file.
      */
 
     floatType pseudoT = .72;
@@ -1013,8 +1001,6 @@ BOOST_AUTO_TEST_CASE( test_aFxn ){
 BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
     /*!
      * Test the computation of the boundary function
-     *
-     * :param std::ofstream &results: The output file.
      */
 
     floatType x        = 0.4;
@@ -1108,8 +1094,6 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
 BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     /*!
      * Test the computation of the barrier homotopy residual
-     *
-     * :param std::ofstream &results: The output file
      */
 
 
@@ -1255,8 +1239,6 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
 BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
     /*!
      * Test for the computation of the barrier homotopy residual.
-     *
-     * :param std::ofstream &results: The output file.
      */
 
 
@@ -1350,8 +1332,6 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
      * pulled into undesirable domains without having to resort to computing the
      * Hessian of the residual function as would be required for optimization
      * based techniques.
-     *
-     * :param std::ofstream &results: The output file.
      */
 
     solverTools::stdFncNLFJ func;
@@ -1530,8 +1510,6 @@ BOOST_AUTO_TEST_CASE( test_applyBoundaryLimitation ){
 BOOST_AUTO_TEST_CASE( test_BFGS ){
     /*!
      * Test of the BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
@@ -1564,8 +1542,6 @@ BOOST_AUTO_TEST_CASE( test_BFGS ){
 BOOST_AUTO_TEST_CASE( test_BFGS2 ){
     /*!
      * Test of the BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
@@ -1603,8 +1579,6 @@ BOOST_AUTO_TEST_CASE( test_BFGS2 ){
 BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
     /*!
      * Test of the homotopy BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
@@ -1639,8 +1613,6 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
 BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
     /*!
      * Test of the BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
