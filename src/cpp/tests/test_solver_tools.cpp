@@ -1,9 +1,17 @@
-//Tests for solver_tools
+/**
+  * \file test_solver_tools.cpp
+  *
+  * Tests for solver_tools
+  */
 
 #include<solver_tools.h>
 #include<sstream>
 #include<fstream>
 #include<iostream>
+
+#define BOOST_TEST_MODULE test_vector_tools
+#include <boost/test/included/unit_test.hpp>
+#include <boost/test/output_test_stream.hpp>
 
 typedef solverTools::errorOut errorOut;
 typedef solverTools::errorNode errorNode;
@@ -609,7 +617,7 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
     return NULL;
 }
 
-int testCheckTolerance(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testCheckTolerance ){
     /*!
      * Test the tolerance checking function.
      * 
@@ -675,7 +683,7 @@ int testCheckTolerance(std::ofstream &results){
     return 0;
 }
 
-int testNewtonRaphson( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     /*!
      * Tests of the Newton-Raphson solver
      * 
@@ -820,7 +828,7 @@ int testNewtonRaphson( std::ofstream &results ){
     return 0;
 }
 
-int testFiniteDifference(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testFiniteDifference ){
     /*!
      * Test the finite difference jacobian calculator.
      * 
@@ -863,7 +871,7 @@ int testFiniteDifference(std::ofstream &results){
     return 0;
 }
 
-int testCheckJacobian(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testCheckJacobian ){
     /*!
      * Test the jacobian checking utility.
      * 
@@ -920,7 +928,7 @@ int testCheckJacobian(std::ofstream &results){
     return 0;
 }
 
-int testCheckLSCriteria(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testCheckLSCriteria ){
     /*!
      * Test the line search criteria
      * 
@@ -951,7 +959,7 @@ int testCheckLSCriteria(std::ofstream &results){
     return 0;
 }
 
-int testHomotopySolver(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     /*!
      * Test the Homotopy solver.
      * 
@@ -1106,7 +1114,7 @@ int testHomotopySolver(std::ofstream &results){
     
 }
 
-int test_aFxn( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_aFxn ){
     /*!
      * Test the computation of the "\f$a\f$" parameter in the Barrier function.
      *
@@ -1178,7 +1186,7 @@ int test_aFxn( std::ofstream &results ){
     return 0;
 }
 
-int test_computeBarrierFunction( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
     /*!
      * Test the computation of the boundary function
      *
@@ -1347,7 +1355,7 @@ int test_computeBarrierFunction( std::ofstream &results ){
     return 0;
 }
 
-int test_computeBarrierHomotopyResidual( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     /*!
      * Test the computation of the barrier homotopy residual
      *
@@ -1549,7 +1557,7 @@ int test_computeBarrierHomotopyResidual( std::ofstream &results ){
     return 0;
 }
 
-int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
     /*!
      * Test for the computation of the barrier homotopy residual.
      *
@@ -1671,7 +1679,7 @@ int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
     return 0;
 }
 
-int test_barrierHomotopySolver( std::ostream &results ){
+BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
     /*!
      * Test the barrier Homotopy solver. This solver enables the addition of
      * bounds to a non-linear solve which can help prevent solutions from being
@@ -1854,7 +1862,7 @@ int test_barrierHomotopySolver( std::ostream &results ){
     return 0;
 }
 
-int test_applyBoundaryLimitation( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_applyBoundaryLimitation ){
     /*!
      * Test of the application of the boundary conditions.
      *
@@ -1922,7 +1930,7 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
     return 0;
 }
 
-int test_BFGS( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_BFGS ){
     /*!
      * Test of the BFGS optimization algorithm.
      *
@@ -1971,7 +1979,7 @@ int test_BFGS( std::ofstream &results ){
     return 0;
 }
 
-int test_BFGS2( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_BFGS2 ){
     /*!
      * Test of the BFGS optimization algorithm.
      *
@@ -2025,7 +2033,7 @@ int test_BFGS2( std::ofstream &results ){
     return 0;
 }
 
-int test_homotopyBFGS( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
     /*!
      * Test of the homotopy BFGS optimization algorithm.
      *
@@ -2076,7 +2084,7 @@ int test_homotopyBFGS( std::ofstream &results ){
     return 0;
 }
 
-int test_homotopyBFGS2( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
     /*!
      * Test of the BFGS optimization algorithm.
      *
@@ -2127,45 +2135,5 @@ int test_homotopyBFGS2( std::ofstream &results ){
     }
 
     results << "test_homotopyBFGS2 & True\n";
-    return 0;
-}
-
-int main( ){
-    /*!
-    The main loop which runs the tests defined in the 
-    accompanying functions. Each function should output
-    the function name followed by & followed by True or False 
-    if the test passes or fails respectively.
-    */
-
-    //Open the results file
-    std::ofstream results;
-    results.open( "results.tex" );
-
-    //Run the tests
-    testCheckTolerance( results );
-    testNewtonRaphson( results );
-    testFiniteDifference( results );
-    testCheckJacobian( results );
-    testCheckLSCriteria( results );
-    testHomotopySolver( results );
-    test_applyBoundaryLimitation( results );
-
-    //Tests of the barrier homotopy solver
-    test_aFxn( results );
-    test_computeBarrierFunction( results );
-    test_computeBarrierHomotopyResidual( results );
-    test_computeBarrierHomotopyResidual2( results );
-    test_barrierHomotopySolver( results );
-
-    //Tests of the BFGS optimizer
-    test_BFGS( results );
-    test_BFGS2( results );
-    test_homotopyBFGS( results );
-    test_homotopyBFGS2( results );
-
-    //Close the results file
-    results.close( );
-
     return 0;
 }
