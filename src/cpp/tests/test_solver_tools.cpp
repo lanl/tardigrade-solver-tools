@@ -630,11 +630,7 @@ BOOST_AUTO_TEST_CASE( testCheckTolerance ){
 
     errorOut error = solverTools::checkTolerance(R, tol, result);
 
-    if (error){
-        error->print();
-        results << "testCheckTolerance & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     BOOST_CHECK( result );
 
@@ -642,11 +638,7 @@ BOOST_AUTO_TEST_CASE( testCheckTolerance ){
 
     error = solverTools::checkTolerance(R, tol, result);
 
-    if (error){
-        error->print();
-        results << "testCheckTolerance & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     if (result){
         results << "testCheckTolerance (test 2) & False\n";
@@ -656,11 +648,7 @@ BOOST_AUTO_TEST_CASE( testCheckTolerance ){
     tol[3] = 3.8;
     error = solverTools::checkTolerance(R, tol, result);
 
-    if (error){
-        error->print();
-        results << "testCheckTolerance & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     if (result){
         results << "testCheckTolerance (test 3) & False\n";
@@ -696,11 +684,7 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     intMatrix intOut;    
     errorOut error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn1 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatVector Rtmp;
     floatMatrix Jtmp;
@@ -708,11 +692,7 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     intMatrix iO;
     error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn1 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } )  );
 
@@ -726,19 +706,11 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } )  );
 
@@ -752,11 +724,7 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn3 );
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn3 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } )  );
 
@@ -779,11 +747,7 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
 
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, {}, {}, linearSolver, J );
 
-    if ( error ){
-        error->print();
-        results << "testNewtonRaphson nlFxn7 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
     BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1. } )  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp )  );
@@ -864,11 +828,7 @@ BOOST_AUTO_TEST_CASE( testCheckJacobian ){
     floatVector x0 = {0, 0};
     errorOut error = solverTools::checkJacobian(func, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
 
-    if (error){
-        error->print();
-        results << "testCheckJacobian & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     BOOST_CHECK( isGood );
 
@@ -883,11 +843,7 @@ BOOST_AUTO_TEST_CASE( testCheckJacobian ){
 
     error = solverTools::checkJacobian(badfunc, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
 
-    if (error){
-        error->print();
-        results << "testCheckJacobian & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     if (isGood){
         results << "testCheckJacobian (test 2) & False\n";
@@ -945,11 +901,7 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
    
     errorOut error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatVector Rtmp;
     floatMatrix Jtmp;
@@ -957,11 +909,7 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     intMatrix iO;
     error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } )  );
 
@@ -975,19 +923,11 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotpySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } )  );
 
@@ -1002,11 +942,7 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          20, 1e-9, 1e-9, 1e-4, 5, 0.2, 0.01 );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } )  );
 
@@ -1020,11 +956,7 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
 
-    if ( error ){
-        error->print();
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } )  );
 
@@ -1048,11 +980,7 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
                                          linearSolver, J, variableIndices, barrierSigns, barrierValues,
                                          false, 20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
 
-    if ( error ){
-        error->print();
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1 } )  );
 
@@ -1079,11 +1007,7 @@ BOOST_AUTO_TEST_CASE( test_aFxn ){
 
     errorOut error = solverTools::aFxn( pseudoT, logAfxn, result );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer )  );
 
@@ -1091,11 +1015,7 @@ BOOST_AUTO_TEST_CASE( test_aFxn ){
 
     error = solverTools::aFxn( pseudoT, logAfxn, result, dadT );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer )  );
 
@@ -1106,19 +1026,11 @@ BOOST_AUTO_TEST_CASE( test_aFxn ){
 
     error = solverTools::aFxn( pseudoT + delta, logAfxn, aP );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     error = solverTools::aFxn( pseudoT - delta, logAfxn, aM );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( ( aP - aM ) / ( 2 * delta ), dadT )  );
 
@@ -1145,21 +1057,13 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
 
     errorOut error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer )  );
 
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer )  );
 
@@ -1169,11 +1073,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
     //Test the Jacobians when the sign is negative
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result, dbdx, dbdt );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer )  );
 
@@ -1186,84 +1086,48 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
 
     error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, false, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, false, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx )  );
 
     error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, false, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, false, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt )  );
 
     //Test the Jacobians when the sign is positive
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result, dbdx, dbdt );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer )  );
 
     error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, true, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, true, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx )  );
 
     error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, true, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, true, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt )  );
 
@@ -1336,11 +1200,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
 #endif
                                                                 );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( residualAnswer, residualResult )  );
 
@@ -1382,11 +1242,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0 + dx, floatArgs, intArgs, rP, JP,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatOuts = floatOutsDefault;
     intOuts   = intOutsDefault;
@@ -1394,11 +1250,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0 - dx, floatArgs, intArgs, rM, JM,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatVector gradCol = ( rP - rM ) / ( 2 * dx[ 0 ] );
 
@@ -1417,11 +1269,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0, floatArgs, intArgs, rP, JP,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatArgs = floatArgsDefault;
     floatArgs[ 0 ][ 0 ] -= dt;
@@ -1432,11 +1280,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0, floatArgs, intArgs, rM, JM,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     gradCol = ( rP - rM ) / ( 2 * dt );
 
@@ -1481,11 +1325,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
     errorOut error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, residualResult, jacobian,
                                                                   floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( residualResult, residualAnswer )  );
 
@@ -1502,20 +1342,12 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
         error = solverTools::computeBarrierHomotopyResidual( func, x + delta, floatArgs, intArgs, rP, jacobian,
                                                              floatOuts, intOuts );
 
-        if ( error ){
-            error->print();
-            results << "test_computeBarrierHomotopyResidual2 & False\n";
-            return 1;
-        }
+        BOOST_CHECK( ! error  );
 
         error = solverTools::computeBarrierHomotopyResidual( func, x - delta, floatArgs, intArgs, rM, jacobian,
                                                              floatOuts, intOuts );
 
-        if ( error ){
-            error->print();
-            results << "test_computeBarrierHomotopyResidual2 & False\n";
-            return 1;
-        }
+        BOOST_CHECK( ! error  );
 
         floatVector gradCol = ( rP - rM ) / ( 2 * delta[ i ] );
 
@@ -1534,22 +1366,14 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
     error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, rP, jacobian,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatArgs[ 0 ][ 0 ] = pseudoTime - dt;
 
     error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, rM, jacobian,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatVector gradCol = ( rP - rM ) / ( 2 * dt );
 
@@ -1628,11 +1452,7 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
                                                          floatOuts, intOuts,
                                                          20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( answer, result )  );
 
@@ -1647,11 +1467,7 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
                                                          floatOuts, intOuts, linearSolver, jacobian,
                                                          20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( answer, result )  );
 
@@ -1662,11 +1478,7 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
 
     error = func( result, floatArgs, intArgs, residualResult, jacobianResult, floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( jacobian, jacobianResult )  );
 
@@ -1682,11 +1494,7 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
                                                 floatOuts, intOuts,
                                                 20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( answer, result )  );
 
@@ -1699,11 +1507,7 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
                                                 floatOuts, intOuts, linearSolver, jacobian,
                                                 20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( answer, result )  );
 
@@ -1712,11 +1516,7 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
 
     error = func( result, floatArgs, intArgs, residualResult, jacobianResult, floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( jacobian, jacobianResult )  );
 
@@ -1746,11 +1546,7 @@ BOOST_AUTO_TEST_CASE( test_applyBoundaryLimitation ){
 
     errorOut error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx );
 
-    if ( error ){
-        error->print();
-        results << "test_applyBoundaryLimitation & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x0 + dx, xAnswer1 )  );
 
@@ -1760,22 +1556,14 @@ BOOST_AUTO_TEST_CASE( test_applyBoundaryLimitation ){
 
     error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx );
 
-    if ( error ){
-        error->print( );
-        results << "test_applyBoundaryLimitation & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x0 + dx, xAnswer2 )  );
 
     dx = dxDefault;
     error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx, 1e-9, 1e-9, true );
 
-    if ( error ){
-        error->print( );
-        results << "test_applyBoundaryLimitation & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x0 + dx, xAnswer3 )  );
 
@@ -1807,11 +1595,7 @@ BOOST_AUTO_TEST_CASE( test_BFGS ){
     errorOut error = solverTools::BFGS( func, x0, x, convergeFlag, fatalErrorFlag,
                                         floatOuts, intOuts, floatArgs, intArgs );
 
-    if ( error ){
-        error->print();
-        results << "test_BFGS & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x, xAnswer )  );
 
@@ -1852,11 +1636,7 @@ BOOST_AUTO_TEST_CASE( test_BFGS2 ){
                                         20, 1e-9, 1e-9, 1e-4, 5, true
                                       );
 
-    if ( error ){
-        error->print();
-        results << "test_BFGS2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer )  );
 
@@ -1894,11 +1674,7 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
                                                 100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
                                               );
 
-    if ( error ){
-        error->print();
-        results << "test_homotopyBFGS & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x, xAnswer )  );
 
@@ -1939,11 +1715,7 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
                                                 100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
                                               );
 
-    if ( error ){
-        error->print();
-        results << "test_homotopyBFGS2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer )  );
 
