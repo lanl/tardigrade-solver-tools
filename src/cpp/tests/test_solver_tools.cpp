@@ -53,13 +53,13 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver. This function is a linear
      * function of the form
      * 
-     * \f$ R = \left[x + 1, y - 5.6\right]\f$
+     * \f$ R = \left[ x + 1, y - 5.6\right]\f$
      * 
      * which has a solution at \f$\left( -1, 5.6 \right)\f$
      * 
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * \f$\left[ \left[ -1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
      * 
      * And intOuts to
      * 
@@ -81,7 +81,7 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
     floatType x0 = -1;
     floatType y0 = 5.6;
 
-    residual = { x[0] - x0, x[1] - y0 };
+    residual = { x[ 0] - x0, x[ 1] - y0 };
     jacobian = { { 1, 0 }, { 0, 1 } };
 
     floatOuts = { { -1 }, { -1, -2, -3 }, { 4, 5, 6 } };
@@ -118,7 +118,7 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
      *
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * \f$\left[ \left[ -1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
      * 
      * And intOuts to
      * 
@@ -173,11 +173,11 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will 
      * require the use of the line-search algorithm. The function is of the form
      * 
-     * \f$R = exp(-x) - 1\f$
+     * \f$R = exp( -x) - 1\f$
      * 
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * \f$\left[ \left[ -1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
      * 
      * And intOuts to
      * 
@@ -260,20 +260,20 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * 
      * The expected incoming values for `floatOuts` are
      * 
-     * \f$ floatOuts = \left[ \left[0, 1, 2 \right], \left[7, -6\right], \left[0.24, 0.25\right]\right]\f$
+     * \f$ floatOuts = \left[ \left[ 0, 1, 2 \right], \left[ 7, -6\right], \left[ 0.24, 0.25\right]\right]\f$
      *
      * The expected incoming values for `intOuts` are
      * 
-     * \f$ intOuts = \left[ \left[ 1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * \f$ intOuts = \left[ \left[ 1, 2, 3\right], \left[ -5, 6, 7, 8\right] \right] \f$
      * 
      * The function currently throws an error if the expected values are not provided. `floatOuts` is 
      * updated to
      * 
-     * \f$ floatOuts = \left[ \left[ 0.1, 1.1, 2.1 \right], \left[7, -6\right], \left[0, 1, 2\right] \right]\f$
+     * \f$ floatOuts = \left[ \left[ 0.1, 1.1, 2.1 \right], \left[ 7, -6\right], \left[ 0, 1, 2\right] \right]\f$
      * 
      * `intOuts` is updated to
      * 
-     * \f$ intOuts = \left[ \left[ -1, 0, 1\right], \left[1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * \f$ intOuts = \left[ \left[ -1, 0, 1\right], \left[ 1, 2, 3\right], \left[ -5, 6, 7, 8\right] \right] \f$
      * 
      * \param &x: The variable vector. One value.
      * \param &floatArgs: Floating point arguments to the function
@@ -303,12 +303,12 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     intVector   answer10 = { -5, 6, 7, 8 };
 
     //x tests
-    if ( x.size() != 1 ){
+    if ( x.size( ) != 1 ){
         return new errorNode( "nlFxn5", "The x vector should have a size of 1" );
     }
 
     //floatArgs tests
-    if ( floatArgs.size() != 2 ){
+    if ( floatArgs.size( ) != 2 ){
         return new errorNode( "nlFxn5", "The floatArgs matrix should have two values" );
     }
 
@@ -321,7 +321,7 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     }
 
     //intArgs tests
-    if ( intArgs.size() != 3 ){
+    if ( intArgs.size( ) != 3 ){
         return new errorNode( "nlFxn5", "The intArgs matrix should have three values" );
     }
 
@@ -338,7 +338,7 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     }
 
     //floatOuts tests
-    if ( floatOuts.size() != 3 ){
+    if ( floatOuts.size( ) != 3 ){
         return new errorNode( "nlFxn5", "The floatOuts matrix should have three values" );
     }
 
@@ -355,7 +355,7 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     }
 
     //intOuts tests
-    if ( intOuts.size() != 2 ){
+    if ( intOuts.size( ) != 2 ){
         return new errorNode( "nlFxn5", "The intOuts matrix must have a size of 2" );
     }
 
@@ -449,7 +449,7 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * \param &intOuts: Additional integer outputs. Unused.
      */
 
-    if ( x.size() != 1 ){
+    if ( x.size( ) != 1 ){
         return new errorNode( "nlFxn7", "The x vector must have a size of 1" );
     }
 
@@ -484,14 +484,14 @@ errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const 
      * \param &intOuts: Additional integer values to return.
      */
 
-    if ( x.size() != 1 ){
+    if ( x.size( ) != 1 ){
         return new errorNode( "lagrangian1", "The x vector must have a size of 1" );
     }
 
     value = ( x[ 0 ] - 1 ) * ( x[ 0 ] + 3 );
     gradient = { ( x[ 0 ] + 3 ) + ( x[ 0 ] - 1 ) };
 
-    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    floatOuts = { { 1, 2, 3}, { -0.4, -0.5, -0.6 } };
     intOuts = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     return NULL;
@@ -511,15 +511,15 @@ errorOut lagrangian2( const floatVector &x, const floatMatrix &floatArgs, const 
      * \param &intOuts: Additional integer values to return.
      */
 
-    if ( x.size() != 3 ){
+    if ( x.size( ) != 3 ){
         return new errorNode( "lagrangian2", "The x vector must have a size of 3" );
     }
 
-    if ( floatOuts.size() != 1 ){
+    if ( floatOuts.size( ) != 1 ){
         return new errorNode( "lagrangian2", "The floatOuts must have a size of 1" );
     }
 
-    if ( intOuts.size() != 1 ){
+    if ( intOuts.size( ) != 1 ){
         return new errorNode( "lagrangian2", "The intOuts must have a size of 1" );
     }
 
@@ -541,7 +541,7 @@ errorOut lagrangian2( const floatVector &x, const floatMatrix &floatArgs, const 
                  1 + 2 * _L * _y,
                  _x * _x + _y * _y - 1 };
 
-    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatOuts = { { 1, 2, 3}, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     return NULL;
@@ -580,15 +580,15 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
      * \param &intOuts: Additional integer values to return.
      */
 
-    if ( x.size() != 3 ){
+    if ( x.size( ) != 3 ){
         return new errorNode( "lagrangian3", "The x vector must have a size of 3" );
     }
 
-    if ( floatOuts.size() != 1 ){
+    if ( floatOuts.size( ) != 1 ){
         return new errorNode( "lagrangian3", "The floatOuts must have a size of 1" );
     }
 
-    if ( intOuts.size() != 1 ){
+    if ( intOuts.size( ) != 1 ){
         return new errorNode( "lagrangian3", "The intOuts must have a size of 1" );
     }
 
@@ -610,7 +610,7 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
                  _x * _x + 2 * _L * _y,
                  _x * _x + _y * _y - 3 };
 
-    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatOuts = { { 1, 2, 3}, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     return NULL;
@@ -622,34 +622,34 @@ BOOST_AUTO_TEST_CASE( testCheckTolerance ){
      */
 
     floatVector R   = {  1,   2, 3.00000, -4.0};
-    floatVector tol = {1.5, 2.1, 3.00001,  4.1};
+    floatVector tol = { 1.5, 2.1, 3.00001,  4.1};
     bool result;
 
-    errorOut error = solverTools::checkTolerance(R, tol, result);
+    errorOut error = solverTools::checkTolerance( R, tol, result);
 
     BOOST_CHECK( ! error );
 
     BOOST_CHECK( result );
 
-    tol[0] = .98;
+    tol[ 0] = .98;
 
-    error = solverTools::checkTolerance(R, tol, result);
-
-    BOOST_CHECK( ! error );
-
-    BOOST_CHECK( ! result );
-
-    tol[0] = 1.5;
-    tol[3] = 3.8;
-    error = solverTools::checkTolerance(R, tol, result);
+    error = solverTools::checkTolerance( R, tol, result);
 
     BOOST_CHECK( ! error );
 
     BOOST_CHECK( ! result );
 
-    tol = {1.6, 2.5};
+    tol[ 0] = 1.5;
+    tol[ 3] = 3.8;
+    error = solverTools::checkTolerance( R, tol, result);
 
-    error = solverTools::checkTolerance(R, tol, result);
+    BOOST_CHECK( ! error );
+
+    BOOST_CHECK( ! result );
+
+    tol = { 1.6, 2.5};
+
+    error = solverTools::checkTolerance( R, tol, result);
 
     BOOST_CHECK( error );
 
@@ -720,10 +720,10 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
 
     //The fourth test. Tests the bounded Newton method
     x0 = { 10. };
-    floatOut.clear();
-    intOut.clear();
-    fO.clear();
-    iO.clear();
+    floatOut.clear( );
+    intOut.clear( );
+    fO.clear( );
+    iO.clear( );
 
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn7 );
 
@@ -735,7 +735,7 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     floatVector boundValues = { 1e-9 };
     floatMatrix Jexp = { { 1. } };
 
-    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, {}, {}, linearSolver, J );
+    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { }, linearSolver, J );
 
     BOOST_CHECK( ! error  );
     BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1. } )  );
@@ -762,30 +762,30 @@ BOOST_AUTO_TEST_CASE( testFiniteDifference ){
      */
 
     //The first test
-    floatVector x0 = {1.5, 6};
+    floatVector x0 = { 1.5, 6};
     floatMatrix J;
 
     solverTools::stdFncNLF func;
-    func = static_cast<solverTools::NonLinearFunction>(nlFxn1);
-    solverTools::finiteDifference(func, x0, J, {}, {});
+    func = static_cast<solverTools::NonLinearFunction>( nlFxn1);
+    solverTools::finiteDifference( func, x0, J, { }, { });
 
     floatVector Rtmp;
     floatMatrix result;
     floatMatrix floatOuts;
     intMatrix intOuts;
-    nlFxn1(x0, {}, {}, Rtmp, result, floatOuts, intOuts);
+    nlFxn1( x0, { }, { }, Rtmp, result, floatOuts, intOuts);
 
-    BOOST_CHECK( vectorTools::fuzzyEquals(J, result) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, result) );
 
     //The second test
-    x0 = {1, 1, 1};
-    floatOuts.clear();
-    intOuts.clear();
-    func = static_cast<solverTools::NonLinearFunction>(nlFxn2);
-    solverTools::finiteDifference(func, x0, J, {}, {});
-    nlFxn2(x0, {}, {}, Rtmp, result, floatOuts, intOuts);
+    x0 = { 1, 1, 1};
+    floatOuts.clear( );
+    intOuts.clear( );
+    func = static_cast<solverTools::NonLinearFunction>( nlFxn2);
+    solverTools::finiteDifference( func, x0, J, { }, { });
+    nlFxn2( x0, { }, { }, Rtmp, result, floatOuts, intOuts);
 
-    BOOST_CHECK( vectorTools::fuzzyEquals(J, result) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, result) );
 
 }
 
@@ -797,15 +797,15 @@ BOOST_AUTO_TEST_CASE( testCheckJacobian ){
     //The first test
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn1);
     bool isGood = false;
     floatType eps = 1e-6;
     floatType tolr = 1e-6;
     floatType tola = 1e-6;
     bool suppressOutput = true;
 
-    floatVector x0 = {0, 0};
-    errorOut error = solverTools::checkJacobian(func, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
+    floatVector x0 = { 0, 0};
+    errorOut error = solverTools::checkJacobian( func, x0, { }, { }, isGood, eps, tolr, tola, suppressOutput);
 
     BOOST_CHECK( ! error );
 
@@ -813,14 +813,14 @@ BOOST_AUTO_TEST_CASE( testCheckJacobian ){
 
     //The second test
     solverTools::stdFncNLFJ badfunc;
-    badfunc = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+    badfunc = [ &]( const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
                             floatVector &r, floatMatrix &j, floatMatrix &fO, intMatrix &iO){
-        errorOut e = func(x_, floatArgs_, intArgs_, r, j, fO, iO);
-        j[0][1] = 0.1;
+        errorOut e = func( x_, floatArgs_, intArgs_, r, j, fO, iO);
+        j[ 0][ 1] = 0.1;
         return e;
     }; 
 
-    error = solverTools::checkJacobian(badfunc, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
+    error = solverTools::checkJacobian( badfunc, x0, { }, { }, isGood, eps, tolr, tola, suppressOutput);
 
     BOOST_CHECK( ! error );
 
@@ -833,17 +833,17 @@ BOOST_AUTO_TEST_CASE( testCheckLSCriteria ){
      * Test the line search criteria
      */
 
-    floatVector R  = {1, 2, 3, 4, 5, 6};
-    floatVector Rp = {2, 3, 4, 5, 6, 7};
+    floatVector R  = { 1, 2, 3, 4, 5, 6};
+    floatVector Rp = { 2, 3, 4, 5, 6, 7};
     bool result;
 
-    solverTools::checkLSCriteria(R, Rp, result);
+    solverTools::checkLSCriteria( R, Rp, result);
 
     BOOST_CHECK( result );
 
-    R[0] = 100;
+    R[ 0] = 100;
 
-    solverTools::checkLSCriteria(R, Rp, result);
+    solverTools::checkLSCriteria( R, Rp, result);
 
     BOOST_CHECK( ! result );
 
@@ -879,11 +879,11 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } )  );
 
     //The second test
-    x0 = {1, 1, 1};
-    floatOuts.clear();
-    intOuts.clear();
-    fO.clear();
-    iO.clear();
+    x0 = { 1, 1, 1};
+    floatOuts.clear( );
+    intOuts.clear( );
+    fO.clear( );
+    iO.clear( );
 
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
@@ -927,8 +927,8 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
 
     //The fifth test ( hard bounds )
     x0 = { 10 };
-    floatOuts.clear();
-    intOuts.clear();
+    floatOuts.clear( );
+    intOuts.clear( );
 
     solverTools::solverType linearSolver;
     floatMatrix J, Jexp;
@@ -941,7 +941,7 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
 
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn7 );
 
-    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {},
+    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          linearSolver, J, variableIndices, barrierSigns, barrierValues,
                                          false, 20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
 
@@ -1097,7 +1097,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
 
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn5);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn5);
 
     floatVector x0 = { 0. };
     floatMatrix floatArgsDefault =
@@ -1158,7 +1158,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     BOOST_CHECK( vectorTools::fuzzyEquals( residualAnswer, residualResult )  );
 
     //Check that the non-homotopy outputs are as expected.
-    BOOST_CHECK( floatOuts.size() == 4 );
+    BOOST_CHECK( floatOuts.size( ) == 4 );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts[ 1 ], floatOutsDefault[ 0 ] + 0.1 )  );
 
@@ -1166,7 +1166,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts[ 3 ], floatOutsDefault[ 0 ] )  );
 
-    BOOST_CHECK( intOuts.size() == 3 );
+    BOOST_CHECK( intOuts.size( ) == 3 );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( intOuts[ 0 ], intOutsDefault[ 0 ] - 2 )  );
 
@@ -1242,7 +1242,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
 
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn6);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn6);
 
     floatVector          x = { 0.15, 0.1, -1.2 };
     floatType   pseudoTime = 0.24;
@@ -1257,8 +1257,8 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
     floatMatrix floatArgs = { { pseudoTime }, bvals, logAMaxVals };
     intMatrix   intArgs   = { variableIndices, residualIndices, signs };
 
-    floatMatrix floatOuts = { {} };
-    intMatrix   intOuts   = { {} };
+    floatMatrix floatOuts = { { } };
+    intMatrix   intOuts   = { { } };
 
     floatVector residualAnswer = { 0.0244375 ,  0.53651154, -0.97499937 };
 
@@ -1276,8 +1276,8 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
 
     //Test the Jacobian w.r.t. x
     floatType eps = 1e-7;
-    for ( unsigned int i = 0; i < x.size(); i++ ){
-        floatVector delta( x.size(), 0 );
+    for ( unsigned int i = 0; i < x.size( ); i++ ){
+        floatVector delta( x.size( ), 0 );
         delta[ i ] = eps * fabs( x[ i ] ) + eps;
 
         floatVector rP, rM;
@@ -1294,7 +1294,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
 
         floatVector gradCol = ( rP - rM ) / ( 2 * delta[ i ] );
 
-        for ( unsigned int j = 0; j < gradCol.size(); j++ ){
+        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
             BOOST_CHECK( vectorTools::fuzzyEquals( gradCol[ j ], jacobian[ j ][ i ] )  );
         }
     }
@@ -1334,7 +1334,7 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
      */
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn5);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn5);
 
     floatVector barrierValues = { 0.1 };
     floatVector logAMaxValues = { 10. };
@@ -1512,7 +1512,7 @@ BOOST_AUTO_TEST_CASE( test_BFGS ){
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian1);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian1);
 
     solverTools::floatVector x0 = { 0. };
     solverTools::floatVector x;
@@ -1522,7 +1522,7 @@ BOOST_AUTO_TEST_CASE( test_BFGS ){
     solverTools::intMatrix intArgs, intOuts;
 
     floatVector xAnswer = { -1 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, { -0.4, -0.5, -0.6 } };
     intMatrix intOutsAnswer = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::BFGS( func, x0, x, convergeFlag, fatalErrorFlag,
@@ -1544,7 +1544,7 @@ BOOST_AUTO_TEST_CASE( test_BFGS2 ){
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian2);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian2);
 
     solverTools::floatVector x0 = { 0., 0., 0. };
     solverTools::floatVector x;
@@ -1557,7 +1557,7 @@ BOOST_AUTO_TEST_CASE( test_BFGS2 ){
     intOuts = { { -1, -2 } };
 
     floatVector xAnswer = { -std::sqrt( 2. ) / 2, -std::sqrt( 2. ) / 2 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intMatrix intOutsAnswer = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::BFGS( func, x0, x, convergeFlag, fatalErrorFlag,
@@ -1581,7 +1581,7 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian1);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian1);
 
     solverTools::floatVector x0 = { 0. };
     solverTools::floatVector x;
@@ -1591,7 +1591,7 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
     solverTools::intMatrix intArgs, intOuts;
 
     floatVector xAnswer = { -1 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, { -0.4, -0.5, -0.6 } };
     intMatrix intOutsAnswer = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
@@ -1615,7 +1615,7 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian2);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian2);
 
     solverTools::floatVector x0 = { 0., 0., 0. };
     solverTools::floatVector x;
@@ -1628,7 +1628,7 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
     intOuts = { { -1, -2 } };
 
     floatVector xAnswer = { -std::sqrt( 2. ) / 2, -std::sqrt( 2. ) / 2 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3}, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intMatrix intOutsAnswer = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
