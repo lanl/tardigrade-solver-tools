@@ -53,17 +53,17 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver. This function is a linear
      * function of the form
      * 
-     * \f$ R = \left[ x + 1, y - 5.6\right ]\f$
+     * \f$ R = \left [ x + 1, y - 5.6 \right ]\f$
      * 
-     * which has a solution at \f$\left( -1, 5.6 \right )\f$
+     * which has a solution at \f$\left ( -1, 5.6 \right )\f$
      * 
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[ -1 \right ], \left[ -1, -2, -3\right ], \left[ 4, 5, 6 \right ] \right ]\f$
+     * \f$\left [ \left [ -1 \right ], \left [ -1, -2, -3 \right ], \left [ 4, 5, 6 \right ] \right ]\f$
      * 
      * And intOuts to
      * 
-     * \f$\left[ \left[ 1, 2, 8 \right ] \right ]\f$
+     * \f$\left [ \left [ 1, 2, 8 \right ] \right ]\f$
      * 
      * \param &x: The variable vector. Of size 2.
      * \param &floatArgs: Floating point arguments to the function. None expected.
@@ -114,15 +114,15 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
     /*!
      * A non-linear function for use in testing the solver. A polynomial function of the form
      * 
-     * \f$ R = \left[ ( x - 1 ) ( x - 7 ) y, ( y - 1 ) ( x - 3 ) z, x y z \right ]\f$
+     * \f$ R = \left [ ( x - 1 ) ( x - 7 ) y, ( y - 1 ) ( x - 3 ) z, x y z \right ]\f$
      *
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[ -1 \right ], \left[ -1, -2, -3\right ], \left[ 4, 5, 6 \right ] \right ]\f$
+     * \f$\left [ \left [ -1 \right ], \left [ -1, -2, -3 \right ], \left [ 4, 5, 6 \right ] \right ]\f$
      * 
      * And intOuts to
      * 
-     * \f$\left[ \left[ 1, 2, 8 \right ] \right ]\f$
+     * \f$\left [ \left [ 1, 2, 8 \right ] \right ]\f$
      * 
      * \param &x: The variable vector. Of size 3.
      * \param &floatArgs: Floating point arguments to the function. Unused.
@@ -177,11 +177,11 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * 
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[ -1 \right ], \left[ -1, -2, -3\right ], \left[ 4, 5, 6 \right ] \right ]\f$
+     * \f$\left [ \left [ -1 \right ], \left [ -1, -2, -3 \right ], \left [ 4, 5, 6 \right ] \right ]\f$
      * 
      * And intOuts to
      * 
-     * \f$\left[ \left[ 1, 2 8 \right ] \right ]\f$
+     * \f$\left [ \left [ 1, 2 8 \right ] \right ]\f$
      * 
      * \param &x: The variable vector. Size 1.
      * \param &floatArgs: Floating point arguments to the function
@@ -248,32 +248,32 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * the use of the bounded homotopy solver. This function performs error checking on the
      * floatArgs, intArgs, floatOuts, and intOuts arrays. The function is of the form.
      * 
-     *  \f$ R = \left[ ( x - 1 ) ( x + 1 ) ( x + 1 ) ( x - 0.25 ) ( x + 0.1 ) \right ]\f$
+     *  \f$ R = \left [ ( x - 1 ) ( x + 1 ) ( x + 1 ) ( x - 0.25 ) ( x + 0.1 ) \right ]\f$
      * 
      * The expected values for `floatArgs` are:
      * 
-     * \f$ floatArgs = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right ], \left[ -0.01, -0.02 \right ] \right ] \f$
+     * \f$ floatArgs = \left [ \left [ 0.1, 0.2, 0.3, 0.4 \right ], \left [ -0.01, -0.02 \right ] \right ] \f$
      * 
      * The expected values for `intArgs` are
      * 
-     * \f$ intArgs = \left[ \left[ -1, -2, -3 \right ], \left[ 5, 4, 3, 2 \right ], \left[ 8, 9, 9 \right ] \right ]\f$
+     * \f$ intArgs = \left [ \left [ -1, -2, -3 \right ], \left [ 5, 4, 3, 2 \right ], \left [ 8, 9, 9 \right ] \right ]\f$
      * 
      * The expected incoming values for `floatOuts` are
      * 
-     * \f$ floatOuts = \left[ \left[ 0, 1, 2 \right ], \left[ 7, -6\right ], \left[ 0.24, 0.25\right ]\right ]\f$
+     * \f$ floatOuts = \left [ \left [ 0, 1, 2 \right ], \left [ 7, -6 \right ], \left [ 0.24, 0.25 \right ] \right ]\f$
      *
      * The expected incoming values for `intOuts` are
      * 
-     * \f$ intOuts = \left[ \left[ 1, 2, 3\right ], \left[ -5, 6, 7, 8\right ] \right ] \f$
+     * \f$ intOuts = \left [ \left [ 1, 2, 3 \right ], \left [ -5, 6, 7, 8 \right ] \right ] \f$
      * 
      * The function currently throws an error if the expected values are not provided. `floatOuts` is 
      * updated to
      * 
-     * \f$ floatOuts = \left[ \left[ 0.1, 1.1, 2.1 \right ], \left[ 7, -6\right ], \left[ 0, 1, 2\right ] \right ]\f$
+     * \f$ floatOuts = \left [ \left [ 0.1, 1.1, 2.1 \right ], \left [ 7, -6 \right ], \left [ 0, 1, 2 \right ] \right ]\f$
      * 
      * `intOuts` is updated to
      * 
-     * \f$ intOuts = \left[ \left[ -1, 0, 1\right ], \left[ 1, 2, 3\right ], \left[ -5, 6, 7, 8\right ] \right ] \f$
+     * \f$ intOuts = \left [ \left [ -1, 0, 1 \right ], \left [ 1, 2, 3 \right ], \left [ -5, 6, 7, 8 \right ] \right ] \f$
      * 
      * \param &x: The variable vector. One value.
      * \param &floatArgs: Floating point arguments to the function
@@ -387,7 +387,7 @@ errorOut nlFxn6( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will require
      * the use of the bounded homotopy solver. The function is of the form
      * 
-     * \f$R = \left[ \left( x - 1 \right ) \left( x + 1 \right ) \left( x - 0.25 \right ) \left( x + 0.1 \right ), \left( y - 1 \right ) \left( y - 1 \right ), \left( x + 5 \right ) \left( z + 1 \right ) \right ]\f$
+     * \f$R = \left [ \left ( x - 1 \right ) \left ( x + 1 \right ) \left ( x - 0.25 \right ) \left ( x + 0.1 \right ), \left ( y - 1 \right ) \left ( y - 1 \right ), \left ( x + 5 \right ) \left ( z + 1 \right ) \right ]\f$
      *
      * \param &x: The variable vector. Three values required.
      * \param &floatArgs: Floating point arguments to the function. Unused.
@@ -469,11 +469,11 @@ errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const 
      * 
      * `floatOuts` is updated to
      * 
-     * \f$floatOuts = \left[ \left[ 1, 2, 3 \right ], \left[ -0.4, -0.5, -0.6 \right ] \right ] \f$
+     * \f$floatOuts = \left [ \left [ 1, 2, 3 \right ], \left [ -0.4, -0.5, -0.6 \right ] \right ] \f$
      * 
      * `intOuts` is updated to
      * 
-     * \f$intOuts = \left[ \left[ 5, 6, 7 \right ], \left[ 8 \right ], \left[ 9, 10 \right ] \right ]\f$
+     * \f$intOuts = \left [ \left [ 5, 6, 7 \right ], \left [ 8 \right ], \left [ 9, 10 \right ] \right ]\f$
      *
      * \param &x: A vector of the variable to be solved. One value required.
      * \param &floatArgs: Additional floating point arguments to residual. Unused.
@@ -553,23 +553,23 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
     /*!
      * A lagrangian used to test the optimization tools. The function is of the form
      * 
-     * \f$L = x^2 y + z * \left( x^2 y^2 - 3 \right ) \f$
+     * \f$L = x^2 y + z * \left ( x^2 y^2 - 3 \right ) \f$
      * 
      * `floatOuts` is expected to have an incoming value of
      * 
-     * \f$ floatOuts = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right ] \right ] \f$
+     * \f$ floatOuts = \left [ \left [ 0.1, 0.2, 0.3, 0.4 \right ] \right ] \f$
      * 
      * `intOuts` is expected to have an incoming value of
      * 
-     * \f$ intOuts = \left[ \left[ 0 \right ], \left[ -1, -2 \right ] \right ] \f$
+     * \f$ intOuts = \left [ \left [ 0 \right ], \left [ -1, -2 \right ] \right ] \f$
      * 
      * `floatOuts is updated to
      * 
-     * \f$ floatOuts = \left[ \left[ 1, 2, 3 \right ], \left[ -0.4, -0.5, -0.6 \right ], \left[ 7, 6, 5 \right ] \right ] \f$
+     * \f$ floatOuts = \left [ \left [ 1, 2, 3 \right ], \left [ -0.4, -0.5, -0.6 \right ], \left [ 7, 6, 5 \right ] \right ] \f$
      * 
      * `intOuts` is updated to
      * 
-     * \f$ intOuts = \left[ \left[ -4 \right ], \left[ 5, 6, 7 \right ], \left[ 8 \right ], \left[ 9, 10 \right ] \right ] \f$ 
+     * \f$ intOuts = \left [ \left [ -4 \right ], \left [ 5, 6, 7 \right ], \left [ 8 \right ], \left [ 9, 10 \right ] \right ] \f$ 
      *
      * \param &x: A vector of the variable to be solved.
      * \param &floatArgs: Additional floating point arguments to residual
