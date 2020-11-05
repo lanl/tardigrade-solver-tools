@@ -674,7 +674,7 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     intMatrix intOut;    
     errorOut error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     floatVector Rtmp;
     floatMatrix Jtmp;
@@ -682,9 +682,9 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     intMatrix iO;
     error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) );
 
     //The second test
     x0 = { 1, 1, 1 };
@@ -696,13 +696,13 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) );
 
     //The third test
     x0 = { 3 };
@@ -714,9 +714,9 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn3 );
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } ) );
 
     //The fourth test. Tests the bounded Newton method
     x0 = { 10. };
@@ -737,10 +737,10 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
 
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { }, linearSolver, J );
 
-    BOOST_CHECK( ! error  );
-    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1. } )  );
+    BOOST_CHECK( ! error );
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1. } ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp ) );
 
     //The fifth test: This test makes sure that when a Newton-Raphson iteration fails it
     //correctly returns a failure to converge.
@@ -752,7 +752,7 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
 
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { }, 5 );
 
-    BOOST_CHECK( ! converged  );
+    BOOST_CHECK( ! converged );
 
 }
 
@@ -866,7 +866,7 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
    
     errorOut error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     floatVector Rtmp;
     floatMatrix Jtmp;
@@ -874,9 +874,9 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     intMatrix iO;
     error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) );
 
     //The second test
     x0 = { 1, 1, 1 };
@@ -888,13 +888,13 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) );
 
     //The third test
     x0 = { 3 };
@@ -907,9 +907,9 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          20, 1e-9, 1e-9, 1e-4, 5, 0.2, 0.01 );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } ) );
 
     //The fourth test
     x0 = { 3 };
@@ -921,9 +921,9 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } ) );
 
     //The fifth test ( hard bounds )
     x0 = { 10 };
@@ -945,11 +945,11 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
                                          linearSolver, J, variableIndices, barrierSigns, barrierValues,
                                          false, 20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1 } )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1 } ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp ) );
 
     
 }
@@ -968,17 +968,17 @@ BOOST_AUTO_TEST_CASE( test_aFxn ){
 
     errorOut error = solverTools::aFxn( pseudoT, logAfxn, result );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
     floatType dadT;
 
     error = solverTools::aFxn( pseudoT, logAfxn, result, dadT );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
     floatType eps = 1e-6;
     floatType delta = eps * pseudoT + eps;
@@ -987,13 +987,13 @@ BOOST_AUTO_TEST_CASE( test_aFxn ){
 
     error = solverTools::aFxn( pseudoT + delta, logAfxn, aP );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     error = solverTools::aFxn( pseudoT - delta, logAfxn, aM );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( ( aP - aM ) / ( 2 * delta ), dadT )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( aP - aM ) / ( 2 * delta ), dadT ) );
 
 }
 
@@ -1014,15 +1014,15 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
 
     errorOut error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer ) );
 
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer ) );
 
     //Test the Jacobians
     floatType dbdx, dbdt;
@@ -1030,9 +1030,9 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
     //Test the Jacobians when the sign is negative
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result, dbdx, dbdt );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer ) );
 
     floatType eps = 1e-6;
 
@@ -1043,50 +1043,50 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
 
     error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, false, bP );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, false, bM );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) );
 
     error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, false, bP );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, false, bM );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) );
 
     //Test the Jacobians when the sign is positive
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result, dbdx, dbdt );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer ) );
 
     error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, true, bP );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, true, bM );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) );
 
     error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, true, bP );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, true, bM );
 
-    BOOST_CHECK( ! error  );
+    BOOST_CHECK( ! error );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt )  );
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) );
 
 }
 
