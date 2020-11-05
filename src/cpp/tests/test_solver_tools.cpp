@@ -640,9 +640,7 @@ BOOST_AUTO_TEST_CASE( testCheckTolerance ){
 
     BOOST_CHECK( ! error );
 
-    if (result){
-        results << "testCheckTolerance (test 2) & False\n";
-    }
+    BOOST_CHECK( ! result );
 
     tol[0] = 1.5;
     tol[3] = 3.8;
@@ -650,10 +648,7 @@ BOOST_AUTO_TEST_CASE( testCheckTolerance ){
 
     BOOST_CHECK( ! error );
 
-    if (result){
-        results << "testCheckTolerance (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! result );
 
     tol = {1.6, 2.5};
 
@@ -661,8 +656,6 @@ BOOST_AUTO_TEST_CASE( testCheckTolerance ){
 
     BOOST_CHECK( error );
 
-    results << "testCheckTolerance & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
@@ -762,13 +755,8 @@ BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
 
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { }, 5 );
 
-    if ( converged ){
-        results << "testNewtonRaphson (test 6) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! converged  );
 
-    results << "testNewtonRaphson & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( testFiniteDifference ){
@@ -804,8 +792,6 @@ BOOST_AUTO_TEST_CASE( testFiniteDifference ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals(J, result) );
 
-    results << "testFiniteDifference & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( testCheckJacobian ){
@@ -845,13 +831,8 @@ BOOST_AUTO_TEST_CASE( testCheckJacobian ){
 
     BOOST_CHECK( ! error );
 
-    if (isGood){
-        results << "testCheckJacobian (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! isGood );
 
-    results << "testCheckJacobian & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( testCheckLSCriteria ){
@@ -873,13 +854,8 @@ BOOST_AUTO_TEST_CASE( testCheckLSCriteria ){
 
     solverTools::checkLSCriteria(R, Rp, result);
 
-    if (result){
-        results << "testCheckLSCriteria (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! result );
 
-    results << "testCheckLSCriteria  & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( testHomotopySolver ){
@@ -986,8 +962,6 @@ BOOST_AUTO_TEST_CASE( testHomotopySolver ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp )  );
 
-    results << "testHomotopySolver & True\n";
-    return 0;
     
 }
 
@@ -1034,8 +1008,6 @@ BOOST_AUTO_TEST_CASE( test_aFxn ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( ( aP - aM ) / ( 2 * delta ), dadT )  );
 
-    results << "test_aFxn & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
@@ -1131,8 +1103,6 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt )  );
 
-    results << "test_computeBarrierFunction & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
@@ -1205,10 +1175,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     BOOST_CHECK( vectorTools::fuzzyEquals( residualAnswer, residualResult )  );
 
     //Check that the non-homotopy outputs are as expected.
-    if ( floatOuts.size() != 4 ){
-        results << "test_computeBarrierHomotopyResidual (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( floatOuts.size() == 4 );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts[ 1 ], floatOutsDefault[ 0 ] + 0.1 )  );
 
@@ -1216,10 +1183,7 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts[ 3 ], floatOutsDefault[ 0 ] )  );
 
-    if ( intOuts.size() != 3 ){
-        results << "test_computeBarrierHomotopyResidual (test 6) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( intOuts.size() == 3 );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( intOuts[ 0 ], intOutsDefault[ 0 ] - 2 )  );
 
@@ -1286,8 +1250,6 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ], 1e-5 )  );
 
-    results << "test_computeBarrierHomotopyResidual & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
@@ -1379,8 +1341,6 @@ BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ] )  );
 
-    results << "test_computeBarrierHomotopyResidual2 & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
@@ -1520,8 +1480,6 @@ BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( jacobian, jacobianResult )  );
 
-    results << "test_barrierHomotopySolver & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_applyBoundaryLimitation ){
@@ -1567,8 +1525,6 @@ BOOST_AUTO_TEST_CASE( test_applyBoundaryLimitation ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( x0 + dx, xAnswer3 )  );
 
-    results << "test_applyBoundaryLimitation & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_BFGS ){
@@ -1603,8 +1559,6 @@ BOOST_AUTO_TEST_CASE( test_BFGS ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer )  );
 
-    results << "test_BFGS & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_BFGS2 ){
@@ -1644,8 +1598,6 @@ BOOST_AUTO_TEST_CASE( test_BFGS2 ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer )  );
 
-    results << "test_BFGS2 & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
@@ -1682,8 +1634,6 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer )  );
 
-    results << "test_homotopyBFGS & True\n";
-    return 0;
 }
 
 BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
@@ -1723,6 +1673,4 @@ BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer )  );
 
-    results << "test_homotopyBFGS2 & True\n";
-    return 0;
 }
