@@ -1,9 +1,16 @@
-//Tests for solver_tools
+/**
+  * \file test_solver_tools.cpp
+  *
+  * Tests for solver_tools
+  */
 
 #include<solver_tools.h>
 #include<sstream>
 #include<fstream>
 #include<iostream>
+
+#define BOOST_TEST_MODULE test_vector_tools
+#include <boost/test/included/unit_test.hpp>
 
 typedef solverTools::errorOut errorOut;
 typedef solverTools::errorNode errorNode;
@@ -14,7 +21,7 @@ typedef solverTools::intVector intVector;
 typedef solverTools::intMatrix intMatrix;
 
 struct cout_redirect{
-    cout_redirect( std::streambuf * new_buffer)
+    cout_redirect( std::streambuf * new_buffer )
         : old( std::cout.rdbuf( new_buffer ) )
     { }
 
@@ -27,7 +34,7 @@ struct cout_redirect{
 };
 
 struct cerr_redirect{
-    cerr_redirect( std::streambuf * new_buffer)
+    cerr_redirect( std::streambuf * new_buffer )
         : old( std::cerr.rdbuf( new_buffer ) )
     { }
 
@@ -46,17 +53,17 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver. This function is a linear
      * function of the form
      * 
-     * \f$ R = \left[x + 1, y - 5.6\right]\f$
+     * \f$ R = \left [ x + 1, y - 5.6 \right ]\f$
      * 
-     * which has a solution at \f$\left( -1, 5.6 \right)\f$
+     * which has a solution at \f$\left ( -1, 5.6 \right )\f$
      * 
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * \f$\left [ \left [ -1 \right ], \left [ -1, -2, -3 \right ], \left [ 4, 5, 6 \right ] \right ]\f$
      * 
      * And intOuts to
      * 
-     * \f$\left[ \left[ 1, 2, 8 \right] \right]\f$
+     * \f$\left [ \left [ 1, 2, 8 \right ] \right ]\f$
      * 
      * \param &x: The variable vector. Of size 2.
      * \param &floatArgs: Floating point arguments to the function. None expected.
@@ -74,7 +81,7 @@ errorOut nlFxn1( const floatVector &x, const floatMatrix &floatArgs, const intMa
     floatType x0 = -1;
     floatType y0 = 5.6;
 
-    residual = { x[0] - x0, x[1] - y0 };
+    residual = { x[ 0 ] - x0, x[ 1 ] - y0 };
     jacobian = { { 1, 0 }, { 0, 1 } };
 
     floatOuts = { { -1 }, { -1, -2, -3 }, { 4, 5, 6 } };
@@ -107,15 +114,15 @@ errorOut nlFxn2( const floatVector &x, const floatMatrix &floatArgs, const intMa
     /*!
      * A non-linear function for use in testing the solver. A polynomial function of the form
      * 
-     * \f$ R = \left[ ( x - 1 ) ( x - 7 ) y, ( y - 1 ) ( x - 3 ) z, x y z \right]\f$
+     * \f$ R = \left [ ( x - 1 ) ( x - 7 ) y, ( y - 1 ) ( x - 3 ) z, x y z \right ]\f$
      *
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * \f$\left [ \left [ -1 \right ], \left [ -1, -2, -3 \right ], \left [ 4, 5, 6 \right ] \right ]\f$
      * 
      * And intOuts to
      * 
-     * \f$\left[ \left[ 1, 2, 8 \right] \right]\f$
+     * \f$\left [ \left [ 1, 2, 8 \right ] \right ]\f$
      * 
      * \param &x: The variable vector. Of size 3.
      * \param &floatArgs: Floating point arguments to the function. Unused.
@@ -166,15 +173,15 @@ errorOut nlFxn3( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will 
      * require the use of the line-search algorithm. The function is of the form
      * 
-     * \f$R = exp(-x) - 1\f$
+     * \f$R = exp( -x ) - 1\f$
      * 
      * The function also sets floatOuts to
      * 
-     * \f$\left[ \left[-1 \right], \left[ -1, -2, -3\right], \left[ 4, 5, 6 \right] \right]\f$
+     * \f$\left [ \left [ -1 \right ], \left [ -1, -2, -3 \right ], \left [ 4, 5, 6 \right ] \right ]\f$
      * 
      * And intOuts to
      * 
-     * \f$\left[ \left[ 1, 2 8 \right] \right]\f$
+     * \f$\left [ \left [ 1, 2 8 \right ] \right ]\f$
      * 
      * \param &x: The variable vector. Size 1.
      * \param &floatArgs: Floating point arguments to the function
@@ -241,32 +248,32 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * the use of the bounded homotopy solver. This function performs error checking on the
      * floatArgs, intArgs, floatOuts, and intOuts arrays. The function is of the form.
      * 
-     *  \f$ R = \left[ ( x - 1 ) ( x + 1 ) ( x + 1 ) ( x - 0.25 ) ( x + 0.1 ) \right]\f$
+     *  \f$ R = \left [ ( x - 1 ) ( x + 1 ) ( x + 1 ) ( x - 0.25 ) ( x + 0.1 ) \right ]\f$
      * 
      * The expected values for `floatArgs` are:
      * 
-     * \f$ floatArgs = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right], \left[ -0.01, -0.02 \right] \right] \f$
+     * \f$ floatArgs = \left [ \left [ 0.1, 0.2, 0.3, 0.4 \right ], \left [ -0.01, -0.02 \right ] \right ] \f$
      * 
      * The expected values for `intArgs` are
      * 
-     * \f$ intArgs = \left[ \left[ -1, -2, -3 \right], \left[ 5, 4, 3, 2 \right], \left[ 8, 9, 9 \right] \right]\f$
+     * \f$ intArgs = \left [ \left [ -1, -2, -3 \right ], \left [ 5, 4, 3, 2 \right ], \left [ 8, 9, 9 \right ] \right ]\f$
      * 
      * The expected incoming values for `floatOuts` are
      * 
-     * \f$ floatOuts = \left[ \left[0, 1, 2 \right], \left[7, -6\right], \left[0.24, 0.25\right]\right]\f$
+     * \f$ floatOuts = \left [ \left [ 0, 1, 2 \right ], \left [ 7, -6 \right ], \left [ 0.24, 0.25 \right ] \right ]\f$
      *
      * The expected incoming values for `intOuts` are
      * 
-     * \f$ intOuts = \left[ \left[ 1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * \f$ intOuts = \left [ \left [ 1, 2, 3 \right ], \left [ -5, 6, 7, 8 \right ] \right ] \f$
      * 
      * The function currently throws an error if the expected values are not provided. `floatOuts` is 
      * updated to
      * 
-     * \f$ floatOuts = \left[ \left[ 0.1, 1.1, 2.1 \right], \left[7, -6\right], \left[0, 1, 2\right] \right]\f$
+     * \f$ floatOuts = \left [ \left [ 0.1, 1.1, 2.1 \right ], \left [ 7, -6 \right ], \left [ 0, 1, 2 \right ] \right ]\f$
      * 
      * `intOuts` is updated to
      * 
-     * \f$ intOuts = \left[ \left[ -1, 0, 1\right], \left[1, 2, 3\right], \left[-5, 6, 7, 8\right] \right] \f$
+     * \f$ intOuts = \left [ \left [ -1, 0, 1 \right ], \left [ 1, 2, 3 \right ], \left [ -5, 6, 7, 8 \right ] \right ] \f$
      * 
      * \param &x: The variable vector. One value.
      * \param &floatArgs: Floating point arguments to the function
@@ -296,25 +303,25 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     intVector   answer10 = { -5, 6, 7, 8 };
 
     //x tests
-    if ( x.size() != 1 ){
+    if ( x.size( ) != 1 ){
         return new errorNode( "nlFxn5", "The x vector should have a size of 1" );
     }
 
     //floatArgs tests
-    if ( floatArgs.size() != 2 ){
+    if ( floatArgs.size( ) != 2 ){
         return new errorNode( "nlFxn5", "The floatArgs matrix should have two values" );
     }
 
-    if ( !vectorTools::fuzzyEquals( floatArgs[ 0 ], answer1) ){
+    if ( !vectorTools::fuzzyEquals( floatArgs[ 0 ], answer1 ) ){
         return new errorNode( "nlFxn5", "The first value of floatArgs should be { 0.1, 0.2, 0.3, 0.4 }" );
     }
 
-    if ( !vectorTools::fuzzyEquals( floatArgs[ 1 ], answer2) ){
+    if ( !vectorTools::fuzzyEquals( floatArgs[ 1 ], answer2 ) ){
         return new errorNode( "nlFxn5", "The second value of floatArgs should be { -0.01, -0.02 }" );
     }
 
     //intArgs tests
-    if ( intArgs.size() != 3 ){
+    if ( intArgs.size( ) != 3 ){
         return new errorNode( "nlFxn5", "The intArgs matrix should have three values" );
     }
 
@@ -331,7 +338,7 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     }
 
     //floatOuts tests
-    if ( floatOuts.size() != 3 ){
+    if ( floatOuts.size( ) != 3 ){
         return new errorNode( "nlFxn5", "The floatOuts matrix should have three values" );
     }
 
@@ -348,7 +355,7 @@ errorOut nlFxn5( const floatVector &x, const floatMatrix &floatArgs, const intMa
     }
 
     //intOuts tests
-    if ( intOuts.size() != 2 ){
+    if ( intOuts.size( ) != 2 ){
         return new errorNode( "nlFxn5", "The intOuts matrix must have a size of 2" );
     }
 
@@ -380,7 +387,7 @@ errorOut nlFxn6( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * A non-linear function for use in testing the solver which will require
      * the use of the bounded homotopy solver. The function is of the form
      * 
-     * \f$R = \left[ \left( x - 1 \right) \left( x + 1 \right) \left( x - 0.25 \right) \left( x + 0.1 \right), \left( y - 1 \right) \left( y - 1 \right), \left( x + 5 \right) \left( z + 1 \right) \right]\f$
+     * \f$R = \left [ \left ( x - 1 \right ) \left ( x + 1 \right ) \left ( x - 0.25 \right ) \left ( x + 0.1 \right ), \left ( y - 1 \right ) \left ( y - 1 \right ), \left ( x + 5 \right ) \left ( z + 1 \right ) \right ]\f$
      *
      * \param &x: The variable vector. Three values required.
      * \param &floatArgs: Floating point arguments to the function. Unused.
@@ -442,7 +449,7 @@ errorOut nlFxn7( const floatVector &x, const floatMatrix &floatArgs, const intMa
      * \param &intOuts: Additional integer outputs. Unused.
      */
 
-    if ( x.size() != 1 ){
+    if ( x.size( ) != 1 ){
         return new errorNode( "nlFxn7", "The x vector must have a size of 1" );
     }
 
@@ -462,11 +469,11 @@ errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const 
      * 
      * `floatOuts` is updated to
      * 
-     * \f$floatOuts = \left[ \left[ 1, 2, 3 \right], \left[ -0.4, -0.5, -0.6 \right] \right] \f$
+     * \f$floatOuts = \left [ \left [ 1, 2, 3 \right ], \left [ -0.4, -0.5, -0.6 \right ] \right ] \f$
      * 
      * `intOuts` is updated to
      * 
-     * \f$intOuts = \left[ \left[ 5, 6, 7 \right], \left[ 8 \right], \left[ 9, 10 \right] \right]\f$
+     * \f$intOuts = \left [ \left [ 5, 6, 7 \right ], \left [ 8 \right ], \left [ 9, 10 \right ] \right ]\f$
      *
      * \param &x: A vector of the variable to be solved. One value required.
      * \param &floatArgs: Additional floating point arguments to residual. Unused.
@@ -477,14 +484,14 @@ errorOut lagrangian1( const floatVector &x, const floatMatrix &floatArgs, const 
      * \param &intOuts: Additional integer values to return.
      */
 
-    if ( x.size() != 1 ){
+    if ( x.size( ) != 1 ){
         return new errorNode( "lagrangian1", "The x vector must have a size of 1" );
     }
 
     value = ( x[ 0 ] - 1 ) * ( x[ 0 ] + 3 );
     gradient = { ( x[ 0 ] + 3 ) + ( x[ 0 ] - 1 ) };
 
-    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    floatOuts = { { 1, 2, 3 }, { -0.4, -0.5, -0.6 } };
     intOuts = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     return NULL;
@@ -504,15 +511,15 @@ errorOut lagrangian2( const floatVector &x, const floatMatrix &floatArgs, const 
      * \param &intOuts: Additional integer values to return.
      */
 
-    if ( x.size() != 3 ){
+    if ( x.size( ) != 3 ){
         return new errorNode( "lagrangian2", "The x vector must have a size of 3" );
     }
 
-    if ( floatOuts.size() != 1 ){
+    if ( floatOuts.size( ) != 1 ){
         return new errorNode( "lagrangian2", "The floatOuts must have a size of 1" );
     }
 
-    if ( intOuts.size() != 1 ){
+    if ( intOuts.size( ) != 1 ){
         return new errorNode( "lagrangian2", "The intOuts must have a size of 1" );
     }
 
@@ -534,7 +541,7 @@ errorOut lagrangian2( const floatVector &x, const floatMatrix &floatArgs, const 
                  1 + 2 * _L * _y,
                  _x * _x + _y * _y - 1 };
 
-    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatOuts = { { 1, 2, 3 }, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     return NULL;
@@ -546,23 +553,23 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
     /*!
      * A lagrangian used to test the optimization tools. The function is of the form
      * 
-     * \f$L = x^2 y + z * \left( x^2 y^2 - 3 \right) \f$
+     * \f$L = x^2 y + z * \left ( x^2 y^2 - 3 \right ) \f$
      * 
      * `floatOuts` is expected to have an incoming value of
      * 
-     * \f$ floatOuts = \left[ \left[ 0.1, 0.2, 0.3, 0.4 \right] \right] \f$
+     * \f$ floatOuts = \left [ \left [ 0.1, 0.2, 0.3, 0.4 \right ] \right ] \f$
      * 
      * `intOuts` is expected to have an incoming value of
      * 
-     * \f$ intOuts = \left[ \left[ 0 \right], \left[ -1, -2 \right] \right] \f$
+     * \f$ intOuts = \left [ \left [ 0 \right ], \left [ -1, -2 \right ] \right ] \f$
      * 
      * `floatOuts is updated to
      * 
-     * \f$ floatOuts = \left[ \left[ 1, 2, 3 \right], \left[ -0.4, -0.5, -0.6 \right], \left[ 7, 6, 5 \right] \right] \f$
+     * \f$ floatOuts = \left [ \left [ 1, 2, 3 \right ], \left [ -0.4, -0.5, -0.6 \right ], \left [ 7, 6, 5 \right ] \right ] \f$
      * 
      * `intOuts` is updated to
      * 
-     * \f$ intOuts = \left[ \left[ -4 \right], \left[ 5, 6, 7 \right], \left[ 8 \right], \left[ 9, 10 \right] \right] \f$ 
+     * \f$ intOuts = \left [ \left [ -4 \right ], \left [ 5, 6, 7 \right ], \left [ 8 \right ], \left [ 9, 10 \right ] \right ] \f$ 
      *
      * \param &x: A vector of the variable to be solved.
      * \param &floatArgs: Additional floating point arguments to residual
@@ -573,15 +580,15 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
      * \param &intOuts: Additional integer values to return.
      */
 
-    if ( x.size() != 3 ){
+    if ( x.size( ) != 3 ){
         return new errorNode( "lagrangian3", "The x vector must have a size of 3" );
     }
 
-    if ( floatOuts.size() != 1 ){
+    if ( floatOuts.size( ) != 1 ){
         return new errorNode( "lagrangian3", "The floatOuts must have a size of 1" );
     }
 
-    if ( intOuts.size() != 1 ){
+    if ( intOuts.size( ) != 1 ){
         return new errorNode( "lagrangian3", "The intOuts must have a size of 1" );
     }
 
@@ -603,79 +610,52 @@ errorOut lagrangian3( const floatVector &x, const floatMatrix &floatArgs, const 
                  _x * _x + 2 * _L * _y,
                  _x * _x + _y * _y - 3 };
 
-    floatOuts = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatOuts = { { 1, 2, 3 }, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intOuts = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     return NULL;
 }
 
-int testCheckTolerance(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testCheckTolerance ){
     /*!
      * Test the tolerance checking function.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
-    floatVector R   = {  1,   2, 3.00000, -4.0};
-    floatVector tol = {1.5, 2.1, 3.00001,  4.1};
+    floatVector R   = {  1,   2, 3.00000, -4.0 };
+    floatVector tol = { 1.5, 2.1, 3.00001,  4.1 };
     bool result;
 
-    errorOut error = solverTools::checkTolerance(R, tol, result);
+    errorOut error = solverTools::checkTolerance( R, tol, result );
 
-    if (error){
-        error->print();
-        results << "testCheckTolerance & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if (!result){
-        results << "testCheckTolerance (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( result );
 
-    tol[0] = .98;
+    tol[ 0 ] = .98;
 
-    error = solverTools::checkTolerance(R, tol, result);
+    error = solverTools::checkTolerance( R, tol, result );
 
-    if (error){
-        error->print();
-        results << "testCheckTolerance & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if (result){
-        results << "testCheckTolerance (test 2) & False\n";
-    }
+    BOOST_CHECK( ! result );
 
-    tol[0] = 1.5;
-    tol[3] = 3.8;
-    error = solverTools::checkTolerance(R, tol, result);
+    tol[ 0 ] = 1.5;
+    tol[ 3 ] = 3.8;
+    error = solverTools::checkTolerance( R, tol, result );
 
-    if (error){
-        error->print();
-        results << "testCheckTolerance & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if (result){
-        results << "testCheckTolerance (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! result );
 
-    tol = {1.6, 2.5};
+    tol = { 1.6, 2.5 };
 
-    error = solverTools::checkTolerance(R, tol, result);
+    error = solverTools::checkTolerance( R, tol, result );
 
-    if (!error){
-        results << "testCheckTolerance (test 4) &False\n";
-        return 1;
-    }
+    BOOST_CHECK( error );
 
-    results << "testCheckTolerance & True\n";
-    return 0;
 }
 
-int testNewtonRaphson( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( testNewtonRaphson ){
     /*!
      * Tests of the Newton-Raphson solver
      * 
@@ -694,11 +674,7 @@ int testNewtonRaphson( std::ofstream &results ){
     intMatrix intOut;    
     errorOut error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn1 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     floatVector Rtmp;
     floatMatrix Jtmp;
@@ -706,16 +682,9 @@ int testNewtonRaphson( std::ofstream &results ){
     intMatrix iO;
     error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn1 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) ){
-        results << "testNewtonRaphson (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) );
 
     //The second test
     x0 = { 1, 1, 1 };
@@ -727,24 +696,13 @@ int testNewtonRaphson( std::ofstream &results ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) ){
-        results << "testNewtonRaphson (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) );
 
     //The third test
     x0 = { 3 };
@@ -756,23 +714,16 @@ int testNewtonRaphson( std::ofstream &results ){
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn3 );
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testNewtonRaphson nlFxn3 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( x, { 0 } ) ){
-        results << "testNewtonRaphson (test 3) & false\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } ) );
 
     //The fourth test. Tests the bounded Newton method
     x0 = { 10. };
-    floatOut.clear();
-    intOut.clear();
-    fO.clear();
-    iO.clear();
+    floatOut.clear( );
+    intOut.clear( );
+    fO.clear( );
+    iO.clear( );
 
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn7 );
 
@@ -784,22 +735,12 @@ int testNewtonRaphson( std::ofstream &results ){
     floatVector boundValues = { 1e-9 };
     floatMatrix Jexp = { { 1. } };
 
-    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, {}, {}, linearSolver, J );
+    error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { }, linearSolver, J );
 
-    if ( error ){
-        error->print();
-        results << "testNewtonRaphson nlFxn7 & False\n";
-        return 1;
-    }
-    if ( !vectorTools::fuzzyEquals( x, { 1. } ) ){
-        results << "testNewtonRaphson (test 4) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1. } ) );
 
-    if ( !vectorTools::fuzzyEquals( J, Jexp ) ){
-        results << "testNewtonRaphson (test 5) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp ) );
 
     //The fifth test: This test makes sure that when a Newton-Raphson iteration fails it
     //correctly returns a failure to converge.
@@ -811,151 +752,106 @@ int testNewtonRaphson( std::ofstream &results ){
 
     error = solverTools::newtonRaphson( func, x0, x, converged, fatalError, floatOut, intOut, { }, { }, 5 );
 
-    if ( converged ){
-        results << "testNewtonRaphson (test 6) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! converged );
 
-    results << "testNewtonRaphson & True\n";
-    return 0;
 }
 
-int testFiniteDifference(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testFiniteDifference ){
     /*!
      * Test the finite difference jacobian calculator.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     //The first test
-    floatVector x0 = {1.5, 6};
+    floatVector x0 = { 1.5, 6 };
     floatMatrix J;
 
     solverTools::stdFncNLF func;
-    func = static_cast<solverTools::NonLinearFunction>(nlFxn1);
-    solverTools::finiteDifference(func, x0, J, {}, {});
+    func = static_cast<solverTools::NonLinearFunction>( nlFxn1 );
+    solverTools::finiteDifference( func, x0, J, { }, { } );
 
     floatVector Rtmp;
     floatMatrix result;
     floatMatrix floatOuts;
     intMatrix intOuts;
-    nlFxn1(x0, {}, {}, Rtmp, result, floatOuts, intOuts);
+    nlFxn1( x0, { }, { }, Rtmp, result, floatOuts, intOuts );
 
-    if (!vectorTools::fuzzyEquals(J, result)){
-        results << "testFiniteDifference (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, result ) );
 
     //The second test
-    x0 = {1, 1, 1};
-    floatOuts.clear();
-    intOuts.clear();
-    func = static_cast<solverTools::NonLinearFunction>(nlFxn2);
-    solverTools::finiteDifference(func, x0, J, {}, {});
-    nlFxn2(x0, {}, {}, Rtmp, result, floatOuts, intOuts);
+    x0 = { 1, 1, 1 };
+    floatOuts.clear( );
+    intOuts.clear( );
+    func = static_cast<solverTools::NonLinearFunction>( nlFxn2 );
+    solverTools::finiteDifference( func, x0, J, { }, { } );
+    nlFxn2( x0, { }, { }, Rtmp, result, floatOuts, intOuts );
 
-    if (!vectorTools::fuzzyEquals(J, result)){
-        results << "testFiniteDifference (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, result ) );
 
-    results << "testFiniteDifference & True\n";
-    return 0;
 }
 
-int testCheckJacobian(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testCheckJacobian ){
     /*!
      * Test the jacobian checking utility.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     //The first test
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn1);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn1 );
     bool isGood = false;
     floatType eps = 1e-6;
     floatType tolr = 1e-6;
     floatType tola = 1e-6;
     bool suppressOutput = true;
 
-    floatVector x0 = {0, 0};
-    errorOut error = solverTools::checkJacobian(func, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
+    floatVector x0 = { 0, 0 };
+    errorOut error = solverTools::checkJacobian( func, x0, { }, { }, isGood, eps, tolr, tola, suppressOutput );
 
-    if (error){
-        error->print();
-        results << "testCheckJacobian & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if (!isGood){
-        results << "testCheckJacobian (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( isGood );
 
     //The second test
     solverTools::stdFncNLFJ badfunc;
-    badfunc = [&](const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
-                            floatVector &r, floatMatrix &j, floatMatrix &fO, intMatrix &iO){
-        errorOut e = func(x_, floatArgs_, intArgs_, r, j, fO, iO);
-        j[0][1] = 0.1;
+    badfunc = [ & ]( const floatVector &x_, const floatMatrix &floatArgs_, const intMatrix &intArgs_,
+                            floatVector &r, floatMatrix &j, floatMatrix &fO, intMatrix &iO ){
+        errorOut e = func( x_, floatArgs_, intArgs_, r, j, fO, iO );
+        j[ 0 ][ 1 ] = 0.1;
         return e;
     }; 
 
-    error = solverTools::checkJacobian(badfunc, x0, {}, {}, isGood, eps, tolr, tola, suppressOutput);
+    error = solverTools::checkJacobian( badfunc, x0, { }, { }, isGood, eps, tolr, tola, suppressOutput );
 
-    if (error){
-        error->print();
-        results << "testCheckJacobian & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if (isGood){
-        results << "testCheckJacobian (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! isGood );
 
-    results << "testCheckJacobian & True\n";
-    return 0;
 }
 
-int testCheckLSCriteria(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testCheckLSCriteria ){
     /*!
      * Test the line search criteria
-     * 
-     * :param std::ofstream &results: The output file
      */
 
-    floatVector R  = {1, 2, 3, 4, 5, 6};
-    floatVector Rp = {2, 3, 4, 5, 6, 7};
+    floatVector R  = { 1, 2, 3, 4, 5, 6 };
+    floatVector Rp = { 2, 3, 4, 5, 6, 7 };
     bool result;
 
-    solverTools::checkLSCriteria(R, Rp, result);
+    solverTools::checkLSCriteria( R, Rp, result );
 
-    if (!result){
-        results << "testCheckLSCriteria (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( result );
 
-    R[0] = 100;
+    R[ 0 ] = 100;
 
-    solverTools::checkLSCriteria(R, Rp, result);
+    solverTools::checkLSCriteria( R, Rp, result );
 
-    if (result){
-        results << "testCheckLSCriteria (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! result );
 
-    results << "testCheckLSCriteria  & True\n";
-    return 0;
 }
 
-int testHomotopySolver(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testHomotopySolver ){
     /*!
      * Test the Homotopy solver.
-     * 
-     * :param std::ofstream &results: The output file
      */
 
     //The first test
@@ -970,11 +866,7 @@ int testHomotopySolver(std::ofstream &results){
    
     errorOut error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     floatVector Rtmp;
     floatMatrix Jtmp;
@@ -982,45 +874,27 @@ int testHomotopySolver(std::ofstream &results){
     intMatrix iO;
     error = nlFxn1( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) ){
-        results << "testHomotopySolver (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0 } ) );
 
     //The second test
-    x0 = {1, 1, 1};
-    floatOuts.clear();
-    intOuts.clear();
-    fO.clear();
-    iO.clear();
+    x0 = { 1, 1, 1 };
+    floatOuts.clear( );
+    intOuts.clear( );
+    fO.clear( );
+    iO.clear( );
 
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn2 );
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { } );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     error = nlFxn2( x, { }, { }, Rtmp, Jtmp, fO, iO );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotpySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) ){
-        results << "testHomotopySolver (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( Rtmp, { 0, 0, 0 } ) );
 
     //The third test
     x0 = { 3 };
@@ -1033,16 +907,9 @@ int testHomotopySolver(std::ofstream &results){
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          20, 1e-9, 1e-9, 1e-4, 5, 0.2, 0.01 );
 
-    if ( error ){
-        error->print( );
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if (!vectorTools::fuzzyEquals( x, { 0 } ) ){
-        results << "testHomotopySolver (test 3) & false\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } ) );
 
     //The fourth test
     x0 = { 3 };
@@ -1054,21 +921,14 @@ int testHomotopySolver(std::ofstream &results){
     error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
 
-    if ( error ){
-        error->print();
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( x, { 0 } ) ){
-        results << "testHomotopySolver (test 4) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 0 } ) );
 
     //The fifth test ( hard bounds )
     x0 = { 10 };
-    floatOuts.clear();
-    intOuts.clear();
+    floatOuts.clear( );
+    intOuts.clear( );
 
     solverTools::solverType linearSolver;
     floatMatrix J, Jexp;
@@ -1081,36 +941,22 @@ int testHomotopySolver(std::ofstream &results){
 
     func = static_cast< solverTools::NonLinearFunctionWithJacobian >( nlFxn7 );
 
-    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, {}, {},
+    error = solverTools::homotopySolver( func, x0, x, converged, fatalErrorFlag, floatOuts, intOuts, { }, { },
                                          linearSolver, J, variableIndices, barrierSigns, barrierValues,
                                          false, 20, 1e-9, 1e-9, 1e-4, 4, 1.0, 0.1 );
 
-    if ( error ){
-        error->print();
-        results << "testHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( x, { 1 } ) ){
-        results << "testHomotopySolver (test 5) & false\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, { 1 } ) );
 
-    if ( !vectorTools::fuzzyEquals( J, Jexp ) ){
-        results << "testHomotopySolver (test 6) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, Jexp ) );
 
-    results << "testHomotopySolver & True\n";
-    return 0;
     
 }
 
-int test_aFxn( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_aFxn ){
     /*!
      * Test the computation of the "\f$a\f$" parameter in the Barrier function.
-     *
-     * :param std::ofstream &results: The output file.
      */
 
     floatType pseudoT = .72;
@@ -1122,31 +968,17 @@ int test_aFxn( std::ofstream &results ){
 
     errorOut error = solverTools::aFxn( pseudoT, logAfxn, result );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( result, answer ) ){
-        results << "test_aFxn (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
     floatType dadT;
 
     error = solverTools::aFxn( pseudoT, logAfxn, result, dadT );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( result, answer ) ){
-        results << "test_aFxn (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
     floatType eps = 1e-6;
     floatType delta = eps * pseudoT + eps;
@@ -1155,34 +987,19 @@ int test_aFxn( std::ofstream &results ){
 
     error = solverTools::aFxn( pseudoT + delta, logAfxn, aP );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     error = solverTools::aFxn( pseudoT - delta, logAfxn, aM );
 
-    if ( error ){
-        error->print();
-        results << "test_aFxn & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( ( aP - aM ) / ( 2 * delta ), dadT ) ){
-        results << "test_aFxn (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( aP - aM ) / ( 2 * delta ), dadT ) );
 
-    results << "test_aFxn & True\n";
-    return 0;
 }
 
-int test_computeBarrierFunction( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_computeBarrierFunction ){
     /*!
      * Test the computation of the boundary function
-     *
-     * :param std::ofstream &results: The output file.
      */
 
     floatType x        = 0.4;
@@ -1197,29 +1014,15 @@ int test_computeBarrierFunction( std::ofstream &results ){
 
     errorOut error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( result, negativeSignAnswer ) ){
-        results << "test_computeBarrierFunction (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer ) );
 
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( result, positiveSignAnswer ) ){
-        results << "test_computeBarrierFunction (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer ) );
 
     //Test the Jacobians
     floatType dbdx, dbdt;
@@ -1227,16 +1030,9 @@ int test_computeBarrierFunction( std::ofstream &results ){
     //Test the Jacobians when the sign is negative
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, false, result, dbdx, dbdt );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( result, negativeSignAnswer ) ){
-        results << "test_computeBarrierFunction (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, negativeSignAnswer ) );
 
     floatType eps = 1e-6;
 
@@ -1247,116 +1043,61 @@ int test_computeBarrierFunction( std::ofstream &results ){
 
     error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, false, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, false, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) ){
-        results << "test_computeBarrierFunction (test 4) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) );
 
     error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, false, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, false, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) ){
-        results << "test_computeBarrierFunction (test 5) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) );
 
     //Test the Jacobians when the sign is positive
     error = solverTools::computeBarrierFunction( x, pseudoT, logAmax, b, true, result, dbdx, dbdt );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( result, positiveSignAnswer ) ){
-        results << "test_computeBarrierFunction (test 6) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, positiveSignAnswer ) );
 
     error = solverTools::computeBarrierFunction( x + dx, pseudoT, logAmax, b, true, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x - dx, pseudoT, logAmax, b, true, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) ){
-        results << "test_computeBarrierFunction (test 7) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dx ), dbdx ) );
 
     error = solverTools::computeBarrierFunction( x, pseudoT + dt, logAmax, b, true, bP );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
     error = solverTools::computeBarrierFunction( x, pseudoT - dt, logAmax, b, true, bM );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierFunction & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error );
 
-    if ( !vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) ){
-        results << "test_computeBarrierFunction (test 8) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( ( bP - bM ) / ( 2 * dt ), dbdt ) );
 
-    results << "test_computeBarrierFunction & True\n";
-    return 0;
 }
 
-int test_computeBarrierHomotopyResidual( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual ){
     /*!
      * Test the computation of the barrier homotopy residual
-     *
-     * :param std::ofstream &results: The output file
      */
 
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn5);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn5 );
 
     floatVector x0 = { 0. };
     floatMatrix floatArgsDefault =
@@ -1412,57 +1153,26 @@ int test_computeBarrierHomotopyResidual( std::ofstream &results ){
 #endif
                                                                 );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( residualAnswer, residualResult ) ){
-        results << "test_computeBarrierHomotopyResidual (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( residualAnswer, residualResult ) );
 
     //Check that the non-homotopy outputs are as expected.
-    if ( floatOuts.size() != 4 ){
-        results << "test_computeBarrierHomotopyResidual (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( floatOuts.size( ) == 4 );
 
-    if ( !vectorTools::fuzzyEquals( floatOuts[ 1 ], floatOutsDefault[ 0 ] + 0.1 ) ){
-        results << "test_computeBarrierHomotopyResidual (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts[ 1 ], floatOutsDefault[ 0 ] + 0.1 ) );
 
-    if ( !vectorTools::fuzzyEquals( floatOuts[ 2 ], floatOutsDefault[ 1 ] ) ){
-        results << "test_computeBarrierHomotopyResidual (test 4) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts[ 2 ], floatOutsDefault[ 1 ] ) );
 
-    if ( !vectorTools::fuzzyEquals( floatOuts[ 3 ], floatOutsDefault[ 0 ] ) ){
-        results << "test_computeBarrierHomotopyResidual (test 5) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts[ 3 ], floatOutsDefault[ 0 ] ) );
 
-    if ( intOuts.size() != 3 ){
-        results << "test_computeBarrierHomotopyResidual (test 6) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( intOuts.size( ) == 3 );
 
-    if ( !vectorTools::fuzzyEquals( intOuts[ 0 ], intOutsDefault[ 0 ] - 2 ) ){
-        results << "test_computeBarrierHomotopyResidual (test 7) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( intOuts[ 0 ], intOutsDefault[ 0 ] - 2 ) );
 
-    if ( !vectorTools::fuzzyEquals( intOuts[ 1 ], intOutsDefault[ 0 ] ) ){
-        results << "test_computeBarrierHomotopyResidual (test 8) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( intOuts[ 1 ], intOutsDefault[ 0 ] ) );
 
-    if ( !vectorTools::fuzzyEquals( intOuts[ 2 ], intOutsDefault[ 1 ] ) ){
-        results << "test_computeBarrierHomotopyResidual (test 9) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( intOuts[ 2 ], intOutsDefault[ 1 ] ) );
 
     //Test the Jacobians
     floatType eps = 1e-6;
@@ -1479,11 +1189,7 @@ int test_computeBarrierHomotopyResidual( std::ofstream &results ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0 + dx, floatArgs, intArgs, rP, JP,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatOuts = floatOutsDefault;
     intOuts   = intOutsDefault;
@@ -1491,18 +1197,11 @@ int test_computeBarrierHomotopyResidual( std::ofstream &results ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0 - dx, floatArgs, intArgs, rM, JM,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatVector gradCol = ( rP - rM ) / ( 2 * dx[ 0 ] );
 
-    if ( !vectorTools::fuzzyEquals( gradCol, jacobian[ 0 ] ) ){
-        results << "test_computeBarrierHomotopyResidual (test 10) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( gradCol, jacobian[ 0 ] ) );
 
     //test drdt
     eps = 1e-7;
@@ -1517,11 +1216,7 @@ int test_computeBarrierHomotopyResidual( std::ofstream &results ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0, floatArgs, intArgs, rP, JP,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatArgs = floatArgsDefault;
     floatArgs[ 0 ][ 0 ] -= dt;
@@ -1532,33 +1227,22 @@ int test_computeBarrierHomotopyResidual( std::ofstream &results ){
     error = solverTools::computeBarrierHomotopyResidual( func, x0, floatArgs, intArgs, rM, JM,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     gradCol = ( rP - rM ) / ( 2 * dt );
 
-    if ( !vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ], 1e-5 ) ){
-        results << "test_computeBarrierHomotopyResidulal (test 11) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ], 1e-5 ) );
 
-    results << "test_computeBarrierHomotopyResidual & True\n";
-    return 0;
 }
 
-int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_computeBarrierHomotopyResidual2 ){
     /*!
      * Test for the computation of the barrier homotopy residual.
-     *
-     * :param std::ofstream &results: The output file.
      */
 
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn6);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn6 );
 
     floatVector          x = { 0.15, 0.1, -1.2 };
     floatType   pseudoTime = 0.24;
@@ -1573,8 +1257,8 @@ int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
     floatMatrix floatArgs = { { pseudoTime }, bvals, logAMaxVals };
     intMatrix   intArgs   = { variableIndices, residualIndices, signs };
 
-    floatMatrix floatOuts = { {} };
-    intMatrix   intOuts   = { {} };
+    floatMatrix floatOuts = { { } };
+    intMatrix   intOuts   = { { } };
 
     floatVector residualAnswer = { 0.0244375 ,  0.53651154, -0.97499937 };
 
@@ -1584,23 +1268,16 @@ int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
     errorOut error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, residualResult, jacobian,
                                                                   floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( residualResult, residualAnswer ) ){
-        results << "test_computeBarrierHomotopyResidual2 (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( residualResult, residualAnswer ) );
 
     //Tests of the Jacobians
 
     //Test the Jacobian w.r.t. x
     floatType eps = 1e-7;
-    for ( unsigned int i = 0; i < x.size(); i++ ){
-        floatVector delta( x.size(), 0 );
+    for ( unsigned int i = 0; i < x.size( ); i++ ){
+        floatVector delta( x.size( ), 0 );
         delta[ i ] = eps * fabs( x[ i ] ) + eps;
 
         floatVector rP, rM;
@@ -1608,28 +1285,17 @@ int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
         error = solverTools::computeBarrierHomotopyResidual( func, x + delta, floatArgs, intArgs, rP, jacobian,
                                                              floatOuts, intOuts );
 
-        if ( error ){
-            error->print();
-            results << "test_computeBarrierHomotopyResidual2 & False\n";
-            return 1;
-        }
+        BOOST_CHECK( ! error  );
 
         error = solverTools::computeBarrierHomotopyResidual( func, x - delta, floatArgs, intArgs, rM, jacobian,
                                                              floatOuts, intOuts );
 
-        if ( error ){
-            error->print();
-            results << "test_computeBarrierHomotopyResidual2 & False\n";
-            return 1;
-        }
+        BOOST_CHECK( ! error  );
 
         floatVector gradCol = ( rP - rM ) / ( 2 * delta[ i ] );
 
-        for ( unsigned int j = 0; j < gradCol.size(); j++ ){
-            if ( !vectorTools::fuzzyEquals( gradCol[ j ], jacobian[ j ][ i ] ) ){
-                results << "test_computeBarrierHomotopyResult2 (test 2) & False\n";
-                return 1;
-            }
+        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
+            BOOST_CHECK( vectorTools::fuzzyEquals( gradCol[ j ], jacobian[ j ][ i ] ) );
         }
     }
 
@@ -1643,47 +1309,32 @@ int test_computeBarrierHomotopyResidual2( std::ofstream &results ){
     error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, rP, jacobian,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatArgs[ 0 ][ 0 ] = pseudoTime - dt;
 
     error = solverTools::computeBarrierHomotopyResidual( func, x, floatArgs, intArgs, rM, jacobian,
                                                          floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_computeBarrierHomotopyResidual2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
     floatVector gradCol = ( rP - rM ) / ( 2 * dt );
 
-    if ( !vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ] ) ){
-        results << "test_computeBarrierHomotopyResidual2 (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( gradCol, floatOuts[ 0 ] ) );
 
-    results << "test_computeBarrierHomotopyResidual2 & True\n";
-    return 0;
 }
 
-int test_barrierHomotopySolver( std::ostream &results ){
+BOOST_AUTO_TEST_CASE( test_barrierHomotopySolver ){
     /*!
      * Test the barrier Homotopy solver. This solver enables the addition of
      * bounds to a non-linear solve which can help prevent solutions from being
      * pulled into undesirable domains without having to resort to computing the
      * Hessian of the residual function as would be required for optimization
      * based techniques.
-     *
-     * :param std::ofstream &results: The output file.
      */
 
     solverTools::stdFncNLFJ func;
-    func = static_cast<solverTools::NonLinearFunctionWithJacobian>(nlFxn5);
+    func = static_cast<solverTools::NonLinearFunctionWithJacobian>( nlFxn5 );
 
     floatVector barrierValues = { 0.1 };
     floatVector logAMaxValues = { 10. };
@@ -1740,16 +1391,9 @@ int test_barrierHomotopySolver( std::ostream &results ){
                                                          floatOuts, intOuts,
                                                          20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( answer, result ) ){
-        results << "test_barrierHomotopySolver (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
 
     floatOuts = floatOutsDefault;
     intOuts = intOutsDefault;
@@ -1762,16 +1406,9 @@ int test_barrierHomotopySolver( std::ostream &results ){
                                                          floatOuts, intOuts, linearSolver, jacobian,
                                                          20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( answer, result ) ){
-        results << "test_barrierHomotopySolver (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
 
     floatMatrix jacobianResult;
 
@@ -1780,16 +1417,9 @@ int test_barrierHomotopySolver( std::ostream &results ){
 
     error = func( result, floatArgs, intArgs, residualResult, jacobianResult, floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( jacobian, jacobianResult ) ){
-        results << "test_barrierHomotopySolver (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( jacobian, jacobianResult ) );
 
     x0 = { 0. };
     implicitRefine = true;
@@ -1803,16 +1433,9 @@ int test_barrierHomotopySolver( std::ostream &results ){
                                                 floatOuts, intOuts,
                                                 20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( answer, result ) ){
-        results << "test_barrierHomotopySolver (test 4) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
 
     floatOuts = floatOutsDefault;
     intOuts = intOutsDefault;
@@ -1823,38 +1446,22 @@ int test_barrierHomotopySolver( std::ostream &results ){
                                                 floatOuts, intOuts, linearSolver, jacobian,
                                                 20, 1e-9, 1e-9, 1e-4, 5, true );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( answer, result ) ){
-        results << "test_barrierHomotopySolver (test 5) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
 
     floatOuts = floatOutsDefault;
     intOuts = intOutsDefault;
 
     error = func( result, floatArgs, intArgs, residualResult, jacobianResult, floatOuts, intOuts );
 
-    if ( error ){
-        error->print();
-        results << "test_barrierHomotopySolver & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( jacobian, jacobianResult ) ){
-        results << "test_barrierHomotopySolver (test 6) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( jacobian, jacobianResult ) );
 
-    results << "test_barrierHomotopySolver & True\n";
-    return 0;
 }
 
-int test_applyBoundaryLimitation( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_applyBoundaryLimitation ){
     /*!
      * Test of the application of the boundary conditions.
      *
@@ -1876,16 +1483,9 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
 
     errorOut error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx );
 
-    if ( error ){
-        error->print();
-        results << "test_applyBoundaryLimitation & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( x0 + dx, xAnswer1 ) ){
-        results << "test_applyBoundaryLimitation (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x0 + dx, xAnswer1 ) );
 
     dx = dxDefault;
     x0[ 3 ] = -0.9;
@@ -1893,44 +1493,26 @@ int test_applyBoundaryLimitation( std::ofstream &results ){
 
     error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx );
 
-    if ( error ){
-        error->print( );
-        results << "test_applyBoundaryLimitation & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( x0 + dx, xAnswer2 ) ){
-        results << "test_applyBoundaryLimitation (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x0 + dx, xAnswer2 ) );
 
     dx = dxDefault;
     error = solverTools::applyBoundaryLimitation( x0, variableIndices, barrierSigns, barrierValues, dx, 1e-9, 1e-9, true );
 
-    if ( error ){
-        error->print( );
-        results << "test_applyBoundaryLimitation & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( x0 + dx, xAnswer3 ) ){
-        results << "test_applyBoundaryLimitation (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x0 + dx, xAnswer3 ) );
 
-    results << "test_applyBoundaryLimitation & True\n";
-    return 0;
 }
 
-int test_BFGS( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_BFGS ){
     /*!
      * Test of the BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian1);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian1 );
 
     solverTools::floatVector x0 = { 0. };
     solverTools::floatVector x;
@@ -1940,46 +1522,29 @@ int test_BFGS( std::ofstream &results ){
     solverTools::intMatrix intArgs, intOuts;
 
     floatVector xAnswer = { -1 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3 }, { -0.4, -0.5, -0.6 } };
     intMatrix intOutsAnswer = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::BFGS( func, x0, x, convergeFlag, fatalErrorFlag,
                                         floatOuts, intOuts, floatArgs, intArgs );
 
-    if ( error ){
-        error->print();
-        results << "test_BFGS & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( x, xAnswer ) ){
-        results << "test_BFGS (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, xAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
-        results << "test_BFGS (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
-        results << "test_BFGS (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) );
 
-    results << "test_BFGS & True\n";
-    return 0;
 }
 
-int test_BFGS2( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_BFGS2 ){
     /*!
      * Test of the BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian2);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian2 );
 
     solverTools::floatVector x0 = { 0., 0., 0. };
     solverTools::floatVector x;
@@ -1992,7 +1557,7 @@ int test_BFGS2( std::ofstream &results ){
     intOuts = { { -1, -2 } };
 
     floatVector xAnswer = { -std::sqrt( 2. ) / 2, -std::sqrt( 2. ) / 2 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3 }, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intMatrix intOutsAnswer = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::BFGS( func, x0, x, convergeFlag, fatalErrorFlag,
@@ -2000,40 +1565,23 @@ int test_BFGS2( std::ofstream &results ){
                                         20, 1e-9, 1e-9, 1e-4, 5, true
                                       );
 
-    if ( error ){
-        error->print();
-        results << "test_BFGS2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer ) ){
-        results << "test_BFGS2 (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
-        results << "test_BFGS2 (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
-        results << "test_BFGS2 (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) );
 
-    results << "test_BFGS2 & True\n";
-    return 0;
 }
 
-int test_homotopyBFGS( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_homotopyBFGS ){
     /*!
      * Test of the homotopy BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian1);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian1 );
 
     solverTools::floatVector x0 = { 0. };
     solverTools::floatVector x;
@@ -2043,7 +1591,7 @@ int test_homotopyBFGS( std::ofstream &results ){
     solverTools::intMatrix intArgs, intOuts;
 
     floatVector xAnswer = { -1 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3 }, { -0.4, -0.5, -0.6 } };
     intMatrix intOutsAnswer = { { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
@@ -2051,40 +1599,23 @@ int test_homotopyBFGS( std::ofstream &results ){
                                                 100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
                                               );
 
-    if ( error ){
-        error->print();
-        results << "test_homotopyBFGS & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( x, xAnswer ) ){
-        results << "test_homotopyBFGS (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( x, xAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
-        results << "test_homotopyBFGS (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
-        results << "test_homotopyBFGS (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) );
 
-    results << "test_homotopyBFGS & True\n";
-    return 0;
 }
 
-int test_homotopyBFGS2( std::ofstream &results ){
+BOOST_AUTO_TEST_CASE( test_homotopyBFGS2 ){
     /*!
      * Test of the BFGS optimization algorithm.
-     *
-     * :param std::ofstream &results: The output file
      */
 
     solverTools::stdFncLagrangianG func;
-    func = static_cast<solverTools::LagrangianFunctionWithGradient>(lagrangian2);
+    func = static_cast<solverTools::LagrangianFunctionWithGradient>( lagrangian2 );
 
     solverTools::floatVector x0 = { 0., 0., 0. };
     solverTools::floatVector x;
@@ -2097,7 +1628,7 @@ int test_homotopyBFGS2( std::ofstream &results ){
     intOuts = { { -1, -2 } };
 
     floatVector xAnswer = { -std::sqrt( 2. ) / 2, -std::sqrt( 2. ) / 2 };
-    floatMatrix floatOutsAnswer = { { 1, 2, 3}, {-0.4, -0.5, -0.6 }, { 7, 6, 5 } };
+    floatMatrix floatOutsAnswer = { { 1, 2, 3 }, { -0.4, -0.5, -0.6 }, { 7, 6, 5 } };
     intMatrix intOutsAnswer = { { -4 }, { 5, 6, 7 }, { 8 }, { 9, 10 } };
 
     errorOut error = solverTools::homotopyBFGS( func, x0, x, convergeFlag, fatalErrorFlag,
@@ -2105,67 +1636,12 @@ int test_homotopyBFGS2( std::ofstream &results ){
                                                 100, 1e-9, 1e-9, 1e-4, 10, 1.0, 0.1, true, 1.0
                                               );
 
-    if ( error ){
-        error->print();
-        results << "test_homotopyBFGS2 & False\n";
-        return 1;
-    }
+    BOOST_CHECK( ! error  );
 
-    if ( !vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer ) ){
-        results << "test_homotopyBFGS2 (test 1) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( { x[ 0 ], x[ 1 ] }, xAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) ){
-        results << "test_homotopyBFGS2 (test 2) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( floatOuts, floatOutsAnswer ) );
 
-    if ( !vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) ){
-        results << "test_homotopyBFGS2 (test 3) & False\n";
-        return 1;
-    }
+    BOOST_CHECK( vectorTools::fuzzyEquals( intOuts, intOutsAnswer ) );
 
-    results << "test_homotopyBFGS2 & True\n";
-    return 0;
-}
-
-int main( ){
-    /*!
-    The main loop which runs the tests defined in the 
-    accompanying functions. Each function should output
-    the function name followed by & followed by True or False 
-    if the test passes or fails respectively.
-    */
-
-    //Open the results file
-    std::ofstream results;
-    results.open( "results.tex" );
-
-    //Run the tests
-    testCheckTolerance( results );
-    testNewtonRaphson( results );
-    testFiniteDifference( results );
-    testCheckJacobian( results );
-    testCheckLSCriteria( results );
-    testHomotopySolver( results );
-    test_applyBoundaryLimitation( results );
-
-    //Tests of the barrier homotopy solver
-    test_aFxn( results );
-    test_computeBarrierFunction( results );
-    test_computeBarrierHomotopyResidual( results );
-    test_computeBarrierHomotopyResidual2( results );
-    test_barrierHomotopySolver( results );
-
-    //Tests of the BFGS optimizer
-    test_BFGS( results );
-    test_BFGS2( results );
-    test_homotopyBFGS( results );
-    test_homotopyBFGS2( results );
-
-    //Close the results file
-    results.close( );
-
-    return 0;
 }
