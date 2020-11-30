@@ -62,7 +62,7 @@ install directory.  However, if you don't have admin privileges, you can also
 insall Eigen to your home directory in ``~/include`` (or possibly in
 ``~/.local/include``, but this is untested by this project).
 
-#### Non-admin Eigen install for solve_tools
+#### Non-admin Eigen install for solver_tools
 [Reference](https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed)
 
 ```
@@ -169,6 +169,9 @@ $ mkdir build
 $ cd build
 $ ccmake .. -DCMAKE_FETCH_SOURCE=LOCAL
 ```
+The configuration will throw errors because `error_tools` and `vector_tools` cannot be located. The user must
+define the path to these repositories in the `CMAKE_ERROR_TOOLS_PATH` and `CMAKE_VECTOR_TOOLS_PATH` cache
+variables. Once defined, one configures cmake by entering `c` and then generating with `g`.
 
 ### Building the documentation
 
