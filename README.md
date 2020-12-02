@@ -85,7 +85,7 @@ This repository is now built completely with cmake.
 
 A build script has been created for convenience, ``new_build.sh``. It will build
 everything including the library binary, the test binary, and the documentation.
-This is the same build script used by ``jenkins_build.sh`` for CI builds and
+This is the same build script used by ``build_test.sh`` for CI builds and
 testing.
 
 ### build process
@@ -93,8 +93,7 @@ testing.
 1) Activate the correct python environment
 
 ```
-$ module load python/2019.10-python-3.7
-$ sv3r
+$ conda activate environment
 ```
 
 2) Build everything
@@ -107,7 +106,7 @@ $ pwd
 ./new_build.sh
 
 # Build and perform tests
-./jenkins_build.sh
+./build_test.sh
 ```
 
 3) View test results
