@@ -68,7 +68,6 @@ $ git checkout 3.3.7
 # Build eigen
 $ mkdir build
 $ cd build
-$ export CXX=$(command -v icpc) # OPTIONAL
 $ cmake3 .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
 $ make install
 ```
