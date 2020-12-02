@@ -89,7 +89,7 @@ everything including the library binary, the test binary, and the documentation.
 This is the same build script used by ``jenkins_build.sh`` for CI builds and
 testing.
 
-### sstelmo
+### build process
 
 1) Activate the correct python environment
 
@@ -135,11 +135,10 @@ multiple libraries and is proceeding faster than collaborators can check in resu
 outside of developers no-one should need to do this, a version of the code using local repositories can be
 built.
 
-1) Activate a [W-13 Python Environment](https://xcp-confluence.lanl.gov/display/PYT/The+W-13+Python+3+environment)
+1) Activate a python environment
 
 ```
-$ module load python/2019.10-python-3.7
-$ sv3r
+$ conda activate environment
 ```
 
 2) Define convenience environment variables

@@ -4,4 +4,3 @@
 repo='solver_tools'
 tests="src/cpp/tests"
 workdir=${PWD}
-proxyout='proxyout.lanl.gov:8080'
