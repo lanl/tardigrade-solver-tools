@@ -91,8 +91,8 @@ testing.
        $ pwd
        /path/to/solver_tools/
 
-       # Just perform the build
-       ./new_build.sh
+       # Just perform the build. Usage arguments are "compiler cmake_build_type"
+       ./new_build.sh c++ None
 
        # Build and perform tests
        ./jenkins_build.sh
