@@ -1,12 +1,12 @@
-cmake_minimum_required (VERSION 3.14)
-project (solver_tools VERSION 0.1.0)
+cmake_minimum_required(VERSION 3.14)
+project(solver_tools VERSION 0.1.0)
 enable_testing()
 
 # Make the code position independent
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Find eigen
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 include_directories(${EIGEN3_INCLUDE_DIR})
 if(EIGEN3_FOUND)
     message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIR}")
@@ -53,13 +53,13 @@ endif()
 FetchContent_MakeAvailable(error_tools vector_tools)
 
 # Add project source directories
-add_subdirectory ("src/cpp")
+add_subdirectory("src/cpp")
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Find Boost. Required for tests
     find_package(Boost 1.53.0 REQUIRED COMPONENTS unit_test_framework)
     # Add tests and docs
-    add_subdirectory ("src/cpp/tests")
-    add_subdirectory ("docs")
+    add_subdirectory("src/cpp/tests")
+    add_subdirectory("docs")
 endif()
 
 # Set the c++ standard
