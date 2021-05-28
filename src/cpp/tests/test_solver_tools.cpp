@@ -9,7 +9,7 @@
 #include<fstream>
 #include<iostream>
 
-#define BOOST_TEST_MODULE test_vector_tools
+#define BOOST_TEST_MODULE test_solver_tools
 #include <boost/test/included/unit_test.hpp>
 
 typedef solverTools::errorOut errorOut;
