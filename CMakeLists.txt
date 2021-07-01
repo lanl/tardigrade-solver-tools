@@ -1,11 +1,19 @@
 #===================================================================================================== PROJECT SETUP ===
 cmake_minimum_required(VERSION 3.14)
 project(solver_tools VERSION 0.2.0)
-enable_testing()
 
 # Set common project paths relative to project root directory
 set(CPP_SRC_PATH "src/cpp")
 set(CMAKE_SRC_PATH "src/cmake")
+
+# Add the cmake folder to locate project CMake module(s)
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}" ${CMAKE_MODULE_PATH})
+
+# Get version number from Git
+set(VERSION_UPDATE_FROM_GIT True)
+# FIXME: Figure out why include() doesn't pick up CMAKE_MODULE_PATH correctly
+include(${CMAKE_SRC_PATH}/GetVersionFromGitTag.cmake)
+project(${PROJECT_NAME} VERSION ${${PROJECT_NAME}_VERSION})
 
 # Add installation directory variables
 include(GNUInstallDirs)
@@ -16,6 +24,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Set the c++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Enable CTest
+enable_testing()
 
 #================================================================================================= FIND DEPENDENCIES ===
 # Find eigen
@@ -39,12 +50,12 @@ if(cmake_build_type_lower STREQUAL "release")
 endif()
 
 # Set a variable indicating if upstream projects should come from the git repository or a local source
-include(FetchContent)
 set(FETCH_SOURCE "REPO" CACHE STRING "The source of the external projects. Options are REPO and LOCAL if LOCAL then the paths must be defined")
 set(ERROR_TOOLS_PATH "" CACHE PATH "The path to the local version of error_tools")
 set(VECTOR_TOOLS_PATH "" CACHE PATH "The path to the local version of vector_tools")
 
 # Find related, but external, projects in installed environment
+include(FetchContent)
 set(upstream_packages "error_tools" "vector_tools")
 foreach(package ${upstream_packages})
     find_package(${package} ${upstream_required} CONFIG)
@@ -76,7 +87,7 @@ endforeach(package)
 # MUST COME AFTER DEPENDENCY LOCATING
 # Add project source directories
 include_directories("${CPP_SRC_PATH}")
-add_subdirectory(${CPP_SRC_PATH})
+add_subdirectory("${CPP_SRC_PATH}")
 
 # Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
