@@ -125,7 +125,7 @@ built.
        /path/to/solver_tools
        $ mkdir build
        $ cd build
-       $ cmake .. -DFETCH_SOURCE=LOCAL -DERROR_TOOLS_PATH=${my_error_tools} -DVECTOR_TOOLS_PATH=${my_vector_tools}
+       $ cmake3 .. -DFETCH_SOURCE=LOCAL -DERROR_TOOLS_PATH=${my_error_tools} -DVECTOR_TOOLS_PATH=${my_vector_tools}
 
 4) Building the library
 
