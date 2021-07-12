@@ -1,4 +1,6 @@
-# solver\_tools
+#############
+solver\_tools
+#############
 
 Tools for performing solves of nonlinear equations.
 
@@ -47,8 +49,8 @@ Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/m
 
 * [Eigen](https://eigen.tuxfamily.org/dox/) >= 3.3.7
 * [BOOST](https://www.boost.org/doc/libs/1_53_0/) >= 1.53.0
-* error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
-* vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
+* error\_tools: https://re-git.lanl.gov/aea/material-models/error_tools
+* vector\_tools: https://re-git.lanl.gov/aea/material-models/vector_tools 
 
 If not found on the current system or active Conda environment, all of the
 ``*_tools`` libraries are pulled from their git repos by branch name and built
