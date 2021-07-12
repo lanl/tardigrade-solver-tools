@@ -68,7 +68,7 @@ foreach(package ${upstream_packages})
         if(FETCH_SOURCE STREQUAL "REPO")
             FetchContent_Declare(
                 ${package}
-                GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/${package}.git
+                GIT_REPOSITORY ssh://git@re-git.lanl.gov:10022/aea/material-models/${package}.git
                 GIT_TAG        origin/dev
             )
         elseif(FETCH_SOURCE STREQUAL "LOCAL")
