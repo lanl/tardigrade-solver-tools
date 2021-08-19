@@ -180,7 +180,18 @@ namespace solverTools{
         unsigned int nLSIterations = 0;
         float lambda = 1;
         bool converged, lsCheck;
-        checkTolerance( R, tol, converged );
+        error = checkTolerance( R, tol, converged );
+
+        if (error){
+
+            errorOut result = new errorNode( __func__, "Error when checking the tolerance");
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
         unsigned int rank;
         convergeFlag = false;
         fatalErrorFlag = false;
@@ -235,7 +246,18 @@ namespace solverTools{
             }
 
             //Check the line search criteria
-            checkLSCriteria( R, Rp, lsCheck, alpha );
+            error = checkLSCriteria( R, Rp, lsCheck, alpha );
+
+            if (error){
+
+                errorOut result = new errorNode( __func__, "Error when checking the tolerance");
+    
+                result->addNext( error );
+    
+                return result;
+
+            }
+
             nLSIterations = 0;
             lambda = 1;
 
