@@ -6,6 +6,9 @@ project(solver_tools VERSION 0.2.0)
 set(CPP_SRC_PATH "src/cpp")
 set(CMAKE_SRC_PATH "src/cmake")
 
+# Add a flag for whether the python bindings are being built or not
+set(SOLVER_TOOLS_BUILD_PYTHON_BINDINGS ON CACHE BOOL "Flag for whether the python bindings should be built")
+
 # Add the cmake folder to locate project CMake module(s)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}" ${CMAKE_MODULE_PATH})
 
@@ -59,6 +62,8 @@ set(VECTOR_TOOLS_PATH "" CACHE PATH "The path to the local version of vector_too
 include(FetchContent)
 set(upstream_packages "error_tools" "vector_tools")
 foreach(package ${upstream_packages})
+    string(TOUPPER "${package}" package_upper)
+    set(${package_upper}_BUILD_PYTHON_BINDINGS ${SOLVER_TOOLS_BUILD_PYTHON_BINDINGS})
     find_package(${package} ${upstream_required} CONFIG)
     if(${package}_FOUND)
         message(STATUS "Found ${package}: ${${package}_DIR}")
