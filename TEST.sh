@@ -5,4 +5,3 @@ workdir=${PWD}
 # Perform repo tests
 cd "build"
 ctest --verbose --output-log results.tex
-cd ${workdir}
