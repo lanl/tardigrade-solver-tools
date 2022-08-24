@@ -1,5 +1,5 @@
 package:
-  name: solver_tools
+  name: 
   # TODO: setup and use pyproject.toml and a Conda build Jinja template
   version: {{ VERSION }}
 
@@ -8,12 +8,10 @@ source:
 
 build:
   script:
-    - tree
     - mkdir build-package
     - cd build-package
     - cmake .. -DCMAKE_BUILD_TYPE=Release
-    - cmake --build . --target solver_tools
-    - cmake --install . --prefix $PREFIX
+    - cmake --install . --prefix ${PREFIX}
   ignore_run_exports:
     - python_abi
 
@@ -22,20 +20,21 @@ requirements:
   build:
     - python {{ python }}
     - {{ compiler('cxx') }}
-    - boost >=1.59
     - cmake >=3.18
     - doxygen
     - eigen >=3.3.7
+    - setuptools
+    - setuptools_scm
     - error_tools
     - vector_tools
   host:
     - python
-    - boost
     - eigen >=3.3.7
+    - setuptools
+    - setuptools_scm
   run:
     - python
     - {{ compiler('cxx') }}
-    - boost
     - eigen >=3.3.7
     - error_tools
     - vector_tools
@@ -47,11 +46,12 @@ test:
   source_files:
     - CMakeLists.txt
     - src/cpp/tests/CMakeLists.txt
-    - src/cpp/tests/test_solver_tools.cpp
+    - src/cpp/tests/test_.cpp
   commands:
-    - tree
-    - mkdir build-package
-    - cd build-package
-    - cmake ..
-    - cmake --build . --target test_solver_tools
-    - ctest -R test_solver_tools
+    - mkdir build-tests
+    - cd build-tests
+    - installed_linked_library_parent="$(dirname $(find ${PREFIX} -name lib.so))"
+    - export LD_LIBRARY_PATH="${installed_linked_library_parent}:${LD_LIBRARY_PATH}"
+    - cmake .. -DCMAKE_BUILD_TYPE=conda-test
+    - cmake --build . --verbose
+    - ctest --output-on-failure
