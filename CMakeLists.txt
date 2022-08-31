@@ -115,8 +115,10 @@ endforeach(package)
 #=============================================================================================== ADD PROJECT TARGETS ===
 # MUST COME AFTER DEPENDENCY LOCATING
 # Add project source directories
-include_directories("${CPP_SRC_PATH}")
-add_subdirectory("${CPP_SRC_PATH}")
+if(${not_conda_test} STREQUAL "true")
+    include_directories("${CPP_SRC_PATH}")
+    add_subdirectory("${CPP_SRC_PATH}")
+endif()
 
 # Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -124,7 +126,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     find_package(Boost 1.53.0 REQUIRED COMPONENTS unit_test_framework)
     # Add tests and docs
     add_subdirectory("${CPP_SRC_PATH}/tests")
-    add_subdirectory("docs")
+    if(${not_conda_test} STREQUAL "true")
+        add_subdirectory("docs")
+    endif()
 endif()
 
 #==================================================================================== SETUP INSTALLATION CMAKE FILES ===
