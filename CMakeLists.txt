@@ -12,11 +12,40 @@ set(SOLVER_TOOLS_BUILD_PYTHON_BINDINGS ON CACHE BOOL "Flag for whether the pytho
 # Add the cmake folder to locate project CMake module(s)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}" ${CMAKE_MODULE_PATH})
 
+# Set build type checks
+string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_lower)
+set(upstream_required "")
+set(not_conda_test "true")
+set(project_link_string ${PROJECT_NAME})
+if(cmake_build_type_lower STREQUAL "release")
+    set(upstream_required "REQUIRED")
+elseif(cmake_build_type_lower STREQUAL "conda-test")
+    set(upstream_required "REQUIRED")
+    set(not_conda_test "false")
+    # Find the installed project library
+    find_file(installed_linked_library
+              "lib${PROJECT_NAME}.so"
+              PATHS "$ENV{CONDA_PREFIX}/lib64" "$ENV{CONDA_PREFIX}/lib"
+              NO_CACHE
+              REQUIRED)
+    set(project_link_string ${installed_linked_library})
+    # Find the installed project umat
+    find_file(installed_umat
+              "${UMAT}.o"
+              PATHS "$ENV{CONDA_PREFIX}/lib64" "$ENV{CONDA_PREFIX}/lib"
+              NO_CACHE
+              REQUIRED)
+endif()
+
 # Get version number from Git
-set(VERSION_UPDATE_FROM_GIT True)
-# FIXME: Figure out why include() doesn't pick up CMAKE_MODULE_PATH correctly
-include(${CMAKE_SRC_PATH}/GetVersionFromGitTag.cmake)
-project(${PROJECT_NAME} VERSION ${${PROJECT_NAME}_VERSION})
+if(${not_conda_test} STREQUAL "true")
+    find_package(Python COMPONENTS Interpreter REQUIRED)
+    execute_process(COMMAND ${Python_EXECUTABLE} -m setuptools_scm
+		            OUTPUT_VARIABLE ${PROJECT_NAME}_VERSION_STRING_FULL
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    string(REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+" ${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_STRING_FULL})
+    project(${PROJECT_NAME} VERSION ${${PROJECT_NAME}_VERSION})
+endif()
 
 # Add installation directory variables
 include(GNUInstallDirs)
