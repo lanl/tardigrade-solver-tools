@@ -1,9 +1,10 @@
 #===================================================================================================== PROJECT SETUP ===
-cmake_minimum_required(VERSION 3.14)
-project(solver_tools VERSION 0.2.0)
+cmake_minimum_required(VERSION 3.18)
+project(solver_tools)
 
 # Set common project paths relative to project root directory
 set(CPP_SRC_PATH "src/cpp")
+set(CPP_TEST_PATH "${CPP_SRC_PATH}/tests")
 set(CMAKE_SRC_PATH "src/cmake")
 
 # Add a flag for whether the python bindings are being built or not
@@ -76,11 +77,6 @@ if(cmake_build_type_lower STREQUAL "release")
     set(upstream_required "REQUIRED")
 endif()
 
-# Set a variable indicating if upstream projects should come from the git repository or a local source
-set(FETCH_SOURCE "REPO" CACHE STRING "The source of the external projects. Options are REPO and LOCAL if LOCAL then the paths must be defined")
-set(ERROR_TOOLS_PATH "" CACHE PATH "The path to the local version of error_tools")
-set(VECTOR_TOOLS_PATH "" CACHE PATH "The path to the local version of vector_tools")
-
 # Find related, but external, projects in installed environment
 include(FetchContent)
 set(upstream_packages "error_tools" "vector_tools")
@@ -93,21 +89,12 @@ foreach(package ${upstream_packages})
     else()
         # Find related, but external, projects using FetchContent and building locally
         message(WARNING "Did not find an installed ${package} package. Attempting local build with FetchContent.")
-        # TODO: Decide how to handle master/dev build differences. bash env variables for GIT TAG?
-        if(FETCH_SOURCE STREQUAL "REPO")
-            FetchContent_Declare(
-                ${package}
-                GIT_REPOSITORY ssh://git@re-git.lanl.gov:10022/aea/material-models/${package}.git
-                GIT_TAG        origin/dev
-            )
-        elseif(FETCH_SOURCE STREQUAL "LOCAL")
-            FetchContent_Declare(
-                ${package}
-                SOURCE_DIR ${${package}_PATH}
-            )
-        else()
-            message(FATAL_ERROR "Fetch source ${FETCH_SOURCE} is not recognized. Options are REPO and LOCAL")
-        endif()
+        # TODO: Decide how to handle main/dev build differences. bash env variables for GIT TAG?
+        FetchContent_Declare(
+            ${package}
+            GIT_REPOSITORY ssh://git@re-git.lanl.gov:10022/aea/material-models/${package}.git
+            GIT_TAG        origin/dev
+        )
         FetchContent_MakeAvailable(${package})
     endif()
 endforeach(package)
@@ -116,16 +103,16 @@ endforeach(package)
 # MUST COME AFTER DEPENDENCY LOCATING
 # Add project source directories
 if(${not_conda_test} STREQUAL "true")
-    include_directories("${CPP_SRC_PATH}")
-    add_subdirectory("${CPP_SRC_PATH}")
+    include_directories(${CPP_SRC_PATH})
+    add_subdirectory(${CPP_SRC_PATH})
 endif()
 
 # Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Find Boost. Required for tests
     find_package(Boost 1.53.0 REQUIRED COMPONENTS unit_test_framework)
-    # Add tests and docs
-    add_subdirectory("${CPP_SRC_PATH}/tests")
+    # Add c++ tests and docs
+    add_subdirectory(${CPP_TEST_PATH})
     if(${not_conda_test} STREQUAL "true")
         add_subdirectory("docs")
     endif()
