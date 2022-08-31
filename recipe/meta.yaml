@@ -1,5 +1,5 @@
 package:
-  name: 
+  name: solver_tools
   # TODO: setup and use pyproject.toml and a Conda build Jinja template
   version: {{ VERSION }}
 
@@ -11,6 +11,7 @@ build:
     - mkdir build-package
     - cd build-package
     - cmake .. -DCMAKE_BUILD_TYPE=Release
+    - cmake --build . --target solver_tools
     - cmake --install . --prefix ${PREFIX}
   ignore_run_exports:
     - python_abi
@@ -46,11 +47,11 @@ test:
   source_files:
     - CMakeLists.txt
     - src/cpp/tests/CMakeLists.txt
-    - src/cpp/tests/test_.cpp
+    - src/cpp/tests/test_solver_tools.cpp
   commands:
     - mkdir build-tests
     - cd build-tests
-    - installed_linked_library_parent="$(dirname $(find ${PREFIX} -name lib.so))"
+    - installed_linked_library_parent="$(dirname $(find ${PREFIX} -name libsolver_tools.so))"
     - export LD_LIBRARY_PATH="${installed_linked_library_parent}:${LD_LIBRARY_PATH}"
     - cmake .. -DCMAKE_BUILD_TYPE=conda-test
     - cmake --build . --verbose
