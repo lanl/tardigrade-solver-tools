@@ -29,12 +29,6 @@ elseif(cmake_build_type_lower STREQUAL "conda-test")
               NO_CACHE
               REQUIRED)
     set(project_link_string ${installed_linked_library})
-    # Find the installed project umat
-    find_file(installed_umat
-              "${UMAT}.o"
-              PATHS "$ENV{CONDA_PREFIX}/lib64" "$ENV{CONDA_PREFIX}/lib"
-              NO_CACHE
-              REQUIRED)
 endif()
 
 # Get version number from Git
