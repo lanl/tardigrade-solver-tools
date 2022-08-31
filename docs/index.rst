@@ -6,7 +6,8 @@ Welcome to |project|'s documentation!
    :maxdepth: 2
    :caption: Contents
 
-   api 
+   api
+   changelog 
 
 ==================
 Indices and tables
