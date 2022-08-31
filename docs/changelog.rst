@@ -16,7 +16,7 @@ Changelog
 
 Release
 =======
-- Released version 0.3.0 (:merge:`26`)
+- Released version 0.3.0 (:merge:`12`)
 
 Internal Changes
 ================
