@@ -10,6 +10,11 @@ Changelog
 0.3.1 (unreleased)
 ******************
 
+Internal Changes
+================
+
+- Build package for multiple compiler versions (:issue: `4`, :merge: `15`). By `Sergio Cordova`_.
+
 ******************
 0.3.0 (09-01-2022)
 ******************
