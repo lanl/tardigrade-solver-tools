@@ -53,5 +53,5 @@ test:
     - installed_linked_library_parent="$(dirname $(find ${PREFIX} -name libsolver_tools.${dylib}))"
     - export LD_LIBRARY_PATH="${installed_linked_library_parent}:${LD_LIBRARY_PATH}"
     - cmake .. -DCMAKE_BUILD_TYPE=conda-test
-    - cmake --build . --verbose
+    - cmake --build . --target all --verbose
     - ctest --output-on-failure
