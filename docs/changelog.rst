@@ -16,6 +16,7 @@ Internal Changes
 - Project configuration and conda build recipe changes to allow macOS builds and conda-build test stage (:merge:`25`).
   By `Kyle Brindley`_.
 - Add GCC 11 conda package variant build (:issue:`6`, :merge:`18`). By `Kyle Brindley`_.
+- Modifications to the ci environment (:merge:`20`). By `Nathan Miller`_.
 
 ******************
 0.3.0 (09-01-2022)
