@@ -17,6 +17,7 @@ Internal Changes
   By `Kyle Brindley`_.
 - Add GCC 11 conda package variant build (:issue:`6`, :merge:`18`). By `Kyle Brindley`_.
 - Modifications to the ci environment (:merge:`20`). By `Nathan Miller`_.
+- Add GCC 10 conda package variant build (:issue:`7`, :merge:`22`). By `Sergio Cordova`_.
 
 ******************
 0.3.0 (09-01-2022)
