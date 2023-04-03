@@ -5,10 +5,27 @@
 Changelog
 #########
 
+******************
+0.4.1 (2023-04-03)
+******************
+
+Breaking Changes
+================
+
+- Required c++17 (:issues:`8`, :merge:`24`). By `Kyle Brindley`_.
 
 ******************
-0.3.1 (unreleased)
+0.3.1 (08-31-2022)
 ******************
+
+Internal Changes
+================
+- Build package for multiple compiler versions (:issue: `4`, :merge: `15`). By `Sergio Cordova`_.
+- Project configuration and conda build recipe changes to allow macOS builds and conda-build test stage (:merge:`25`).
+  By `Kyle Brindley`_.
+- Add GCC 11 conda package variant build (:issue:`6`, :merge:`18`). By `Kyle Brindley`_.
+- Modifications to the ci environment (:merge:`20`). By `Nathan Miller`_.
+- Add GCC 10 conda package variant build (:issue:`7`, :merge:`22`). By `Sergio Cordova`_.
 
 ******************
 0.3.0 (09-01-2022)
