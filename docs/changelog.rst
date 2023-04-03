@@ -5,9 +5,17 @@
 Changelog
 #########
 
+******************
+0.4.1 (2023-04-03)
+******************
+
+Breaking Changes
+================
+
+- Required c++17 (:issues:`8`, :merge:`24`). By `Kyle Brindley`_.
 
 ******************
-0.3.1 (unreleased)
+0.3.1 (08-31-2022)
 ******************
 
 Internal Changes
