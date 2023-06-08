@@ -6,12 +6,20 @@ Changelog
 #########
 
 ******************
+0.5.1 (unreleased)
+******************
+
+Breaking changes
+================
+- Deploy to the Conda environment preferred ``lib`` directory instead of the CMake linux default ``lib64`` (:issue:`20`,
+  :merge:`49`). By `Kyle Brindley`_.
+
+******************
 0.4.1 (2023-04-03)
 ******************
 
 Breaking Changes
 ================
-
 - Required c++17 (:issues:`8`, :merge:`24`). By `Kyle Brindley`_.
 
 ******************
