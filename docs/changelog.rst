@@ -9,6 +9,10 @@ Changelog
 0.5.2 (unreleased)
 ******************
 
+Internal Changes
+================
+- Clean up conda-build recipe (:issue:`11`, :merge:`29`). By `Kyle Brindley`_.
+
 ******************
 0.5.1 (2023-06-20)
 ******************
