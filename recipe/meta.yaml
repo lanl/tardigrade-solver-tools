@@ -3,10 +3,23 @@ package:
   # TODO: setup and use pyproject.toml and a Conda build Jinja template
   version: {{ VERSION }}
 
+about:
+  home: https://github.com/lanl/tardigrade-solver-tools
+  license: BSD-3-Clause
+  license_file: LICENSE
+  summary:  'A collection of nonlinear solvers and optimizers for small to moderately sized problems'
+  description: |
+    tardigrade-solver-tools (C20048 Tardigrade) Tools for performing solves of nonlinear equations.
+  doc_url: https://lanl.github.io/tardigrade-solver-tools
+  dev_url: https://github.com/lanl/tardigrade-solver-tools
+
 source:
   path: '..'
 
 build:
+  number: 0
+  script_env:
+    - SETUPTOOLS_SCM_PRETEND_VERSION={{ VERSION }}
   script:
     - mkdir build-package
     - cd build-package
@@ -17,13 +30,10 @@ build:
     - python_abi
 
 requirements:
-  build:
-    - {{ compiler('cxx') }}
-    - setuptools_scm >=6.2
-    - libcxx <16  # [osx]
   host:
     - {{ compiler('cxx') }}
     - python
+    - setuptools_scm >=6.2
     - cmake >=3.18
     - eigen >=3.3.7
     - error_tools >=0.6
@@ -31,7 +41,6 @@ requirements:
     - boost >=1.59  # TODO: Separate the package/test configuration to make BOOST an optional build dependency
     - doxygen  # TODO: Separate the package/documentation configuration to make Doxygen an optional build dependency
     - sphinx  # TODO: Separate the package/documentation configuration to make Sphinx an optional build dependency
-    - libcxx <16  # [osx]
   run:
     - {{ compiler('cxx') }}
     - eigen >=3.3.7
