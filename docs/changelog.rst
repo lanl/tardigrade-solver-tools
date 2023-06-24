@@ -13,6 +13,8 @@ Internal Changes
 ================
 - Clean up conda-build recipe (:issue:`11`, :merge:`29`). By `Kyle Brindley`_.
 - Help CMake find the correct Python executable for conda-build on osx-arm64 (:merge:`30`). By `Kyle Brindley`_.
+- Remove compiler as a runtime dependency. The OS-correct standard library package is added as a depedency by
+  conda-build (:merge:`31`). By `Kyle Brindley`_.
 
 ******************
 0.5.1 (2023-06-20)
