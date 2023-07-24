@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * \file solver_tools.cpp
+  * \file tardigrade_solver_tools.cpp
   *****************************************************************************
   * The solver tools library. Incorporates a collection of non-linear solver
   * tools built on top of Eigen. These tools are intended to be general enough
@@ -9,9 +9,9 @@
   *****************************************************************************
   */
 
-#include<solver_tools.h>
+#include<tardigrade_solver_tools.h>
 
-namespace solverTools{
+namespace tardigradeSolverTools{
 
     errorOut newtonRaphson( stdFncNLFJ residual, const floatVector &x0,
                             floatVector &x, bool &convergeFlag, bool &fatalErrorFlag, floatMatrix &floatOuts, intMatrix &intOuts,
@@ -200,7 +200,7 @@ namespace solverTools{
         while ( ( !converged ) && ( nNLIterations<maxNLIterations ) ){
 
             //Perform the linear solve
-            ddx = -vectorTools::solveLinearSystem( J, R, rank, linearSolver );
+            ddx = -tardigradeVectorTools::solveLinearSystem( J, R, rank, linearSolver );
 
             //Check the rank to make sure the linear system has a unique solution
             if ( rank != R.size( ) ){
@@ -401,7 +401,7 @@ namespace solverTools{
          * \param &floatArgs: The additional floating-point arguments.
          * \param &intArgs: The additional integer arguments.
          * \param &linearSolver: The linear solver object used in the solution of the nonlinear solve.
-         *     Note that the linear solver will always be the same as that is defined in solverTools.
+         *     Note that the linear solver will always be the same as that is defined in tardigradeSolverTools.
          *     This contains the decomposed matrix which is useful for Jacobian calculations.
          * \param &J: The Jacobian matrix of the nonlinear solve.
          * \param maxNLIterations: The maximum number of non-linear iterations.
@@ -450,7 +450,7 @@ namespace solverTools{
          * \param &floatArgs: The additional floating-point arguments.
          * \param &intArgs: The additional integer arguments.
          * \param &linearSolver: The linear solver object used in the solution of the nonlinear solve.
-         *     Note that the linear solver will always be the same as that is defined in solverTools.
+         *     Note that the linear solver will always be the same as that is defined in tardigradeSolverTools.
          *     This contains the decomposed matrix which is useful for Jacobian calculations.
          * \param &J: The Jacobian matrix of the nonlinear solve.
          * \param &boundVariableIndices: The indices of variables that have hard bounds
@@ -558,7 +558,7 @@ namespace solverTools{
                 floatOuts = oldFloatOuts;
                 intOuts   = oldIntOuts;
     
-                xdot = -vectorTools::solveLinearSystem( J, rh, rank );
+                xdot = -tardigradeVectorTools::solveLinearSystem( J, rh, rank );
    
                 if ( rank != J.size( ) ){
                     convergeFlag = false;
@@ -654,7 +654,7 @@ namespace solverTools{
             return new errorNode("errorOut", "R has a size of zero");
         }
 
-        result = vectorTools::dot(R, R) < (1 - alpha)*vectorTools::dot(Rp, Rp);
+        result = tardigradeVectorTools::dot(R, R) < (1 - alpha)*tardigradeVectorTools::dot(Rp, Rp);
 
         return NULL;
     }
@@ -755,11 +755,11 @@ namespace solverTools{
         intMatrix intOuts;
         residual(x0, floatArgs, intArgs, rtmp, analyticJ, floatOuts, intOuts);
 
-        isGood = vectorTools::fuzzyEquals(finiteDifferenceJ, analyticJ, tolr, tola);
+        isGood = tardigradeVectorTools::fuzzyEquals(finiteDifferenceJ, analyticJ, tolr, tola);
 
         if ((!isGood) && (!suppressOutput)){
             std::cout << "Jacobian is not within tolerance.\nError:\n";
-            vectorTools::print(analyticJ - finiteDifferenceJ);
+            tardigradeVectorTools::print(analyticJ - finiteDifferenceJ);
         }
 
         return NULL;
@@ -891,10 +891,10 @@ namespace solverTools{
         return NULL;
     }
 
-    errorOut computeBarrierHomotopyResidual( stdFncNLFJ computeOriginalResidual, const solverTools::floatVector &x,
-                                             const solverTools::floatMatrix &floatArgs, const solverTools::intMatrix &intArgs,
-                                             solverTools::floatVector &residual, solverTools::floatMatrix &jacobian,
-                                             solverTools::floatMatrix &floatOuts, solverTools::intMatrix &intOuts
+    errorOut computeBarrierHomotopyResidual( stdFncNLFJ computeOriginalResidual, const tardigradeSolverTools::floatVector &x,
+                                             const tardigradeSolverTools::floatMatrix &floatArgs, const tardigradeSolverTools::intMatrix &intArgs,
+                                             tardigradeSolverTools::floatVector &residual, tardigradeSolverTools::floatMatrix &jacobian,
+                                             tardigradeSolverTools::floatMatrix &floatOuts, tardigradeSolverTools::intMatrix &intOuts
                                            ){
         /*!
          * Compute the residual function for the barrier homotopy approach. This approach allows the user
@@ -1130,7 +1130,7 @@ namespace solverTools{
 
         //Scale the dx vector if appropriate
         if ( !mode ){
-            if ( !vectorTools::fuzzyEquals( scaleFactor, 1.0 ) ){
+            if ( !tardigradeVectorTools::fuzzyEquals( scaleFactor, 1.0 ) ){
                 dx *= scaleFactor;
             }
         }
@@ -1336,7 +1336,7 @@ namespace solverTools{
             }
 
             //Solve for the new dx
-            x -= dPT * vectorTools::solveLinearSystem( J, homotopyFloatOuts[ 0 ], rank );
+            x -= dPT * tardigradeVectorTools::solveLinearSystem( J, homotopyFloatOuts[ 0 ], rank );
 
             //Update the pseudo-time
             pseudoTime += dt;
@@ -1438,7 +1438,7 @@ namespace solverTools{
         }
 
         //Set the initial iterate of the hessian
-        floatMatrix B = ( vectorTools::l2norm( lagrangianGradient_kp1 ) / stepSize ) * vectorTools::eye< floatType >( lagrangianGradient_kp1.size() );
+        floatMatrix B = ( tardigradeVectorTools::l2norm( lagrangianGradient_kp1 ) / stepSize ) * tardigradeVectorTools::eye< floatType >( lagrangianGradient_kp1.size() );
 
         //Set the tolerance for each value individually
         floatVector tol = floatVector( lagrangianGradient_kp1.size(), 0 );
@@ -1480,8 +1480,8 @@ namespace solverTools{
 
             //Compute the direction
             unsigned int rank;
-            p = -vectorTools::solveLinearSystem( B, lagrangianGradient_k, rank );
-            pNorm = vectorTools::l2norm( p );
+            p = -tardigradeVectorTools::solveLinearSystem( B, lagrangianGradient_k, rank );
+            pNorm = tardigradeVectorTools::l2norm( p );
 
             //Apply maximum dx step size limitation
             if ( ( maxdx > 0 ) && ( pNorm > maxdx ) ){
@@ -1569,9 +1569,9 @@ namespace solverTools{
                 theta = 1.;
 
                 //Update the approximation of the hessian
-                ys = vectorTools::dot( y, s );
-                Bs = vectorTools::dot( B, s );
-                sBs = vectorTools::dot( s, Bs );
+                ys = tardigradeVectorTools::dot( y, s );
+                Bs = tardigradeVectorTools::dot( B, s );
+                sBs = tardigradeVectorTools::dot( s, Bs );
 
                 if ( ys < 0.2 * sBs ){
                     theta = 0.8 * sBs / ( sBs - ys );
@@ -1579,8 +1579,8 @@ namespace solverTools{
 
                 r = theta * y  + ( 1 - theta ) * Bs;
 
-                B += vectorTools::dyadic( r, r ) / vectorTools::dot( s, r )
-                   - vectorTools::dyadic( Bs, Bs ) / vectorTools::dot( s, Bs );
+                B += tardigradeVectorTools::dyadic( r, r ) / tardigradeVectorTools::dot( s, r )
+                   - tardigradeVectorTools::dyadic( Bs, Bs ) / tardigradeVectorTools::dot( s, Bs );
 
                 //Update the previous values
                 lagrangian_k = lagrangian_kp1;
@@ -1675,7 +1675,7 @@ namespace solverTools{
                 return result;
             }
 
-            l = 0.5 * ( 1 - s ) * vectorTools::dot( x_ - x0, x_ - x0 ) + s * L;
+            l = 0.5 * ( 1 - s ) * tardigradeVectorTools::dot( x_ - x0, x_ - x0 ) + s * L;
             dldx = ( 1 - s ) * ( x_ - x0 ) + s * dLdx;
 
             return static_cast<errorOut>(NULL);
