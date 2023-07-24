@@ -6,13 +6,13 @@
     :maxdepth: 2
 
 ****************
-solver_tools.cpp
+tardigrade_solver_tools.cpp
 ****************
 
-.. doxygenfile:: solver_tools.cpp
+.. doxygenfile:: tardigrade_solver_tools.cpp
 
 **************
-solver_tools.h
+tardigrade_solver_tools.h
 **************
 
-.. doxygenfile:: solver_tools.h
+.. doxygenfile:: tardigrade_solver_tools.h

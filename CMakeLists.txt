@@ -1,6 +1,6 @@
 #===================================================================================================== PROJECT SETUP ===
 cmake_minimum_required(VERSION 3.18)
-project(solver_tools)
+project(tardigrade_solver_tools)
 
 # Set common project paths relative to project root directory
 set(CPP_SRC_PATH "src/cpp")
@@ -8,7 +8,7 @@ set(CPP_TEST_PATH "${CPP_SRC_PATH}/tests")
 set(CMAKE_SRC_PATH "src/cmake")
 
 # Add a flag for whether the python bindings are being built or not
-set(SOLVER_TOOLS_BUILD_PYTHON_BINDINGS ON CACHE BOOL "Flag for whether the python bindings should be built")
+set(TARDIGRADE_SOLVER_TOOLS_BUILD_PYTHON_BINDINGS ON CACHE BOOL "Flag for whether the python bindings should be built")
 
 # Add the cmake folder to locate project CMake module(s)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}" ${CMAKE_MODULE_PATH})
@@ -87,10 +87,10 @@ endif()
 
 # Find related, but external, projects in installed environment
 include(FetchContent)
-set(upstream_packages "error_tools" "vector_tools")
+set(upstream_packages "tardigrade_error_tools" "tardigrade_vector_tools")
 foreach(package ${upstream_packages})
     string(TOUPPER "${package}" package_upper)
-    set(${package_upper}_BUILD_PYTHON_BINDINGS ${SOLVER_TOOLS_BUILD_PYTHON_BINDINGS})
+    set(${package_upper}_BUILD_PYTHON_BINDINGS ${TARDIGRADE_SOLVER_TOOLS_BUILD_PYTHON_BINDINGS})
     find_package(${package} ${upstream_required} CONFIG)
     if(${package}_FOUND)
         message(STATUS "Found ${package}: ${${package}_DIR}")

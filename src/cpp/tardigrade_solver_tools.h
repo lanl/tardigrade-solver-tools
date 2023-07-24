@@ -1,6 +1,6 @@
 /**
   *****************************************************************************
-  * \file solver_tools.h
+  * \file tardigrade_solver_tools.h
   *****************************************************************************
   * The solver tools library. Incorporates a collection of non-linear solver
   * tools built on top of Eigen. These tools are intended to be general enough
@@ -9,17 +9,17 @@
   *****************************************************************************
   */
 
-#ifndef SOLVER_TOOLS_H
-#define SOLVER_TOOLS_H
+#ifndef TARDIGRADE_SOLVER_TOOLS_H
+#define TARDIGRADE_SOLVER_TOOLS_H
 
 #define USE_EIGEN
-#include<vector_tools.h>
-#include<error_tools.h>
+#include<tardigrade_vector_tools.h>
+#include<tardigrade_error_tools.h>
 #include<sstream>
 
-namespace solverTools{
+namespace tardigradeSolverTools{
 
-    typedef errorTools::Node errorNode; //!< Redefinition for the error node
+    typedef tardigradeErrorTools::Node errorNode; //!< Redefinition for the error node
     typedef errorNode* errorOut; //!< Redefinition for a pointer to the error node
     typedef double floatType; //!< Define the float values type.
     typedef int intType; //!< Define the integer values type.
@@ -28,7 +28,7 @@ namespace solverTools{
     typedef std::vector< floatVector > floatMatrix; //!< Define a matrix of floats
     typedef std::vector< intVector > intMatrix; //!< Define a matrix of integers
 
-    using solverType = vectorTools::solverType< floatType >; //!< Force consistency with vectorTools
+    using solverType = tardigradeVectorTools::solverType< floatType >; //!< Force consistency with tardigradeVectorTools
 
     /**
      * A residual function.
