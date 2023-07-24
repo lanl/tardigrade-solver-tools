@@ -11,8 +11,8 @@ Tools for performing solves of nonlinear equations.
 Information
 ===========
 
-* Documentation: https://aea.re-pages.lanl.gov/material-models/solver_tools
-* Wiki: https://re-git.lanl.gov/aea/material-models/solver_tools/-/wikis/home
+* Documentation: https://aea.re-pages.lanl.gov/material-models/tardigrade_solver_tools
+* Wiki: https://re-git.lanl.gov/aea/material-models/tardigrade_solver_tools/-/wikis/home
 
 Developers
 ==========
@@ -50,7 +50,7 @@ packages.
 .. code-block:: bash
 
    $ pwd
-   path/to/vector_tools/
+   path/to/tardigrade_vector_tools/
    $ pipreqs --use-local --print --no-pin .
 
 A minimal anaconda environment for building the documentation can be created
@@ -75,8 +75,8 @@ C++ Libraries
 
 * [Eigen](https://eigen.tuxfamily.org/dox/) >= 3.3.7
 * [BOOST](https://www.boost.org/doc/libs/1_53_0/) >= 1.53.0
-* error\_tools: https://re-git.lanl.gov/aea/material-models/error_tools
-* vector\_tools: https://re-git.lanl.gov/aea/material-models/vector_tools
+* error\_tools: https://re-git.lanl.gov/aea/material-models/tardigrade_error_tools
+* vector\_tools: https://re-git.lanl.gov/aea/material-models/tardigrade_vector_tools
 
 If not found on the current system or active Conda environment, all of the
 ``*_tools`` libraries are pulled from their git repos by branch name and built
@@ -116,7 +116,7 @@ sstelmo
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/
+      /path/to/tardigrade_solver_tools/
 
       # Just perform the build. Usage arguments are "cmake_build_type"
       ./new_build.sh None
@@ -160,25 +160,25 @@ built.
 
    .. code-block:: bash
 
-      $ my_error_tools=/path/to/my/error_tools
-      $ my_vector_tools=/path/to/my/vector_tools
+      $ my_tardigrade_error_tools=/path/to/my/tardigrade_error_tools
+      $ my_tardigrade_vector_tools=/path/to/my/tardigrade_vector_tools
 
 3) Perform the initial configuration
 
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools
+      /path/to/tardigrade_solver_tools
       $ mkdir build
       $ cd build
-      $ cmake3 .. -DFETCH_SOURCE=LOCAL -DERROR_TOOLS_PATH=${my_error_tools} -DVECTOR_TOOLS_PATH=${my_vector_tools}
+      $ cmake3 .. -DFETCH_SOURCE=LOCAL -DTARDIGRADE_ERROR_TOOLS_PATH=${my_tardigrade_error_tools} -DTARDIGRADE_VECTOR_TOOLS_PATH=${my_tardigrade_vector_tools}
 
 4) Building the library
 
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/build
+      /path/to/tardigrade_solver_tools/build
       $ make
 
 Building the documentation
@@ -191,7 +191,7 @@ To build just the documentation pick up the steps here:
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/
+      /path/to/tardigrade_solver_tools/
       $ mkdir build/
       $ cd build/
 
@@ -200,7 +200,7 @@ To build just the documentation pick up the steps here:
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/build/
+      /path/to/tardigrade_solver_tools/build/
       $ cmake3 ..
 
 4) Build the docs
@@ -213,14 +213,14 @@ To build just the documentation pick up the steps here:
 
    .. code-block:: bash
 
-      solver_tools/build/docs/sphinx/html/index.html
+      tardigrade_solver_tools/build/docs/sphinx/html/index.html
 
 6) Display docs
 
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/build/
+      /path/to/tardigrade_solver_tools/build/
       $ firefox docs/sphinx/html/index.html &
 
 7) While the Sphinx API is still a WIP, try the doxygen API
@@ -228,7 +228,7 @@ To build just the documentation pick up the steps here:
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/build/
+      /path/to/tardigrade_solver_tools/build/
       $ firefox docs/doxygen/html/index.html &
 
 *******************
@@ -242,7 +242,7 @@ Build the entire before performing the installation.
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/build
+      /path/to/tardigrade_solver_tools/build
       $ cmake3 --build .
 
 5) Install the library
@@ -250,7 +250,7 @@ Build the entire before performing the installation.
    .. code-block:: bash
 
       $ pwd
-      /path/to/solver_tools/build
+      /path/to/tardigrade_solver_tools/build
       $ cmake --install . --prefix path/to/root/install
 
       # Example local user (non-admin) Linux install

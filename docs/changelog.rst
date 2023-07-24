@@ -6,8 +6,13 @@ Changelog
 #########
 
 ******************
-0.5.2 (unreleased)
+0.6.1 (2023-07-24)
 ******************
+
+Breaking changes
+================
+- Change project, package, and namespace from 'solver tools' to 'tardigrade solver tools' (:issue:`12`, :merge:`33`). By
+  `Kyle Brindley`_.
 
 Internal Changes
 ================
