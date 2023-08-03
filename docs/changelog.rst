@@ -6,6 +6,14 @@ Changelog
 #########
 
 ******************
+0.6.2 (Unreleased)
+******************
+
+Internal Changes
+================
+-  Clean up conda package CI files after conda-build (:issue:`13`, :merge:`35`). By `Sergio Cordova`_.
+
+******************
 0.6.1 (2023-07-24)
 ******************
 
