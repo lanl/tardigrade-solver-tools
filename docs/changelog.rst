@@ -6,8 +6,16 @@ Changelog
 #########
 
 ******************
-0.6.3 (unreleased)
+0.6.4 (unreleased)
 ******************
+
+******************
+0.6.3 (2023-09-29)
+******************
+
+Internal Changes
+================
+- Add draft GitHub release action. By `Kyle Brindley`_.
 
 ******************
 0.6.2 (2023-09-20)
